@@ -1,0 +1,198 @@
+[v-cloak] {
+    display: none
+}
+
+body {
+    font-family: "Poppins", sans-serif;
+    scroll-behavior: smooth;
+    background: url("https://upld.zone.id/uploads/qkiacfviq/new-background.webp") no-repeat center center fixed;
+    background-size: cover;
+    overflow-x: hidden;
+}
+
+:root {
+    --bs-primary-button: rgba(255, 196, 82, 0.8);
+    --bs-secondary-button: rgba(255, 217, 125, 0.6);
+    color-scheme: light only;
+}
+
+.glass-card {
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    background-color: rgba(255, 255, 255, 0.3);
+    border-radius: 24px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    padding: 80px 0;
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+/* Button AI */
+.glass-button-primary {
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 50px;
+    background: var(--bs-primary-button);
+    border: 2px solid rgba(255, 196, 82, 0.4);
+    padding: 14px 32px;
+    margin: 0 8px;
+    display: inline-block;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.4s ease;
+    box-shadow:
+        0 4px 16px rgba(255, 196, 82, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    color: #8B4513;
+    font-weight: 600;
+    /* text-decoration: none;
+      cursor: pointer;
+      border: none;
+      font-size: 16px; */
+}
+
+.glass-button-primary::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: left 0.6s ease;
+}
+
+.glass-button-primary:hover::before {
+    left: 100%;
+}
+
+.glass-button-primary:hover {
+    transform: translateY(-2px);
+    background: rgba(255, 196, 82, 0.3);
+    border-color: rgba(255, 196, 82, 0.6);
+    box-shadow:
+        0 8px 25px rgba(255, 196, 82, 0.3),
+        0 4px 12px rgba(0, 0, 0, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+.glass-button-primary:active {
+    transform: translateY(0px);
+    transition: transform 0.1s ease;
+}
+
+/* Button 2 AI */
+.glass-button-secondary-1 {
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 50px;
+    background: var(--bs-secondary-button);
+    border: 2px solid rgba(255, 217, 125, 0.3);
+    padding: 14px 32px;
+    margin: 0 8px;
+    display: inline-block;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.4s ease;
+    box-shadow:
+        0 4px 16px rgba(255, 217, 125, 0.15),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    color: #B8860B;
+    font-weight: 500;
+    /* text-decoration: none;
+      cursor: pointer;
+      border: none;
+      font-size: 16px; */
+}
+
+.glass-button-secondary-1::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.25), transparent);
+    transition: left 0.6s ease;
+}
+
+.glass-button-secondary-1:hover::before {
+    left: 100%;
+}
+
+.glass-button-secondary-1:hover {
+    transform: translateY(-2px);
+    background: rgba(255, 217, 125, 0.8);
+    border-color: rgba(255, 217, 125, 0.5);
+    box-shadow:
+        0 8px 25px rgba(255, 217, 125, 0.25),
+        0 4px 12px rgba(0, 0, 0, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+.glass-button-secondary-1:active {
+    transform: translateY(0px);
+    transition: transform 0.1s ease;
+}
+
+section {
+    overflow: hidden;
+}
+
+.activity-card {
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 24px;
+    box-shadow: 8px 8px 24px 0 rgba(9, 13, 20, 0.4), -4px -4px 8px 0 rgba(224, 224, 255, 0.04), 0 1px 1px 0 rgba(9, 13, 20, 0.4);
+    padding: 24px;
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.glass-testimonial {
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    background-color: rgba(255, 255, 255, 0.3);
+    border-radius: 24px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.blockquote {
+    background: rgba(255, 255, 255, 0.15);
+    text-align: center;
+    padding: 1rem;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+    backdrop-filter: blur(15px);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.article h2 {
+    border-bottom: 1px solid #dee2e6 !important;
+    margin-bottom: 1rem;
+    padding-bottom: 5px;
+    margin-top: 1.5rem;
+    font-size: 1.75rem;
+}
+
+.article h3,
+.article h4,
+.article h5 {
+    margin-top: 1.5rem;
+    font-size: 1.25rem;
+}
+
+.article img {
+    max-width: 100%;
+    display: block;
+    margin: auto;
+    border-radius: 24px;
+}
+
+.date {
+    display: inline-block;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 24px;
+    font-size: 0.9rem;
+    backdrop-filter: blur(15px);
+}
