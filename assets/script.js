@@ -43,6 +43,36 @@ const locations = [
     { name: "Kendari", lat: -3.9806, lng: 122.5160, volunteers: 1 }
 ];
 
+// FAQ Toggle Functionality
+const toggles = document.querySelectorAll(".faq-toggle");
+
+toggles.forEach((toggle) => {
+  toggle.addEventListener("click", () => {
+    const faqItem = toggle.parentElement;
+    const isActive = faqItem.classList.contains("active");
+    
+    // Logic Close Other FAQ
+    document.querySelectorAll(".faq").forEach(item => {
+      if (item !== faqItem && item.classList.contains("active")) {
+        item.classList.remove("active");
+      }
+    });
+    
+    // Toggle current FAQ
+    faqItem.classList.toggle("active");
+    
+    // Arrow Animation
+    const chevron = toggle.querySelector(".fa-chevron-down");
+    if (chevron) {
+      if (!isActive) {
+        chevron.style.transform = "rotate(180deg)";
+      } else {
+        chevron.style.transform = "rotate(0deg)";
+      }
+    }
+  });
+});
+
 locations.forEach(loc => {
     L.marker([loc.lat, loc.lng])
         .addTo(map)
