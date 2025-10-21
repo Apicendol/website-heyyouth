@@ -104,6 +104,118 @@ body {
       font-size: 16px; */
 }
 
+/* FAQ Section */
+.faq-container {
+  margin: 0 auto;
+  max-width: 600px;
+}
+
+.faq {
+  background-color: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 10px;
+  margin: 20px 0;
+  overflow: hidden;
+  padding: 30px;
+  position: relative;
+  transition: 0.3s ease;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.faq.active {
+  background-color: rgba(255, 255, 255, 0.3);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+.faq.active::before,
+.faq.active::after {
+  color: #2ecc71;
+  content: "\f075";
+  font-family: "Font Awesome 6 Free";
+  font-size: 7rem;
+  left: 20px;
+  opacity: 0.2;
+  position: absolute;
+  top: 20px;
+  z-index: 0;
+}
+
+.faq.active::before {
+  color: #3498db;
+  left: -30px;
+  top: -10px;
+  transform: rotateY(180deg);
+}
+
+.faq-title {
+  margin: 0 35px 0 0;
+  font-weight: 600;
+  color: #333;
+  font-size: 20px;
+}
+
+.faq-text {
+  max-height: 0;
+  overflow: hidden;
+  margin: 0;
+  color: #333;
+  transition: max-height 0.4s ease, margin 0.4s ease;
+  font-size: 20px; 
+}
+
+.faq.active .faq-text {
+  max-height: 500px; 
+  margin: 30px 0 0;
+}
+
+.faq-toggle {
+  align-items: center;
+  background-color: transparent;
+  border: 0;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  font-size: 1rem;
+  height: 30px;
+  justify-content: center;
+  padding: 0;
+  position: absolute;
+  right: 30px;
+  top: 30px;
+  width: 30px;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.faq-toggle:hover {
+  transform: scale(1.1);
+}
+
+.faq-toggle .fa-times,
+.faq.active .faq-toggle .fa-chevron-down {
+  display: none;
+}
+
+.faq.active .faq-toggle .fa-times {
+  color: #fff;
+  display: block;
+}
+
+.faq-toggle .fa-chevron-down {
+  display: block;
+  transition: transform 0.3s ease;
+}
+
+.faq.active .faq-toggle {
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+.faq.active .faq-toggle .fa-chevron-down {
+  transform: rotate(180deg);
+}
+/* FAQ Section */
+
 .glass-button-secondary-1::before {
     content: '';
     position: absolute;
@@ -196,3 +308,132 @@ section {
     font-size: 0.9rem;
     backdrop-filter: blur(15px);
 }
+
+/* Podcast Section */
+.podcast-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  overflow: hidden;
+}
+
+.podcast-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.podcast-img-container {
+  position: relative;
+  overflow: hidden;
+}
+
+.podcast-img {
+  height: 200px;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.podcast-card:hover .podcast-img {
+  transform: scale(1.05);
+}
+
+.podcast-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 10; 
+}
+
+.podcast-overlay-link {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 5; 
+  display: block;
+}
+
+.podcast-img-container:hover .podcast-overlay {
+  opacity: 1;
+}
+
+.podcast-icon {
+  font-size: 4rem; 
+  color: #1DB954; 
+  transition: transform 0.3s ease;
+  pointer-events: none; 
+}
+
+.podcast-img-container:hover .podcast-icon {
+  transform: scale(1.1);
+}
+
+.podcast-card {
+  display: flex;
+  flex-direction: column;
+}
+
+.podcast-card .card-body {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.podcast-card .card-text {
+  flex-grow: 1;
+}
+
+.spotify-btn {
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  border-radius: 0.25rem;
+  display: inline-flex;
+  align-items: center;
+  height: 38px; 
+  background-color: transparent;
+  border: 2px solid #1DB954;
+  color: #1DB954;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.spotify-btn:hover {
+  background-color: #1DB954;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(29, 185, 84, 0.3);
+}
+
+.spotify-btn i {
+  transition: transform 0.3s ease;
+}
+
+.spotify-btn:hover i {
+  transform: scale(1.2);
+}
+
+.spotify-btn::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: rgba(29, 185, 84, 0.1);
+  transition: left 0.3s ease;
+  z-index: -1;
+}
+
+.spotify-btn:hover::before {
+  left: 0;
+}
+/* Podcast Section */
