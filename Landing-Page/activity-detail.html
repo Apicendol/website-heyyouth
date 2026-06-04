@@ -37,6 +37,7 @@
         }
     </style>
     <link rel="stylesheet" href="../assets/Style/tailwind.css">
+    <link rel="stylesheet" href="../assets/Style/Style.css">
 </head>
 
 <body
@@ -198,10 +199,10 @@
                     class="mt-16 pt-8 border-t border-gray-200 flex flex-col sm:flex-row justify-between items-center gap-4">
                     <a href="activities.html"
                         class="inline-flex items-center text-primary font-bold hover:text-accent transition-colors">
-                        <i class="fas fa-arrow-left mr-2"></i> Kembali ke Activities
+                        <i class="fas fa-arrow-left mr-2"></i> <span class="lang-id">Kembali ke Kegiatan</span><span class="lang-en">Back to Activities</span>
                     </a>
                     <div class="flex gap-4">
-                        <span class="text-sm text-gray-500 font-medium self-center">Bagikan:</span>
+                        <span class="text-sm text-gray-500 font-medium self-center"><span class="lang-id">Bagikan:</span><span class="lang-en">Share:</span></span>
                         <a href="#"
                             class="w-10 h-10 rounded-full bg-gray-100 hover:bg-primary hover:text-white flex items-center justify-center transition-all text-gray-600"><i
                                 class="fab fa-facebook-f"></i></a>
@@ -222,11 +223,10 @@
                     class="w-16 h-16 bg-red-100 text-red-500 rounded-full flex items-center justify-center mx-auto mb-4">
                     <i class="fas fa-exclamation-triangle text-2xl"></i>
                 </div>
-                <h2 class="text-2xl font-bold text-heading mb-2">Artikel Tidak Ditemukan</h2>
-                <p class="text-gray-600 mb-6">Maaf, artikel yang Anda cari mungkin telah dihapus atau link salah.</p>
+                <h2 class="text-2xl font-bold text-heading mb-2"><span class="lang-id">Artikel Tidak Ditemukan</span><span class="lang-en">Article Not Found</span></h2>
+                <p class="text-gray-600 mb-6"><span class="lang-id">Maaf, artikel yang Anda cari mungkin telah dihapus atau link salah.</span><span class="lang-en">Sorry, the article you are looking for may have been deleted or the link is incorrect.</span></p>
                 <a href="activities.html"
-                    class="inline-block bg-primary hover:bg-primaryDark text-white px-6 py-3 rounded-xl font-bold transition-colors">Lihat
-                    Semua Aktivitas</a>
+                    class="inline-block bg-primary hover:bg-primaryDark text-white px-6 py-3 rounded-xl font-bold transition-colors"><span class="lang-id">Lihat Semua Aktivitas</span><span class="lang-en">View All Activities</span></a>
             </div>
         </div>
 
@@ -300,24 +300,65 @@
                 const activity = data.activityCards.find(a => String(a.id) === String(activityId));
 
                 if (activity) {
-                    document.getElementById('detail-title').textContent = activity.title;
-                    document.getElementById('detail-category').textContent = activity.category;
+                    const bilEsc = (idVal, enVal, fallback) => {
+                        if (window._bilingualEsc) {
+                            return window._bilingualEsc(idVal, enVal, fallback);
+                        }
+                        const escape = (s) => {
+                            if (!s) return '';
+                            const d = document.createElement('div');
+                            d.textContent = s;
+                            return d.innerHTML;
+                        };
+                        const id = escape(idVal || fallback || '');
+                        const en = escape(enVal || fallback || '');
+                        return '<span class="lang-id">' + id + '</span><span class="lang-en">' + en + '</span>';
+                    };
+
+                    const bilHtml = (idVal, enVal, fallback) => {
+                        if (window._bilingualHtml) {
+                            return window._bilingualHtml(idVal, enVal, fallback);
+                        }
+                        const id = idVal || fallback || '';
+                        const en = enVal || fallback || '';
+                        return '<span class="lang-id">' + id + '</span><span class="lang-en">' + en + '</span>';
+                    };
+
+                    document.getElementById('detail-title').innerHTML = bilEsc(activity.title_id, activity.title_en, activity.title);
+                    document.getElementById('detail-category').innerHTML = bilEsc(activity.category_id, activity.category_en, activity.category);
                     document.getElementById('detail-date').textContent = activity.date;
-                    document.getElementById('detail-description').textContent = activity.description;
+                    document.getElementById('detail-description').innerHTML = bilEsc(activity.description_id, activity.description_en, activity.description);
+                    
                     const fullContent = document.getElementById('detail-full-content');
-                    if (activity.fullStory && activity.fullStory.trim() !== '') {
-                        fullContent.innerHTML = activity.fullStory;
+                    const story_id = activity.fullStory_id || activity.fullStory || '';
+                    const story_en = activity.fullStory_en || activity.fullStory || '';
+                    
+                    if (story_id.trim() !== '' || story_en.trim() !== '') {
+                        fullContent.innerHTML = bilHtml(story_id, story_en);
                     } else {
-                        const safeDesc = document.createElement('div');
-                        safeDesc.textContent = activity.description;
-                        fullContent.innerHTML = '<p>' + safeDesc.innerHTML + '</p>';
+                        const desc_id = activity.description_id || activity.description || '';
+                        const desc_en = activity.description_en || activity.description || '';
+                        fullContent.innerHTML = bilHtml('<p>' + desc_id + '</p>', '<p>' + desc_en + '</p>');
                     }
 
                     const detailHero = document.getElementById('detail-hero');
                     let imgSrc = (activity.image && activity.image.trim() !== '') ? window._resolveImgPath(activity.image) : 'https://images.unsplash.com/photo-1497633762265-9381796906ea?q=80&w=1000&auto=format&fit=crop';
                     detailHero.style.backgroundImage = 'url("' + imgSrc + '")';
 
-                    document.title = activity.title + ' - Hey Youth!';
+                    const updatePageTitle = () => {
+                        const currentLang = localStorage.getItem('heyyouth_lang') || 'en';
+                        const pageTitleText = (currentLang === 'id') ? (activity.title_id || activity.title) : (activity.title_en || activity.title);
+                        document.title = pageTitleText + ' - Hey Youth!';
+                    };
+
+                    updatePageTitle();
+
+                    // Listen to language changes
+                    document.querySelectorAll('.lang-btn').forEach(btn => {
+                        btn.addEventListener('click', () => {
+                            setTimeout(updatePageTitle, 100);
+                        });
+                    });
 
                     loadingState.classList.add('hidden');
                     articleContainer.classList.remove('hidden');
