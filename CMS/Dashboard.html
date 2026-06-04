@@ -1,0 +1,2588 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <script>
+        (function () {
+            var savedTheme = localStorage.getItem('heyyouth_theme') || 'light';
+            if (savedTheme === 'dark') {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        })();
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CMS Dashboard - Hey Youth!</title>
+    <meta name="robots" content="noindex, nofollow">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Merriweather:ital,wght@0,700;1,400&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .sidebar-link.active {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-left: 3px solid #F59E0B;
+            color: #ffffff;
+        }
+
+        .sidebar-link:not(.active):hover {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        .cms-card {
+            transition: all 0.2s ease;
+        }
+
+        .cms-card:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .modal-overlay {
+            background: rgba(15, 23, 42, 0.5);
+            backdrop-filter: blur(4px);
+        }
+
+        .toast-enter {
+            animation: slideInRight 0.3s ease-out;
+        }
+
+        .toast-exit {
+            animation: slideOutRight 0.3s ease-in forwards;
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideOutRight {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+
+            to {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+        }
+
+        textarea {
+            resize: vertical;
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 3px;
+        }
+
+        .upload-zone {
+            border: 2px dashed #d1d5db;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .upload-zone:hover,
+        .upload-zone.dragover {
+            border-color: #1D4ED8;
+            background-color: #EFF6FF;
+        }
+
+        .upload-zone img {
+            max-height: 160px;
+            object-fit: contain;
+        }
+
+        #map-cms {
+            height: 250px;
+            width: 100%;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            z-index: 10;
+        }
+
+        /* ===== CMS DARK MODE STYLES ===== */
+        html.dark body {
+            background-color: #0b0f19 !important;
+            color: #94a3b8 !important;
+        }
+
+        html.dark .bg-bg {
+            background-color: #0b0f19 !important;
+        }
+
+        html.dark .bg-white {
+            background-color: #111827 !important;
+            color: #cbd5e1 !important;
+        }
+
+        html.dark header.bg-white {
+            background-color: #111827 !important;
+            border-color: #1e293b !important;
+        }
+
+        html.dark .text-heading {
+            color: #f8fafc !important;
+        }
+
+        html.dark .text-body {
+            color: #94a3b8 !important;
+        }
+
+        html.dark .text-gray-500 {
+            color: #94a3b8 !important;
+        }
+
+        html.dark .text-gray-400 {
+            color: #64748b !important;
+        }
+
+        html.dark .text-gray-600 {
+            color: #cbd5e1 !important;
+        }
+
+        html.dark .border-gray-100,
+        html.dark .border-gray-200 {
+            border-color: #1e293b !important;
+        }
+
+        html.dark .bg-gray-50 {
+            background-color: #1e293b !important;
+        }
+
+        html.dark .bg-gray-100 {
+            background-color: #1e293b !important;
+            color: #cbd5e1 !important;
+        }
+
+        html.dark .hover\:bg-gray-50:hover,
+        html.dark tr.hover\:bg-gray-50:hover {
+            background-color: #1e293b !important;
+        }
+
+        html.dark .hover\:bg-gray-100:hover {
+            background-color: #1e293b !important;
+        }
+
+        html.dark .bg-blue-100 {
+            background-color: #1e3a8a !important;
+            color: #93c5fd !important;
+        }
+
+        html.dark .bg-amber-100 {
+            background-color: #78350f !important;
+            color: #fde047 !important;
+        }
+
+        html.dark .bg-green-100 {
+            background-color: #064e3b !important;
+            color: #6ee7b7 !important;
+        }
+
+        html.dark .bg-purple-100 {
+            background-color: #581c87 !important;
+            color: #d8b4fe !important;
+        }
+
+        html.dark .bg-red-100 {
+            background-color: #7f1d1d !important;
+            color: #fca5a5 !important;
+        }
+
+        html.dark .bg-teal-100 {
+            background-color: #115e59 !important;
+            color: #5eead4 !important;
+        }
+
+        html.dark #modal .bg-white,
+        html.dark #modal .sticky.bg-white {
+            background-color: #111827 !important;
+        }
+
+        html.dark #confirm-dialog .bg-white {
+            background-color: #111827 !important;
+        }
+
+        html.dark input,
+        html.dark textarea,
+        html.dark select {
+            background-color: #1e293b !important;
+            color: #f8fafc !important;
+            border-color: #334155 !important;
+        }
+
+        html.dark input[readonly] {
+            background-color: #0f172a !important;
+            color: #64748b !important;
+            border-color: #1e293b !important;
+        }
+
+        html.dark #map-cms {
+            filter: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%);
+        }
+
+        html.dark .upload-zone {
+            border-color: #334155 !important;
+        }
+
+        html.dark .upload-zone:hover,
+        html.dark .upload-zone.dragover {
+            border-color: #3b82f6 !important;
+            background-color: #1e3a8a !important;
+        }
+    </style>
+    <link rel="stylesheet" href="../assets/Style/tailwind.css">
+</head>
+
+<body class="bg-bg text-body min-h-screen" style="display: none;">
+
+    <!-- ===== MOBILE TOP BAR ===== -->
+    <div
+        class="lg:hidden fixed top-0 left-0 right-0 z-50 bg-heading text-white h-14 flex items-center justify-between px-4 shadow-lg">
+        <button id="sidebar-toggle" class="p-2 hover:bg-white/10 rounded-lg transition-colors">
+            <i class="fas fa-bars text-lg"></i>
+        </button>
+        <span class="font-bold text-sm">CMS Dashboard</span>
+        <a href="../Landing-Page/index.html" class="p-2 hover:bg-white/10 rounded-lg transition-colors" title="Lihat Beranda">
+            <i class="fas fa-external-link-alt text-sm"></i>
+        </a>
+    </div>
+
+    <!-- ===== SIDEBAR BACKDROP ===== -->
+    <div id="sidebar-backdrop" class="fixed inset-0 bg-black/40 z-50 hidden lg:hidden" onclick="closeSidebar()"></div>
+
+    <!-- ===== SIDEBAR ===== -->
+    <aside id="sidebar"
+        class="fixed top-0 left-0 h-full w-64 bg-heading text-gray-300 z-50 transform -translate-x-full lg:translate-x-0 transition-transform duration-300 flex flex-col">
+        <div class="p-5 border-b border-white/10">
+            <a href="Login.html" class="flex items-center gap-2">
+                <img src="../assets/img/NEW HEY YOUTH Sep 2025.png" alt="Logo" class="h-8 w-auto brightness-0 invert">
+            </a>
+            <p class="text-xs text-gray-500 mt-2 ml-1">Admin Panel</p>
+        </div>
+        <nav class="flex-1 py-4 space-y-1 px-3 overflow-y-auto">
+            <button onclick="switchTab('homepage')" data-tab="homepage"
+                class="sidebar-link active w-full text-left px-3 py-2.5 rounded-lg text-sm flex items-center gap-3 transition-all">
+                <i class="fas fa-home w-5 text-center text-xs"></i>
+                <span>Homepage</span>
+                <span id="count-homepage" class="ml-auto bg-white/10 text-xs px-2 py-0.5 rounded-full">0</span>
+            </button>
+            <button onclick="switchTab('about')" data-tab="about"
+                class="sidebar-link w-full text-left px-3 py-2.5 rounded-lg text-sm flex items-center gap-3 transition-all">
+                <i class="fas fa-users w-5 text-center text-xs"></i>
+                <span>About Us</span>
+                <span id="count-about" class="ml-auto bg-white/10 text-xs px-2 py-0.5 rounded-full">0</span>
+            </button>
+            <button onclick="switchTab('activities')" data-tab="activities"
+                class="sidebar-link w-full text-left px-3 py-2.5 rounded-lg text-sm flex items-center gap-3 transition-all">
+                <i class="fas fa-bolt w-5 text-center text-xs"></i>
+                <span>Activities</span>
+                <span id="count-activities" class="ml-auto bg-white/10 text-xs px-2 py-0.5 rounded-full">0</span>
+            </button>
+            <button onclick="switchTab('partners')" data-tab="partners"
+                class="sidebar-link w-full text-left px-3 py-2.5 rounded-lg text-sm flex items-center gap-3 transition-all">
+                <i class="fas fa-handshake w-5 text-center text-xs"></i>
+                <span>Partners</span>
+                <span id="count-partners" class="ml-auto bg-white/10 text-xs px-2 py-0.5 rounded-full">0</span>
+            </button>
+            <button onclick="switchTab('donation')" data-tab="donation"
+                class="sidebar-link w-full text-left px-3 py-2.5 rounded-lg text-sm flex items-center gap-3 transition-all">
+                <i class="fas fa-donate w-5 text-center text-xs"></i>
+                <span>Donation</span>
+            </button>
+
+        </nav>
+        <div class="p-4 border-t border-white/10 space-y-2">
+            <a href="../Landing-Page/index.html"
+                class="flex items-center gap-2 px-3 py-2 text-sm text-gray-400 hover:text-white rounded-lg hover:bg-white/5 transition-all">
+                <i class="fas fa-external-link-alt w-5 text-center text-xs"></i>
+                <span>Lihat Beranda</span>
+            </a>
+            <button onclick="resetData()"
+                class="flex items-center gap-2 px-3 py-2 text-sm text-gray-400 hover:text-red-400 rounded-lg hover:bg-white/5 transition-all w-full text-left">
+                <i class="fas fa-undo w-5 text-center text-xs"></i>
+                <span>Reset ke Default</span>
+            </button>
+            <button onclick="logout()"
+                class="flex items-center gap-2 px-3 py-2 text-sm text-gray-400 hover:text-red-400 rounded-lg hover:bg-white/5 transition-all w-full text-left">
+                <i class="fas fa-sign-out-alt w-5 text-center text-xs"></i>
+                <span>Logout</span>
+            </button>
+        </div>
+    </aside>
+
+    <!-- ===== MAIN CONTENT ===== -->
+    <main class="lg:ml-64 pt-14 lg:pt-0 min-h-screen">
+        <header
+            class="bg-white border-b border-gray-200 px-6 lg:px-8 py-5 flex items-center justify-between sticky top-0 z-30">
+            <div>
+                <h1 id="page-title" class="text-xl font-bold text-heading">Homepage</h1>
+                <p id="page-desc" class="text-sm text-gray-500 mt-0.5">Kelola seluruh konten yang tampil di beranda</p>
+            </div>
+            <div class="flex items-center gap-3">
+                <button type="button"
+                    class="theme-toggle-btn p-2 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-700 transition-all focus:outline-none dark:bg-slate-800 dark:hover:bg-slate-700 dark:text-yellow-400 w-9 h-9 flex items-center justify-center"
+                    aria-label="Toggle Theme">
+                    <i class="fas fa-sun theme-icon-sun text-sm hidden"></i>
+                    <i class="fas fa-moon theme-icon-moon text-sm"></i>
+                </button>
+            </div>
+        </header>
+
+        <div id="content-area" class="p-6 lg:p-8 space-y-10">
+
+            <!-- VIEW: HOMEPAGE -->
+            <div id="view-homepage" class="space-y-10">
+                <div class="space-y-8">
+                    <div class="border-b border-gray-200 pb-4">
+                        <h2 class="text-lg font-bold text-heading flex items-center gap-2">
+                            <i class="fas fa-chart-line text-primary"></i> Statistik Pengunjung
+                        </h2>
+                        <p class="text-xs text-gray-500 mt-1">Analisis jumlah kunjungan halaman dan tren pengunjung
+                            secara real-time</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <!-- Total Visitors Card -->
+                        <div class="bg-white p-6 rounded-2xl border border-gray-200 shadow-sm flex items-center gap-4">
+                            <div
+                                class="w-12 h-12 bg-blue-100 text-primary rounded-xl flex items-center justify-center text-xl">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <div>
+                                <p class="text-sm font-semibold text-gray-400">Total Pengunjung</p>
+                                <h3 id="stat-total-visitors" class="text-2xl font-bold text-heading mt-0.5">-</h3>
+                            </div>
+                        </div>
+                        <div class="bg-white p-6 rounded-2xl border border-gray-200 shadow-sm flex items-center gap-4">
+                            <div
+                                class="w-12 h-12 bg-amber-100 text-accent rounded-xl flex items-center justify-center text-xl">
+                                <i class="fas fa-fire"></i>
+                            </div>
+                            <div>
+                                <p class="text-sm font-semibold text-gray-400">Halaman Terpopuler</p>
+                                <h3 id="stat-top-page"
+                                    class="text-xl font-bold text-heading mt-0.5 truncate max-w-[180px]">-</h3>
+                            </div>
+                        </div>
+                        <div class="bg-white p-6 rounded-2xl border border-gray-200 shadow-sm flex items-center gap-4">
+                            <div
+                                class="w-12 h-12 bg-green-100 text-green-600 rounded-xl flex items-center justify-center text-xl">
+                                <i class="fas fa-eye"></i>
+                            </div>
+                            <div>
+                                <p class="text-sm font-semibold text-gray-400">Kunjungan Hari Ini</p>
+                                <h3 id="stat-today-visitors" class="text-2xl font-bold text-heading mt-0.5">-</h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                        <!-- Graph Card (Col span 2) -->
+                        <div
+                            class="bg-white p-6 rounded-2xl border border-gray-200 shadow-sm lg:col-span-2 flex flex-col">
+                            <h3 class="font-bold text-heading text-lg mb-4 flex items-center gap-2">
+                                <i class="fas fa-chart-area text-primary text-sm"></i> Grafik Kunjungan (7 Hari
+                                Terakhir)
+                            </h3>
+                            <div class="relative flex-grow min-h-[300px]">
+                                <canvas id="visitorChart"></canvas>
+                            </div>
+                        </div>
+
+                        <div class="bg-white p-6 rounded-2xl border border-gray-200 shadow-sm flex flex-col">
+                            <h3 class="font-bold text-heading text-lg mb-4 flex items-center gap-2">
+                                <i class="fas fa-list-ol text-accent text-sm"></i> Detail Kunjungan Halaman
+                            </h3>
+                            <div class="overflow-x-auto flex-grow">
+                                <table class="w-full text-sm">
+                                    <thead class="bg-gray-50 border-b border-gray-200">
+                                        <tr>
+                                            <th class="text-left px-3 py-2.5 font-semibold text-heading text-xs">Halaman
+                                            </th>
+                                            <th class="text-center px-3 py-2.5 font-semibold text-heading text-xs">
+                                                Status</th>
+                                            <th class="text-right px-3 py-2.5 font-semibold text-heading text-xs">Jumlah
+                                                View</th>
+                                            <th class="text-right px-3 py-2.5 font-semibold text-heading text-xs">
+                                                Persentase</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="stat-page-views-tbody">
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <hr class="border-gray-200">
+
+                <div>
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center gap-3">
+                            <div
+                                class="w-8 h-8 bg-amber-100 rounded-lg flex items-center justify-center text-accent text-sm">
+                                <i class="fas fa-user-tie"></i></div>
+                            <h2 class="text-lg font-bold text-heading">Testimoni Eksternal</h2>
+                            <span id="count-external"
+                                class="text-xs bg-gray-100 text-gray-500 px-2 py-0.5 rounded-full font-medium">0</span>
+                        </div>
+                        <button onclick="openAddModal('external')"
+                            class="bg-primary hover:bg-primaryDark text-white px-3.5 py-2 rounded-lg text-xs font-semibold transition-colors shadow-sm flex items-center gap-1.5">
+                            <i class="fas fa-plus text-[10px]"></i> Tambah
+                        </button>
+                    </div>
+                    <div id="list-external" class="grid md:grid-cols-2 xl:grid-cols-3 gap-4"></div>
+                </div>
+                <hr class="border-gray-200">
+                <div>
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center gap-3">
+                            <div
+                                class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center text-primary text-sm">
+                                <i class="fas fa-users"></i></div>
+                            <h2 class="text-lg font-bold text-heading">Testimoni Internal</h2>
+                            <span id="count-internal"
+                                class="text-xs bg-gray-100 text-gray-500 px-2 py-0.5 rounded-full font-medium">0</span>
+                        </div>
+                        <button onclick="openAddModal('internal')"
+                            class="bg-primary hover:bg-primaryDark text-white px-3.5 py-2 rounded-lg text-xs font-semibold transition-colors shadow-sm flex items-center gap-1.5">
+                            <i class="fas fa-plus text-[10px]"></i> Tambah
+                        </button>
+                    </div>
+                    <div id="list-internal" class="grid md:grid-cols-2 xl:grid-cols-3 gap-4"></div>
+                </div>
+                <hr class="border-gray-200">
+                <div>
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center gap-3">
+                            <div
+                                class="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center text-green-600 text-sm">
+                                <i class="fas fa-question-circle"></i></div>
+                            <h2 class="text-lg font-bold text-heading">FAQ</h2>
+                            <span id="count-faq"
+                                class="text-xs bg-gray-100 text-gray-500 px-2 py-0.5 rounded-full font-medium">0</span>
+                        </div>
+                        <button onclick="openAddModal('faq')"
+                            class="bg-primary hover:bg-primaryDark text-white px-3.5 py-2 rounded-lg text-xs font-semibold transition-colors shadow-sm flex items-center gap-1.5">
+                            <i class="fas fa-plus text-[10px]"></i> Tambah
+                        </button>
+                    </div>
+                    <div id="list-faq" class="space-y-3 max-w-4xl"></div>
+                </div>
+                <hr class="border-gray-200">
+                <div>
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center gap-3">
+                            <div
+                                class="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center text-purple-600 text-sm">
+                                <i class="fas fa-map-marked-alt"></i></div>
+                            <h2 class="text-lg font-bold text-heading">Lokasi Peta</h2>
+                            <span id="count-locations"
+                                class="text-xs bg-gray-100 text-gray-500 px-2 py-0.5 rounded-full font-medium">0</span>
+                        </div>
+                        <button onclick="openAddModal('locations')"
+                            class="bg-primary hover:bg-primaryDark text-white px-3.5 py-2 rounded-lg text-xs font-semibold transition-colors shadow-sm flex items-center gap-1.5">
+                            <i class="fas fa-plus text-[10px]"></i> Tambah
+                        </button>
+                    </div>
+                    <div class="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm">
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-sm">
+                                <thead class="bg-gray-50 border-b border-gray-200">
+                                    <tr>
+                                        <th class="text-left px-4 py-3 font-semibold text-heading">#</th>
+                                        <th class="text-left px-4 py-3 font-semibold text-heading">Lokasi</th>
+                                        <th class="text-left px-4 py-3 font-semibold text-heading">Latitude</th>
+                                        <th class="text-left px-4 py-3 font-semibold text-heading">Longitude</th>
+                                        <th class="text-left px-4 py-3 font-semibold text-heading">Relawan</th>
+                                        <th class="text-right px-4 py-3 font-semibold text-heading">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="list-locations"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- VIEW: ABOUT US -->
+            <div id="view-about" class="hidden space-y-10">
+                <div>
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center gap-3">
+                            <div
+                                class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center text-primary text-sm">
+                                <i class="fas fa-image"></i></div>
+                            <h2 class="text-lg font-bold text-heading">Hero Section</h2>
+                        </div>
+                        <button onclick="openEditModal('about-hero', null)"
+                            class="bg-primary hover:bg-primaryDark text-white px-3.5 py-2 rounded-lg text-xs font-semibold transition-colors shadow-sm flex items-center gap-1.5">
+                            <i class="fas fa-pen text-[10px]"></i> Edit Konten
+                        </button>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+                        <p class="text-sm text-gray-500 mb-4">Pratinjau konten Hero Section di halaman About Us:</p>
+                        <div id="preview-about-hero" class="border border-gray-100 rounded-lg p-4 bg-gray-50"></div>
+                    </div>
+                </div>
+                <hr class="border-gray-200">
+                <div>
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center gap-3">
+                            <div
+                                class="w-8 h-8 bg-accent/20 rounded-lg flex items-center justify-center text-accent text-sm">
+                                <i class="fas fa-user-tie"></i></div>
+                            <h2 class="text-lg font-bold text-heading">Leadership Team</h2>
+                            <span id="count-team"
+                                class="text-xs bg-gray-100 text-gray-500 px-2 py-0.5 rounded-full font-medium">0</span>
+                        </div>
+                        <button onclick="openAddModal('team')"
+                            class="bg-primary hover:bg-primaryDark text-white px-3.5 py-2 rounded-lg text-xs font-semibold transition-colors shadow-sm flex items-center gap-1.5">
+                            <i class="fas fa-plus text-[10px]"></i> Tambah Anggota
+                        </button>
+                    </div>
+                    <div id="list-team" class="grid md:grid-cols-2 xl:grid-cols-4 gap-4"></div>
+                </div>
+            </div>
+
+            <!-- VIEW: ACTIVITIES -->
+            <div id="view-activities" class="hidden space-y-10">
+
+                <div>
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center gap-3">
+                            <div
+                                class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center text-primary text-sm">
+                                <i class="fas fa-newspaper"></i></div>
+                            <h2 class="text-lg font-bold text-heading">Activity Cards</h2>
+                            <span id="count-activity-cards"
+                                class="text-xs bg-gray-100 text-gray-500 px-2 py-0.5 rounded-full font-medium">0</span>
+                        </div>
+                        <button onclick="openAddModal('activity-card')"
+                            class="bg-primary hover:bg-primaryDark text-white px-3.5 py-2 rounded-lg text-xs font-semibold transition-colors shadow-sm flex items-center gap-1.5">
+                            <i class="fas fa-plus text-[10px]"></i> Tambah
+                        </button>
+                    </div>
+                    <div id="list-activity-cards" class="grid md:grid-cols-2 gap-4"></div>
+                </div>
+
+                <hr class="border-gray-200">
+
+                <div>
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center gap-3">
+                            <div
+                                class="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center text-green-600 text-sm">
+                                <i class="fas fa-microphone-alt"></i></div>
+                            <h2 class="text-lg font-bold text-heading">Podcasts</h2>
+                            <span id="count-podcasts"
+                                class="text-xs bg-gray-100 text-gray-500 px-2 py-0.5 rounded-full font-medium">0</span>
+                        </div>
+                        <button onclick="openAddModal('podcast')"
+                            class="bg-primary hover:bg-primaryDark text-white px-3.5 py-2 rounded-lg text-xs font-semibold transition-colors shadow-sm flex items-center gap-1.5">
+                            <i class="fas fa-plus text-[10px]"></i> Tambah
+                        </button>
+                    </div>
+                    <div id="list-podcasts" class="grid md:grid-cols-2 gap-4"></div>
+                </div>
+            </div>
+
+            <!-- VIEW: PARTNERS -->
+            <div id="view-partners" class="hidden space-y-10">
+                <div>
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center gap-3">
+                            <div
+                                class="w-8 h-8 bg-teal-100 rounded-lg flex items-center justify-center text-teal-600 text-sm">
+                                <i class="fas fa-handshake"></i></div>
+                            <h2 class="text-lg font-bold text-heading">Daftar Partner</h2>
+                            <span id="count-partners-list"
+                                class="text-xs bg-gray-100 text-gray-500 px-2 py-0.5 rounded-full font-medium">0</span>
+                        </div>
+                        <button onclick="openAddModal('partner')"
+                            class="bg-primary hover:bg-primaryDark text-white px-3.5 py-2 rounded-lg text-xs font-semibold transition-colors shadow-sm flex items-center gap-1.5">
+                            <i class="fas fa-plus text-[10px]"></i> Tambah Partner
+                        </button>
+                    </div>
+                    <div id="list-partners" class="grid md:grid-cols-2 xl:grid-cols-4 gap-4"></div>
+                </div>
+            </div>
+
+            <!-- VIEW: DONATION (NEW) -->
+            <div id="view-donation" class="hidden space-y-10">
+                <div>
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center gap-3">
+                            <div
+                                class="w-8 h-8 bg-red-100 rounded-lg flex items-center justify-center text-red-600 text-sm">
+                                <i class="fas fa-heart"></i></div>
+                            <h2 class="text-lg font-bold text-heading">Pengaturan Halaman Donation</h2>
+                        </div>
+                        <button onclick="openEditModal('donation-settings', null)"
+                            class="bg-primary hover:bg-primaryDark text-white px-3.5 py-2 rounded-lg text-xs font-semibold transition-colors shadow-sm flex items-center gap-1.5">
+                            <i class="fas fa-pen text-[10px]"></i> Edit Konten
+                        </button>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+                        <p class="text-sm text-gray-500 mb-4">Kelola teks hero, gambar strip, dan detail rekening bank:
+                        </p>
+                        <div id="preview-donation" class="border border-gray-100 rounded-lg p-4 bg-gray-50"></div>
+                    </div>
+                </div>
+            </div>
+
+
+
+        </div>
+    </main>
+
+    <!-- ===== MODAL ===== -->
+    <div id="modal" class="fixed inset-0 z-[100] hidden flex items-center justify-center p-4">
+        <div class="modal-overlay absolute inset-0" onclick="closeModal()"></div>
+        <div class="relative bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto z-10">
+            <div
+                class="sticky top-0 bg-white px-6 py-4 border-b border-gray-100 flex items-center justify-between rounded-t-2xl z-10">
+                <h3 id="modal-title" class="font-bold text-heading text-lg">Tambah Item</h3>
+                <button onclick="closeModal()" class="text-gray-400 hover:text-heading transition-colors p-1">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div id="modal-body" class="px-6 py-5"></div>
+        </div>
+    </div>
+
+    <!-- ===== CONFIRM DIALOG ===== -->
+    <div id="confirm-dialog" class="fixed inset-0 z-[110] hidden flex items-center justify-center p-4">
+        <div class="modal-overlay absolute inset-0" onclick="closeConfirm()"></div>
+        <div class="relative bg-white rounded-2xl shadow-2xl w-full max-w-sm z-10 p-6 text-center">
+            <div class="w-14 h-14 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <i class="fas fa-trash-alt text-red-500 text-xl"></i>
+            </div>
+            <h3 class="font-bold text-heading text-lg mb-2">Hapus Item?</h3>
+            <p class="text-sm text-gray-500 mb-6">Data yang dihapus tidak dapat dikembalikan.</p>
+            <div class="flex gap-3">
+                <button onclick="closeConfirm()"
+                    class="flex-1 py-2.5 border border-gray-200 text-heading font-semibold rounded-lg hover:bg-gray-50 transition-colors text-sm">Batal</button>
+                <button id="confirm-delete-btn"
+                    class="flex-1 py-2.5 bg-red-500 hover:bg-red-600 text-white font-semibold rounded-lg transition-colors text-sm">Ya,
+                    Hapus</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== TOAST ===== -->
+    <div id="toast" class="fixed bottom-6 right-6 z-[120] hidden">
+        <div id="toast-inner" class="flex items-center gap-3 px-5 py-3 rounded-xl shadow-lg text-sm font-medium">
+            <i id="toast-icon"></i>
+            <span id="toast-text"></span>
+        </div>
+    </div>
+
+    <input type="file" id="file-input-hidden" accept="image/*" class="hidden">
+
+    <!-- ===== JAVASCRIPT ===== -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="../assets/Javascript/firebase-init.js"></script>
+    <script>
+        (function () {
+            'use strict';
+
+            /* =========================================
+               AUTH CHECK
+               ========================================= */
+            firebase.auth().onAuthStateChanged(function (user) {
+                if (!user) {
+                    window.location.href = 'Login.html';
+                } else {
+                    document.body.style.display = 'block';
+                    initDashboard();
+                }
+            });
+
+            if (!localStorage.getItem('hey_youth_cms_v2_fixed')) {
+                localStorage.removeItem('hey_youth_cms');
+                localStorage.setItem('hey_youth_cms_v2_fixed', 'true');
+            }
+
+            /* =========================================
+               CONSTANTS & DEFAULT DATA
+               ========================================= */
+            var CMS_KEY = 'hey_youth_cms';
+
+            var DEFAULT_DATA = {
+                externalTestimonials: [
+                    {
+                        id: 1,
+                        name: 'Mr. Rifki Zamzam',
+                        title: 'Co-Founder, Qatar HR Forum',
+                        title_id: 'Co-Founder, Qatar HR Forum',
+                        title_en: 'Co-Founder, Qatar HR Forum',
+                        quote: 'Kerjasama dengan Hey Youth! memberikan dampak positif yang nyata bagi komunitas kami.',
+                        quote_id: 'Kerjasama dengan Hey Youth! memberikan dampak positif yang nyata bagi komunitas kami.',
+                        quote_en: 'Collaborating with Hey Youth! brings a real positive impact to our community.',
+                        image: 'img/Testi/p1.jpg'
+                    },
+                    {
+                        id: 2,
+                        name: 'Ms. Rina Nurutami, S.Psi',
+                        title: 'Vice Principal, Daarut Tauhid',
+                        title_id: 'Wakil Kepala Sekolah, Daarut Tauhid',
+                        title_en: 'Vice Principal, Daarut Tauhid',
+                        quote: 'Sangat menginspirasi melihat semangat pemuda yang rela berkontribusi untuk pendidikan.',
+                        quote_id: 'Sangat menginspirasi melihat semangat pemuda yang rela berkontribusi untuk pendidikan.',
+                        quote_en: 'It is highly inspiring to see the youth passion to contribute to education.',
+                        image: 'img/Testi/p2.jpg'
+                    },
+                    {
+                        id: 3,
+                        name: 'Yiwen Xu',
+                        title: 'Student, Univ. of Edinburgh',
+                        title_id: 'Mahasiswa, Univ. of Edinburgh',
+                        title_en: 'Student, Univ. of Edinburgh',
+                        quote: 'Hey Youth! adalah jembatan yang menghubungkan antusiasme dengan aksi nyata.',
+                        quote_id: 'Hey Youth! adalah jembatan yang menghubungkan antusiasme dengan aksi nyata.',
+                        quote_en: 'Hey Youth! is a bridge that connects enthusiasm with real actions.',
+                        image: 'img/Testi/p3.jpg'
+                    }
+                ],
+                internalTestimonials: [
+                    {
+                        id: 4,
+                        name: 'Alya',
+                        role: 'Community Coordinator',
+                        role_id: 'Koordinator Komunitas',
+                        role_en: 'Community Coordinator',
+                        quote: 'Sangat bahagia bisa bergabung di Hey Youth! Banyak belajar hal baru setiap hari.',
+                        quote_id: 'Sangat bahagia bisa bergabung di Hey Youth! Banyak belajar hal baru setiap hari.',
+                        quote_en: 'Extremely happy to join Hey Youth! Learning new things every day.',
+                        image: 'img/Testi/Alya.jpg'
+                    },
+                    {
+                        id: 5,
+                        name: 'Herza',
+                        role: 'Web Developer',
+                        role_id: 'Web Developer',
+                        role_en: 'Web Developer',
+                        quote: 'Hey Youth adalah agent of change. Di sini kita bisa membuat dampak nyata.',
+                        quote_id: 'Hey Youth adalah agent of change. Di sini kita bisa membuat dampak nyata.',
+                        quote_en: 'Hey Youth is an agent of change. Here we can make a real difference.',
+                        image: 'img/Testi/Herza.jpg'
+                    },
+                    {
+                        id: 6,
+                        name: 'Karyn',
+                        role: 'Teacher',
+                        role_id: 'Guru',
+                        role_en: 'Teacher',
+                        quote: 'Hey Youth merayakan rasa ingin tahu dan membentuk sistem kepercayaan.',
+                        quote_id: 'Hey Youth merayakan rasa ingin tahu dan membentuk sistem kepercayaan.',
+                        quote_en: 'Hey Youth celebrates curiosity and builds trust systems.',
+                        image: 'img/Testi/Karyn.jpg'
+                    }
+                ],
+                faqs: [
+                    {
+                        id: 7,
+                        question: "Why don't we recruit people per batch?",
+                        question_id: 'Mengapa kami tidak merekrut anggota per batch?',
+                        question_en: "Why don't we recruit people per batch?",
+                        answer: 'Kami membuka pendaftaran secara terbuka (rolling recruitment) agar talenta terbaik dapat bergabung kapan saja tanpa harus menunggu jadwal batch tertentu. Ini memungkinkan fleksibilitas lebih tinggi.',
+                        answer_id: 'Kami membuka pendaftaran secara terbuka (rolling recruitment) agar talenta terbaik dapat bergabung kapan saja tanpa harus menunggu jadwal batch tertentu. Ini memungkinkan fleksibilitas lebih tinggi.',
+                        answer_en: 'We open registration through rolling recruitment so that the best talent can join at any time without waiting for a specific batch schedule, allowing higher flexibility.'
+                    },
+                    {
+                        id: 8,
+                        question: 'Do I need to have high English levels to join Hey Youth?',
+                        question_id: 'Apakah saya perlu memiliki kemampuan Bahasa Inggris tingkat tinggi untuk bergabung dengan Hey Youth?',
+                        question_en: 'Do I need to have high English levels to join Hey Youth?',
+                        answer: 'Tidak wajib. Meskipun beberapa program internasional membutuhkan kemampuan Bahasa Inggris, kami menyediakan banyak peran di mana Bahasa Indonesia adalah bahasa utama komunikasi. Yang terpenting adalah semangat berkontribusi.',
+                        answer_id: 'Tidak wajib. Meskipun beberapa program internasional membutuhkan kemampuan Bahasa Inggris, kami menyediakan banyak peran di mana Bahasa Indonesia adalah bahasa utama komunikasi. Yang terpenting adalah semangat berkontribusi.',
+                        answer_en: 'Not required. Although some international programs require English skills, we provide many roles where Indonesian is the primary language. The most important thing is the spirit to contribute.'
+                    },
+                    {
+                        id: 9,
+                        question: 'How can I donate to foundation?',
+                        question_id: 'Bagaimana cara berdonasi ke yayasan?',
+                        question_en: 'How can I donate to foundation?',
+                        answer: 'Anda dapat mendukung kami melalui transfer bank atau donasi barang. Silakan kunjungi halaman Donation untuk informasi rekening dan kebutuhan barang terkini.',
+                        answer_id: 'Anda dapat mendukung kami melalui transfer bank atau donasi barang. Silakan kunjungi halaman Donation untuk informasi rekening dan kebutuhan barang terkini.',
+                        answer_en: 'You can support us via bank transfer or item donations. Please visit our Donation page for current bank accounts and item needs.'
+                    }
+                ],
+                locations: [
+                    { id: 101, name: 'Jakarta', lat: -6.2088, lng: 106.8456, volunteers: 8 },
+                    { id: 102, name: 'Karawang', lat: -6.3146, lng: 107.3094, volunteers: 1 },
+                    { id: 103, name: 'Medan', lat: 3.5952, lng: 98.6722, volunteers: 1 },
+                    { id: 104, name: 'Jakarta Timur', lat: -6.2307, lng: 106.8967, volunteers: 2 },
+                    { id: 105, name: 'Malang', lat: -7.9826, lng: 112.6308, volunteers: 3 },
+                    { id: 106, name: 'Jakarta Selatan', lat: -6.2615, lng: 106.8106, volunteers: 2 },
+                    { id: 107, name: 'Arcamanik, Bandung', lat: -6.9175, lng: 107.6191, volunteers: 1 },
+                    { id: 108, name: 'Depok', lat: -6.4025, lng: 106.8048, volunteers: 3 },
+                    { id: 109, name: 'Bogor', lat: -6.5950, lng: 106.7997, volunteers: 4 },
+                    { id: 110, name: 'Bangka', lat: -2.3216, lng: 106.1086, volunteers: 1 },
+                    { id: 111, name: 'West Java', lat: -6.9034, lng: 107.6046, volunteers: 1 },
+                    { id: 112, name: 'Palembang', lat: -2.9761, lng: 104.7754, volunteers: 1 },
+                    { id: 113, name: 'Sunter, Jakarta Utara', lat: -6.1360, lng: 106.8778, volunteers: 1 },
+                    { id: 114, name: 'Purwokerto', lat: -7.4239, lng: 109.2215, volunteers: 1 },
+                    { id: 115, name: 'Cikarang', lat: -6.2737, lng: 107.1352, volunteers: 1 },
+                    { id: 116, name: 'Bekasi', lat: -6.2369, lng: 106.9715, volunteers: 3 },
+                    { id: 117, name: 'Tuban, East Java', lat: -6.9079, lng: 112.0560, volunteers: 1 },
+                    { id: 118, name: 'Sumedang, Jatinangor', lat: -6.9329, lng: 107.7667, volunteers: 1 },
+                    { id: 119, name: 'Gresik', lat: -7.1666, lng: 112.6568, volunteers: 1 },
+                    { id: 120, name: 'Purbalingga', lat: -7.3707, lng: 109.3582, volunteers: 1 },
+                    { id: 121, name: 'Jakarta Barat', lat: -6.1754, lng: 106.8272, volunteers: 1 },
+                    { id: 122, name: 'Aceh', lat: 5.5524, lng: 95.3188, volunteers: 1 },
+                    { id: 123, name: 'Batang, Jawa Tengah', lat: -7.0094, lng: 109.7368, volunteers: 1 },
+                    { id: 124, name: 'Bandung', lat: -6.9175, lng: 107.6191, volunteers: 2 },
+                    { id: 125, name: 'Surabaya', lat: -7.2504, lng: 112.7688, volunteers: 1 },
+                    { id: 126, name: 'Bali', lat: -8.4095, lng: 115.1889, volunteers: 1 },
+                    { id: 127, name: 'Surakarta', lat: -7.5559, lng: 110.8200, volunteers: 1 },
+                    { id: 128, name: 'Pekanbaru', lat: 0.5071, lng: 101.4478, volunteers: 1 },
+                    { id: 129, name: 'South Tangerang', lat: -6.2878, lng: 106.7323, volunteers: 1 },
+                    { id: 130, name: 'Kendari', lat: -3.9806, lng: 122.5160, volunteers: 1 }
+                ],
+                partners: [
+                    {
+                        id: 1,
+                        name: 'Qatar HR Forum',
+                        description: 'Membangun jaringan profesional HR global.',
+                        description_id: 'Membangun jaringan profesional HR global.',
+                        description_en: 'Building a global professional HR network.',
+                        icon: 'fa-users-cog',
+                        image: 'img/Partners/Qatar HR Forum.jpg',
+                        color: 'blue',
+                        link: 'https://qatarhrforum.com'
+                    },
+                    {
+                        id: 2,
+                        name: 'The Facial Skin Lab',
+                        description: 'Klinik kecantikan terpercaya.',
+                        description_id: 'Klinik kecantikan terpercaya.',
+                        description_en: 'A trusted beauty clinic.',
+                        icon: 'fa-spa',
+                        image: 'img/Partners/The Facial Skin Lab.jpg',
+                        color: 'pink',
+                        link: 'https://instagram.com'
+                    },
+                    {
+                        id: 3,
+                        name: 'Shadow A Scientist',
+                        description: 'Program mentoring ilmiah.',
+                        description_id: 'Program mentoring ilmiah.',
+                        description_en: 'Scientific mentoring program.',
+                        icon: 'fa-flask',
+                        image: 'img/Partners/Shadow A Scientist.jpg',
+                        color: 'purple',
+                        link: '#'
+                    },
+                    {
+                        id: 4,
+                        name: 'SMP Adzkia',
+                        description: 'Sekolah Islam terpadu.',
+                        description_id: 'Sekolah Islam terpadu.',
+                        description_en: 'Integrated Islamic School.',
+                        icon: 'fa-school',
+                        image: 'img/Partners/SMP Adzkia Islamic.jpg',
+                        color: 'green',
+                        link: '#'
+                    }
+                ],
+                donationSettings: {
+                    heroTitle: 'Support Our Mission',
+                    heroTitle_id: 'Dukung Misi Kami',
+                    heroTitle_en: 'Support Our Mission',
+                    heroSubtitle: 'Bantu kami menyediakan akses pendidikan yang layak bagi anak-anak Indonesia. Setiap donasi Anda menjadi jembatan menuju masa depan yang lebih cerah.',
+                    heroSubtitle_id: 'Bantu kami menyediakan akses pendidikan yang layak bagi anak-anak Indonesia. Setiap donasi Anda menjadi jembatan menuju masa depan yang lebih cerah.',
+                    heroSubtitle_en: 'Help us provide decent access to education for Indonesian children. Every donation you make is a bridge to a brighter future.',
+                    stripText: 'Together We Can',
+                    stripText_id: 'Bersama Kita Bisa',
+                    stripText_en: 'Together We Can',
+                    stripImage: 'img/Front Card.webp',
+                    bankName: 'Bank Central Asia (BCA)',
+                    accountName: 'Yuni Triandini',
+                    accountNumber: '466 0070 724',
+                    qrisImage: 'https://via.placeholder.com/200?text=QRIS'
+                },
+                aboutHero: {
+                    title: 'Mendidik Untuk <br><span class="text-primary">Masa Depan Indonesia</span>',
+                    title_id: 'Mendidik Untuk <br><span class="text-primary">Masa Depan Indonesia</span>',
+                    title_en: 'Educating For <br><span class="text-primary">Indonesia\'s Future</span>',
+                    subtitle: 'Hey Youth adalah sebuah komunitas pemuda di Indonesia yang didedikasikan untuk melakukan perubahan melalui pendidikan. Kami menyediakan akses ke pendidikan berkualitas dan peluang mentoring bagi mereka yang membutuhkan.',
+                    subtitle_id: 'Hey Youth adalah sebuah komunitas pemuda di Indonesia yang didedikasikan untuk melakukan perubahan melalui pendidikan. Kami menyediakan akses ke pendidikan berkualitas dan peluang mentoring bagi mereka yang membutuhkan.',
+                    subtitle_en: 'Hey Youth is a youth community in Indonesia dedicated to making changes through education. We provide access to quality education and mentoring opportunities for those in need.',
+                    volunteerCount: '1k+',
+                    image: 'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?q=80&w=2070&auto=format&fit=crop'
+                },
+                team: [
+                    {
+                        id: 201,
+                        name: 'Yuni Triandini',
+                        role: 'Founder',
+                        role_id: 'Founder',
+                        role_en: 'Founder',
+                        image: 'img/ceo.jpeg',
+                        linkedin: '#',
+                        instagram: '#'
+                    },
+                    {
+                        id: 202,
+                        name: 'Rama',
+                        role: 'Head of Marketing',
+                        role_id: 'Kepala Pemasaran',
+                        role_en: 'Head of Marketing',
+                        image: 'https://ui-avatars.com/api/?name=Rama&size=100&background=random&color=fff',
+                        linkedin: '#',
+                        instagram: '#'
+                    },
+                    {
+                        id: 203,
+                        name: 'Dzikri',
+                        role: 'Head of Graphic Designer',
+                        role_id: 'Kepala Desainer Grafis',
+                        role_en: 'Head of Graphic Designer',
+                        image: 'https://ui-avatars.com/api/?name=Dzikri&size=100&background=random&color=fff',
+                        linkedin: '#',
+                        instagram: '#'
+                    }
+                ],
+                activityCards: [
+                    {
+                        id: 301,
+                        category: 'Education',
+                        category_id: 'Pendidikan',
+                        category_en: 'Education',
+                        date: '10 November 2025',
+                        title: 'Dream Big, Learn Bigger: Inspiring the Next Generation at Yos Sudarso',
+                        title_id: 'Dream Big, Learn Bigger: Menginspirasi Generasi Penerus di Yos Sudarso',
+                        title_en: 'Dream Big, Learn Bigger: Inspiring the Next Generation at Yos Sudarso',
+                        description: 'Kami mengunjungi sekolah di Yos Sudarso untuk berbagi inspirasi dan materi pendidikan interaktif kepada ratusan siswa, membantu mereka bermimpi lebih besar.',
+                        description_id: 'Kami mengunjungi sekolah di Yos Sudarso untuk berbagi inspirasi dan materi pendidikan interaktif kepada ratusan siswa, membantu mereka bermimpi lebih besar.',
+                        description_en: 'We visited a school in Yos Sudarso to share inspiration and interactive educational materials with hundreds of students, helping them dream bigger.',
+                        image: 'img/Donation.jpeg',
+                        link: '#',
+                        fullStory: '<p>Pada hari yang cerah, tim Hey Youth berkunjung ke SD Yos Sudarso. Antusiasme siswa-siswi sangat luar biasa ketika kami memperkenalkan program mentoring kami.</p><p>Kegiatan ini diawali dengan sesi ice breaking yang diikuti oleh seluruh siswa kelas 5 and 6. Dilanjutkan dengan materi tentang "Membangun Mimpi Sejak Dini".</p><br><p>Kami berharap kunjungan ini dapat menjadi inspirasi bagi mereka untuk terus belajar dan giat meraih cita-cita.</p>',
+                        fullStory_id: '<p>Pada hari yang cerah, tim Hey Youth berkunjung ke SD Yos Sudarso. Antusiasme siswa-siswi sangat luar biasa ketika kami memperkenalkan program mentoring kami.</p><p>Kegiatan ini diawali dengan sesi ice breaking yang diikuti oleh seluruh siswa kelas 5 and 6. Dilanjutkan dengan materi tentang "Membangun Mimpi Sejak Dini".</p><br><p>Kami berharap kunjungan ini dapat menjadi inspirasi bagi mereka untuk terus belajar dan giat meraih cita-cita.</p>',
+                        fullStory_en: '<p>On a bright day, the Hey Youth team visited SD Yos Sudarso. The enthusiasm of the students was extraordinary when we introduced our mentoring program.</p><p>This activity started with an ice-breaking session followed by all 5th and 6th grade students, followed by material on "Building Dreams from an Early Age".</p><br><p>We hope this visit can serve as an inspiration for them to keep learning and striving to achieve their dreams.</p>'
+                    },
+                    {
+                        id: 302,
+                        category: 'Community',
+                        category_id: 'Komunitas',
+                        category_en: 'Community',
+                        date: '14 April 2025',
+                        title: 'Instilling Education, Igniting Dreams: Hey Youth\'s Visit to TBM Kolong',
+                        title_id: 'Menanamkan Pendidikan, Menyalakan Impian: Kunjungan Hey Youth ke TBM Kolong',
+                        title_en: 'Instilling Education, Igniting Dreams: Hey Youth\'s Visit to TBM Kolong',
+                        description: 'Kunjungan spesial ke TBM Kolong untuk mendukung literasi di lingkungan sekitar, mendonasikan buku, dan mengadakan sesi membaca bersama anak-anak.',
+                        description_id: 'Kunjungan spesial ke TBM Kolong untuk mendukung literasi di lingkungan sekitar, mendonasikan buku, dan mengadakan sesi membaca bersama anak-anak.',
+                        description_en: 'A special visit to TBM Kolong to support local literacy, donating books, and hosting a reading session with children.',
+                        image: 'img/Front Card.webp',
+                        link: '#',
+                        fullStory: '<p>TBM Kolong adalah salah satu tempat baca yang sangat bersemangat di daerah kami. Kami mendonasikan 100 eksemplar buku cerita dan ensiklopedia anak.</p><p>Selain donasi buku, relawan kami juga membacakan cerita rakyat Nusantara kepada anak-anak dengan penuh ekspresi.</p>',
+                        fullStory_id: '<p>TBM Kolong adalah salah satu tempat baca yang sangat bersemangat di daerah kami. Kami mendonasikan 100 eksemplar buku cerita dan ensiklopedia anak.</p><p>Selain donasi buku, relawan kami juga membacakan cerita rakyat Nusantara kepada anak-anak dengan penuh ekspresi.</p>',
+                        fullStory_en: '<p>TBM Kolong is a very vibrant reading shelter in our area. We donated 100 copies of children storybooks and encyclopedias.</p><p>Along with book donation, our volunteers read Indonesian folklores to children with rich expressions.</p>'
+                    }
+                ],
+                podcasts: [
+                    {
+                        id: 401,
+                        episode: 'Episode 2',
+                        episode_id: 'Episode 2',
+                        episode_en: 'Episode 2',
+                        title: 'Suicide Is Not The Answer: Here\'s Why',
+                        title_id: 'Suicide Is Not The Answer: Ini Alasannya',
+                        title_en: 'Suicide Is Not The Answer: Here\'s Why',
+                        thumbnail: 'img/Podcast/Eps 2.png',
+                        spotifyLink: 'https://open.spotify.com/episode/5xcQh5HewK3MvIcxkSiWef'
+                    },
+                    {
+                        id: 402,
+                        episode: 'Episode 1',
+                        episode_id: 'Episode 1',
+                        episode_en: 'Episode 1',
+                        title: 'The Power of Self-Affirmation: Transforming Our Lives',
+                        title_id: 'Kekuatan Afirmasi Diri: Mengubah Hidup Kita',
+                        title_en: 'The Power of Self-Affirmation: Transforming Our Lives',
+                        thumbnail: 'img/Podcast/Eps 1.png',
+                        spotifyLink: 'https://open.spotify.com/episode/1a0xUotfQZAdD6jtHT4l5g?si=l3nk1yvSSzK7XPMMFLMvHA&nd=1&dlsi=746e34d28eaa4e68'
+                    }
+                ]
+            };
+
+            /* =========================================
+               DATA LAYER
+               ========================================= */
+            var memoryData = null;
+
+            function _resolveImgPath(path) {
+                if (!path) return '';
+                if (path.indexOf('data:') === 0 || path.indexOf('http') === 0 || path.indexOf('//') === 0 || path.indexOf('blob:') === 0) {
+                    return path;
+                }
+                var cleanPath = path;
+                if (cleanPath.indexOf('../assets/') === 0) {
+                    cleanPath = cleanPath.substring(10);
+                } else if (cleanPath.indexOf('assets/') === 0) {
+                    cleanPath = cleanPath.substring(7);
+                } else if (cleanPath.indexOf('../') === 0) {
+                    cleanPath = cleanPath.substring(3);
+                }
+                if (cleanPath.indexOf('img/') !== 0) {
+                    cleanPath = 'img/' + cleanPath;
+                }
+                return '../assets/' + cleanPath;
+            }
+
+            function getData() {
+                if (memoryData) return JSON.parse(JSON.stringify(memoryData));
+                return JSON.parse(JSON.stringify(DEFAULT_DATA));
+            }
+
+            async function saveData(data) {
+                memoryData = JSON.parse(JSON.stringify(data));
+                try {
+                    await window.saveFirebaseData(data);
+                    return true;
+                } catch (e) {
+                    showToast('Gagal menyimpan ke database.', 'error');
+                    return false;
+                }
+            }
+
+            /* =========================================
+               STATE
+               ========================================= */
+            var editingItem = null;
+            var editingSection = null;
+            var deletingId = null;
+            var deletingSection = null;
+            var uploadedImage = null;
+            var uploadedQrisImage = null;
+
+            /* =========================================
+               SIDEBAR & NAVIGATION
+               ========================================= */
+            window.switchTab = function (tab) {
+                editingItem = null;
+                editingSection = null;
+
+                document.querySelectorAll('.sidebar-link').forEach(function (el) {
+                    el.classList.toggle('active', el.getAttribute('data-tab') === tab);
+                });
+
+                document.getElementById('view-homepage').classList.add('hidden');
+                document.getElementById('view-about').classList.add('hidden');
+                document.getElementById('view-activities').classList.add('hidden');
+                document.getElementById('view-partners').classList.add('hidden');
+                document.getElementById('view-donation').classList.add('hidden');
+
+                if (tab === 'homepage') {
+                    document.getElementById('view-homepage').classList.remove('hidden');
+                    document.getElementById('page-title').textContent = 'Homepage';
+                    document.getElementById('page-desc').textContent = 'Kelola seluruh konten yang tampil di beranda dan analisis kunjungan';
+                    if (lastStatsData) {
+                        updateStatisticsUI(lastStatsData);
+                    }
+                } else if (tab === 'about') {
+                    document.getElementById('view-about').classList.remove('hidden');
+                    document.getElementById('page-title').textContent = 'About Us';
+                    document.getElementById('page-desc').textContent = 'Kelola profil organisasi dan tim inti';
+                    renderAboutPreview();
+                } else if (tab === 'activities') {
+                    document.getElementById('view-activities').classList.remove('hidden');
+                    document.getElementById('page-title').textContent = 'Activities';
+                    document.getElementById('page-desc').textContent = 'Kelola berita kegiatan dan episode podcast terbaru';
+                } else if (tab === 'partners') {
+                    document.getElementById('view-partners').classList.remove('hidden');
+                    document.getElementById('page-title').textContent = 'Partners';
+                    document.getElementById('page-desc').textContent = 'Kelola daftar mitra dan kolaborator organisasi';
+                } else if (tab === 'donation') {
+                    document.getElementById('view-donation').classList.remove('hidden');
+                    document.getElementById('page-title').textContent = 'Donation Page';
+                    document.getElementById('page-desc').textContent = 'Kelola konten halaman donasi';
+                    renderDonationPreview();
+                }
+
+                renderAllLists();
+                closeSidebar();
+            };
+
+            function renderAllLists() {
+                var data = getData();
+                renderTestimonials('list-external', data.externalTestimonials, 'external');
+                renderTestimonials('list-internal', data.internalTestimonials, 'internal');
+                renderFaqs(data.faqs);
+                renderLocations(data.locations);
+                renderTeam(data.team);
+                renderActivityCards(data.activityCards);
+                renderPodcasts(data.podcasts);
+                renderPartners(data.partners);
+                updateCounts(data);
+            }
+
+            window.closeSidebar = function () {
+                document.getElementById('sidebar').classList.add('-translate-x-full');
+                document.getElementById('sidebar-backdrop').classList.add('hidden');
+            };
+
+            document.getElementById('sidebar-toggle').addEventListener('click', function () {
+                document.getElementById('sidebar').classList.remove('-translate-x-full');
+                document.getElementById('sidebar-backdrop').classList.remove('hidden');
+            });
+
+            /* =========================================
+               COUNTS
+               ========================================= */
+            function updateCounts(data) {
+                var ext = (data.externalTestimonials || []).length;
+                var int = (data.internalTestimonials || []).length;
+                var faq = (data.faqs || []).length;
+                var loc = (data.locations || []).length;
+                var team = (data.team || []).length;
+                var actCards = (data.activityCards || []).length;
+                var pods = (data.podcasts || []).length;
+                var partners = (data.partners || []).length;
+
+                document.getElementById('count-external').textContent = ext;
+                document.getElementById('count-internal').textContent = int;
+                document.getElementById('count-faq').textContent = faq;
+                document.getElementById('count-locations').textContent = loc;
+                document.getElementById('count-team').textContent = team;
+
+                document.getElementById('count-activity-cards').textContent = actCards;
+                document.getElementById('count-podcasts').textContent = pods;
+                document.getElementById('count-partners').textContent = partners;
+                document.getElementById('count-partners-list').textContent = partners;
+
+                document.getElementById('count-homepage').textContent = ext + int + faq + loc;
+                document.getElementById('count-about').textContent = team + 1;
+                document.getElementById('count-activities').textContent = actCards + pods;
+            }
+
+            /* =========================================
+               IMAGE UPLOAD & COMPRESSION
+               ========================================= */
+            function compressImage(file, maxWidth, quality, callback) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    var img = new Image();
+                    img.onload = function () {
+                        var canvas = document.createElement('canvas');
+                        var w = img.width;
+                        var h = img.height;
+                        if (w > maxWidth) {
+                            h = Math.round((maxWidth / w) * h);
+                            w = maxWidth;
+                        }
+                        canvas.width = w;
+                        canvas.height = h;
+                        var ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, w, h);
+                        callback(canvas.toDataURL('image/jpeg', quality));
+                    };
+                    img.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+
+            function triggerUpload(targetType) {
+                var input = document.getElementById('file-input-hidden');
+                input.value = '';
+                input.onchange = function () {
+                    var file = input.files[0];
+                    if (!file) return;
+                    if (!file.type.startsWith('image/')) {
+                        showToast('File harus berupa gambar.', 'error');
+                        return;
+                    }
+                    if (file.size > 10 * 1024 * 1024) {
+                        showToast('Ukuran file maksimal 10MB.', 'error');
+                        return;
+                    }
+
+                    var zoneId = (targetType === 'qris') ? 'upload-zone-qris' : 'upload-zone';
+                    var zone = document.getElementById(zoneId);
+
+                    if (zone) {
+                        zone.innerHTML = '<div class="py-6 text-center text-gray-400"><i class="fas fa-spinner fa-spin text-2xl mb-2 block"></i><p class="text-xs">Memproses gambar...</p></div>';
+                    }
+                    compressImage(file, 400, 0.7, function (base64) {
+                        if (targetType === 'qris') {
+                            uploadedQrisImage = base64;
+                            updateUploadPreviewQris(base64);
+                        } else {
+                            uploadedImage = base64;
+                            updateUploadPreview(base64);
+                        }
+                    });
+                };
+                input.click();
+            }
+
+            function updateUploadPreview(src) {
+                var zone = document.getElementById('upload-zone');
+                if (!zone) return;
+                zone.innerHTML =
+                    '<div class="relative">' +
+                    '<img src="' + src + '" alt="Preview" class="w-full h-40 object-contain rounded-lg bg-gray-50">' +
+                    '<button type="button" onclick="removeUpload()" class="absolute top-1 right-1 w-7 h-7 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center text-xs shadow-md transition-colors"><i class="fas fa-times"></i></button>' +
+                    '</div>' +
+                    '<p class="text-xs text-green-600 font-medium mt-2"><i class="fas fa-check-circle mr-1"></i>Gambar berhasil diupload</p>';
+            }
+
+            function updateUploadPreviewQris(src) {
+                var zone = document.getElementById('upload-zone-qris');
+                if (!zone) return;
+                zone.innerHTML =
+                    '<div class="relative">' +
+                    '<img src="' + src + '" alt="Preview QRIS" class="w-24 h-24 object-contain mx-auto bg-gray-50 rounded">' +
+                    '<button type="button" onclick="removeUploadQris()" class="absolute top-0 right-0 bg-red-500 text-white p-1 rounded-full text-xs shadow-md"><i class="fas fa-times"></i></button>' +
+                    '</div>' +
+                    '<p class="text-xs text-green-600 font-medium mt-2 text-center">QRIS Uploaded</p>';
+            }
+
+            window.removeUpload = function () {
+                uploadedImage = null;
+                var zone = document.getElementById('upload-zone');
+                if (!zone) return;
+                zone.innerHTML =
+                    '<div class="py-6 text-center">' +
+                    '<i class="fas fa-cloud-upload-alt text-3xl text-gray-300 mb-2 block"></i>' +
+                    '<p class="text-sm text-gray-500 font-medium">Klik atau seret gambar ke sini</p>' +
+                    '<p class="text-xs text-gray-400 mt-1">JPEG, PNG, WebP — Maks 10MB</p>' +
+                    '</div>';
+            };
+
+            window.removeUploadQris = function () {
+                uploadedQrisImage = null;
+                var zone = document.getElementById('upload-zone-qris');
+                if (!zone) return;
+                zone.innerHTML =
+                    '<div class="py-4 text-center text-gray-400 text-sm border border-dashed border-gray-300 rounded">' +
+                    '<i class="fas fa-qrcode text-2xl mb-1"></i>' +
+                    '<p>Upload QRIS</p>' +
+                    '</div>';
+            };
+
+            function initDragDrop(targetType) {
+                var zoneId = (targetType === 'qris') ? 'upload-zone-qris' : 'upload-zone';
+                var zone = document.getElementById(zoneId);
+                if (!zone) return;
+
+                var clickHandler = (function (z, t) {
+                    return function () { triggerUpload(t); };
+                })(zone, targetType);
+
+                if (!zone.hasClickEvent) {
+                    zone.addEventListener('click', clickHandler);
+                    zone.hasClickEvent = true;
+                }
+
+                zone.addEventListener('dragover', function (e) {
+                    e.preventDefault();
+                    zone.classList.add('dragover');
+                });
+                zone.addEventListener('dragleave', function () {
+                    zone.classList.remove('dragover');
+                });
+                zone.addEventListener('drop', function (e) {
+                    e.preventDefault();
+                    zone.classList.remove('dragover');
+                    var file = e.dataTransfer.files[0];
+                    if (!file || !file.type.startsWith('image/')) {
+                        showToast('File harus berupa gambar.', 'error');
+                        return;
+                    }
+                    if (file.size > 10 * 1024 * 1024) {
+                        showToast('Ukuran file maksimal 10MB.', 'error');
+                        return;
+                    }
+
+                    var loadingHtml = '<div class="py-6 text-center text-gray-400"><i class="fas fa-spinner fa-spin text-2xl mb-2 block"></i><p class="text-xs">Memproses gambar...</p></div>';
+                    zone.innerHTML = loadingHtml;
+
+                    compressImage(file, 400, 0.7, function (base64) {
+                        if (targetType === 'qris') {
+                            uploadedQrisImage = base64;
+                            updateUploadPreviewQris(base64);
+                        } else {
+                            uploadedImage = base64;
+                            updateUploadPreview(base64);
+                        }
+                    });
+                });
+            }
+
+            function initCmsMap(item) {
+                var defaultLat = -6.2088;
+                var defaultLng = 106.8456;
+
+                var lat = item ? item.lat : defaultLat;
+                var lng = item ? item.lng : defaultLng;
+
+                setTimeout(function () {
+                    var mapContainer = document.getElementById('map-cms');
+                    if (!mapContainer || typeof L === 'undefined') return;
+
+                    var map = L.map('map-cms').setView([lat, lng], 13);
+
+                    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                        attribution: '&copy; OpenStreetMap'
+                    }).addTo(map);
+
+                    var marker = L.marker([lat, lng], {
+                        draggable: true
+                    }).addTo(map);
+
+                    function updateCoords(newLat, newLng) {
+                        var latEl = document.getElementById('f-lat');
+                        var lngEl = document.getElementById('f-lng');
+                        if (latEl) latEl.value = newLat.toFixed(6);
+                        if (lngEl) lngEl.value = newLng.toFixed(6);
+                    }
+
+                    marker.on('dragend', function (e) {
+                        var position = marker.getLatLng();
+                        updateCoords(position.lat, position.lng);
+                    });
+
+                    map.on('click', function (e) {
+                        marker.setLatLng(e.latlng);
+                        updateCoords(e.latlng.lat, e.latlng.lng);
+                    });
+
+                    if (!item) {
+                        updateCoords(lat, lng);
+                    }
+
+                    var nameInput = document.getElementById('f-name');
+                    var searchTimeout = null;
+
+                    if (nameInput) {
+                        nameInput.addEventListener('input', function () {
+                            clearTimeout(searchTimeout);
+                            var query = nameInput.value.trim();
+                            if (query.length < 3) return;
+
+                            searchTimeout = setTimeout(function () {
+                                fetch('https://nominatim.openstreetmap.org/search?format=json&q=' + encodeURIComponent(query), {
+                                    headers: {
+                                        'User-Agent': 'HeyYouthCMS/1.0 (hey.youth.id@gmail.com)'
+                                    }
+                                })
+                                    .then(response => response.json())
+                                    .then(data => {
+                                        if (data && data.length > 0) {
+                                            var found = data[0];
+                                            var newLat = parseFloat(found.lat);
+                                            var newLng = parseFloat(found.lon);
+
+                                            map.setView([newLat, newLng], 13);
+                                            marker.setLatLng([newLat, newLng]);
+                                            updateCoords(newLat, newLng);
+                                        }
+                                    })
+                                    .catch(err => console.error('Geocoding error:', err));
+                            }, 1000);
+                        });
+                    }
+
+                    setTimeout(function () { map.invalidateSize(); }, 400);
+                }, 300);
+            }
+
+            /* =========================================
+               RENDER FUNCTIONS
+               ========================================= */
+            function renderTestimonials(containerId, items, type) {
+                var container = document.getElementById(containerId);
+                items = items || [];
+                if (items.length === 0) {
+                    container.innerHTML = '<div class="col-span-full text-center py-16 text-gray-400"><i class="fas fa-inbox text-4xl mb-3 block"></i><p>Belum ada data. Klik "Tambah" untuk menambahkan.</p></div>';
+                    return;
+                }
+                container.innerHTML = items.map(function (item) {
+                    var imgSrc = item.image || '';
+                    var isBase64 = imgSrc && imgSrc.startsWith('data:');
+                    var displaySrc = _resolveImgPath(imgSrc);
+                    var fallback = 'https://ui-avatars.com/api/?name=' + encodeURIComponent(item.name) + '&size=100&background=random&color=fff';
+                    var subtitle = type === 'external' ? item.title : item.role;
+                    var badge = isBase64 ? '<span class="text-[9px] bg-green-100 text-green-600 px-1.5 py-0.5 rounded-full font-medium">uploaded</span>' : '';
+                    return '<div class="cms-card bg-white rounded-xl border border-gray-200 p-5 flex flex-col">' +
+                        '<div class="flex items-start gap-3 mb-3">' +
+                        '<img src="' + escapeAttr(displaySrc) + '" alt="' + escapeAttr(item.name) + '" class="w-11 h-11 rounded-full object-cover border-2 border-gray-100 flex-shrink-0" onerror="this.src=\'' + fallback + '\'">' +
+                        '<div class="min-w-0">' +
+                        '<div class="flex items-center gap-1.5">' +
+                        '<h4 class="font-bold text-heading text-sm truncate">' + escapeHtml(item.name) + '</h4>' +
+                        badge +
+                        '</div>' +
+                        '<p class="text-xs text-gray-500 truncate">' + escapeHtml(subtitle || '') + '</p>' +
+                        '</div>' +
+                        '</div>' +
+                        '<p class="text-sm text-gray-600 italic flex-grow line-clamp-3">"' + escapeHtml(item.quote) + '"</p>' +
+                        '<div class="flex gap-2 mt-4 pt-3 border-t border-gray-100">' +
+                        '<button onclick="openEditModal(\'' + type + '\',' + item.id + ')" class="flex-1 text-xs font-semibold text-primary hover:bg-blue-50 py-2 rounded-lg transition-colors"><i class="fas fa-pen mr-1"></i> Edit</button>' +
+                        '<button onclick="confirmDelete(\'' + type + '\',' + item.id + ')" class="flex-1 text-xs font-semibold text-red-500 hover:bg-red-50 py-2 rounded-lg transition-colors"><i class="fas fa-trash mr-1"></i> Hapus</button>' +
+                        '</div>' +
+                        '</div>';
+                }).join('');
+            }
+
+            function renderFaqs(items) {
+                var container = document.getElementById('list-faq');
+                items = items || [];
+                if (items.length === 0) {
+                    container.innerHTML = '<div class="text-center py-16 text-gray-400"><i class="fas fa-inbox text-4xl mb-3 block"></i><p>Belum ada data. Klik "Tambah" untuk menambahkan.</p></div>';
+                    return;
+                }
+                container.innerHTML = items.map(function (item) {
+                    return '<div class="cms-card bg-white rounded-xl border border-gray-200 p-5">' +
+                        '<div class="flex items-start justify-between gap-3">' +
+                        '<div class="min-w-0 flex-grow">' +
+                        '<h4 class="font-bold text-heading text-sm mb-1">' + escapeHtml(item.question) + '</h4>' +
+                        '<p class="text-xs text-gray-500 line-clamp-2">' + escapeHtml(item.answer) + '</p>' +
+                        '</div>' +
+                        '<div class="flex gap-1 flex-shrink-0">' +
+                        '<button onclick="openEditModal(\'faq\',' + item.id + ')" class="p-2 text-primary hover:bg-blue-50 rounded-lg transition-colors" title="Edit"><i class="fas fa-pen text-xs"></i></button>' +
+                        '<button onclick="confirmDelete(\'faq\',' + item.id + ')" class="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors" title="Hapus"><i class="fas fa-trash text-xs"></i></button>' +
+                        '</div>' +
+                        '</div>' +
+                        '</div>';
+                }).join('');
+            }
+
+            function renderLocations(items) {
+                var tbody = document.getElementById('list-locations');
+                items = items || [];
+                if (items.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="6" class="text-center py-16 text-gray-400"><i class="fas fa-inbox text-4xl mb-3 block"></i><p>Belum ada data.</p></td></tr>';
+                    return;
+                }
+                tbody.innerHTML = items.map(function (item, idx) {
+                    return '<tr class="border-b border-gray-100 hover:bg-gray-50 transition-colors">' +
+                        '<td class="px-4 py-3 text-gray-400">' + (idx + 1) + '</td>' +
+                        '<td class="px-4 py-3 font-medium text-heading">' + escapeHtml(item.name) + '</td>' +
+                        '<td class="px-4 py-3 text-gray-500 font-mono text-xs">' + item.lat + '</td>' +
+                        '<td class="px-4 py-3 text-gray-500 font-mono text-xs">' + item.lng + '</td>' +
+                        '<td class="px-4 py-3"><span class="bg-accent/10 text-accent text-xs font-bold px-2 py-1 rounded-full">' + item.volunteers + '</span></td>' +
+                        '<td class="px-4 py-3 text-right">' +
+                        '<button onclick="openEditModal(\'locations\',' + item.id + ')" class="p-1.5 text-primary hover:bg-blue-50 rounded-lg transition-colors mr-1" title="Edit"><i class="fas fa-pen text-xs"></i></button>' +
+                        '<button onclick="confirmDelete(\'locations\',' + item.id + ')" class="p-1.5 text-red-500 hover:bg-red-50 rounded-lg transition-colors" title="Hapus"><i class="fas fa-trash text-xs"></i></button>' +
+                        '</td>' +
+                        '</tr>';
+                }).join('');
+            }
+
+            function renderTeam(items) {
+                var container = document.getElementById('list-team');
+                items = items || [];
+                if (items.length === 0) {
+                    container.innerHTML = '<div class="col-span-full text-center py-16 text-gray-400"><i class="fas fa-inbox text-4xl mb-3 block"></i><p>Belum ada data tim.</p></div>';
+                    return;
+                }
+                container.innerHTML = items.map(function (item) {
+                    var imgSrc = item.image || '';
+                    var isBase64 = imgSrc && imgSrc.startsWith('data:');
+                    var displaySrc = _resolveImgPath(imgSrc);
+                    var fallback = 'https://ui-avatars.com/api/?name=' + encodeURIComponent(item.name) + '&size=100&background=random&color=fff';
+                    var badge = isBase64 ? '<span class="text-[9px] bg-green-100 text-green-600 px-1.5 py-0.5 rounded-full font-medium">uploaded</span>' : '';
+
+                    return '<div class="cms-card bg-white rounded-xl border border-gray-200 p-5 flex flex-col items-center text-center">' +
+                        '<div class="relative mb-3">' +
+                        '<img src="' + escapeAttr(displaySrc) + '" alt="' + escapeAttr(item.name) + '" class="w-20 h-20 rounded-full object-cover border-2 border-white shadow-md" onerror="this.src=\'' + fallback + '\'">' +
+                        badge +
+                        '</div>' +
+                        '<h4 class="font-bold text-heading text-sm truncate w-full">' + escapeHtml(item.name) + '</h4>' +
+                        '<p class="text-xs text-primary font-semibold mb-3">' + escapeHtml(item.role) + '</p>' +
+                        '<div class="flex gap-2 mt-auto w-full">' +
+                        '<button onclick="openEditModal(\'team\',' + item.id + ')" class="flex-1 text-xs font-semibold text-primary hover:bg-blue-50 py-2 rounded-lg transition-colors"><i class="fas fa-pen mr-1"></i> Edit</button>' +
+                        '<button onclick="confirmDelete(\'team\',' + item.id + ')" class="flex-1 text-xs font-semibold text-red-500 hover:bg-red-50 py-2 rounded-lg transition-colors"><i class="fas fa-trash mr-1"></i> Hapus</button>' +
+                        '</div>' +
+                        '</div>';
+                }).join('');
+            }
+
+            function renderActivityCards(items) {
+                var container = document.getElementById('list-activity-cards');
+                items = items || [];
+                if (items.length === 0) {
+                    container.innerHTML = '<div class="col-span-full text-center py-10 text-gray-400"><p>Belum ada activity card.</p></div>';
+                    return;
+                }
+                container.innerHTML = items.map(function (item) {
+                    var imgSrc = item.image ? _resolveImgPath(item.image) : 'https://via.placeholder.com/400x250?text=No+Image';
+                    var badgeColor = item.category === 'Education' ? 'bg-primary/90' : 'bg-accent/90';
+
+                    return '<div class="cms-card bg-white rounded-xl border border-gray-200 p-4 flex flex-col">' +
+                        '<div class="relative h-32 w-full rounded-lg overflow-hidden mb-3 bg-gray-100">' +
+                        '<img src="' + escapeAttr(imgSrc) + '" class="w-full h-full object-cover">' +
+                        '<span class="absolute top-2 left-2 ' + badgeColor + ' text-white text-[10px] font-bold px-2 py-0.5 rounded shadow-sm">' + escapeHtml(item.category) + '</span>' +
+                        '</div>' +
+                        '<h4 class="font-bold text-heading text-sm line-clamp-2 h-10">' + escapeHtml(item.title) + '</h4>' +
+                        '<div class="mt-auto pt-3 flex gap-2">' +
+                        '<button onclick="openEditModal(\'activity-card\',' + item.id + ')" class="flex-1 text-xs font-semibold text-primary hover:bg-blue-50 py-1.5 rounded transition-colors">Edit</button>' +
+                        '<button onclick="confirmDelete(\'activity-card\',' + item.id + ')" class="flex-1 text-xs font-semibold text-red-500 hover:bg-red-50 py-1.5 rounded transition-colors">Hapus</button>' +
+                        '</div>' +
+                        '</div>';
+                }).join('');
+            }
+
+            function renderPodcasts(items) {
+                var container = document.getElementById('list-podcasts');
+                items = items || [];
+                if (items.length === 0) {
+                    container.innerHTML = '<div class="col-span-full text-center py-10 text-gray-400"><p>Belum ada podcast.</p></div>';
+                    return;
+                }
+                container.innerHTML = items.map(function (item) {
+                    var imgSrc = item.thumbnail ? _resolveImgPath(item.thumbnail) : 'https://via.placeholder.com/150?text=No+Img';
+                    var fallback = 'https://via.placeholder.com/150?text=No+Img';
+
+                    return '<div class="cms-card bg-white rounded-xl border border-gray-200 p-4 flex items-center gap-4">' +
+                        '<div class="w-16 h-16 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0 relative">' +
+                        '<img src="' + escapeAttr(imgSrc) + '" class="w-full h-full object-cover" onerror="this.src=\'' + fallback + '\'">' +
+                        '</div>' +
+                        '<div class="flex-grow min-w-0">' +
+                        '<div class="text-[10px] font-bold text-accent uppercase tracking-wide">' + escapeHtml(item.episode) + '</div>' +
+                        '<h4 class="font-bold text-heading text-sm truncate">' + escapeHtml(item.title) + '</h4>' +
+                        '<div class="text-[10px] text-gray-400 truncate mt-1"><i class="fas fa-link mr-1"></i>' + (item.spotifyLink ? item.spotifyLink : 'No Link') + '</div>' +
+                        '</div>' +
+                        '<div class="flex gap-2 flex-shrink-0">' +
+                        '<button onclick="openEditModal(\'podcast\',' + item.id + ')" class="p-1.5 text-primary hover:bg-blue-50 rounded-lg transition-colors"><i class="fas fa-pen text-xs"></i></button>' +
+                        '<button onclick="confirmDelete(\'podcast\',' + item.id + ')" class="p-1.5 text-red-500 hover:bg-red-50 rounded-lg transition-colors"><i class="fas fa-trash text-xs"></i></button>' +
+                        '</div>' +
+                        '</div>';
+                }).join('');
+            }
+
+            function renderPartners(items) {
+                var container = document.getElementById('list-partners');
+                if (!items || items.length === 0) {
+                    container.innerHTML = '<div class="col-span-full text-center py-10 text-gray-400"><p>Belum ada data partner.</p></div>';
+                    return;
+                }
+
+                var colorMap = {
+                    'blue': 'bg-blue-50 text-blue-500 hover:bg-blue-500 hover:text-white',
+                    'pink': 'bg-pink-50 text-pink-500 hover:bg-pink-500 hover:text-white',
+                    'purple': 'bg-purple-50 text-purple-600 hover:bg-purple-600 hover:text-white',
+                    'green': 'bg-green-50 text-green-600 hover:bg-green-600 hover:text-white',
+                    'yellow': 'bg-yellow-50 text-yellow-600 hover:bg-yellow-600 hover:text-white',
+                    'gray': 'bg-gray-100 text-gray-500 hover:bg-gray-500 hover:text-white',
+                };
+
+                container.innerHTML = items.map(function (item) {
+                    var colorClass = colorMap[item.color] || colorMap['blue'];
+                    var logoHtml = '';
+
+                    if (item.image) {
+                        var imgSrc = _resolveImgPath(item.image);
+                        logoHtml = '<div class="w-16 h-16 rounded-xl overflow-hidden mb-4 bg-white border border-gray-100 shadow-sm flex items-center justify-center p-2">' +
+                            '<img src="' + escapeAttr(imgSrc) + '" class="max-w-full max-h-full object-contain">' +
+                            '</div>';
+                    } else {
+                        logoHtml = '<div class="w-16 h-16 rounded-full flex items-center justify-center text-2xl mb-4 transition-all duration-300 ' + colorClass + '">' +
+                            '<i class="fas ' + (item.icon || 'fa-building') + '"></i>' +
+                            '</div>';
+                    }
+
+                    return '<div class="cms-card bg-white rounded-xl border border-gray-200 p-6 flex flex-col items-center text-center group h-full">' +
+                        logoHtml +
+                        '<h4 class="font-bold text-heading text-lg mb-2">' + escapeHtml(item.name) + '</h4>' +
+                        '<p class="text-sm text-gray-500 mb-6 flex-grow line-clamp-2">' + escapeHtml(item.description) + '</p>' +
+                        '<div class="flex gap-2 w-full mt-auto">' +
+                        '<button onclick="openEditModal(\'partner\',' + item.id + ')" class="flex-1 text-xs font-semibold text-primary hover:bg-blue-50 py-2 rounded-lg transition-colors"><i class="fas fa-pen mr-1"></i> Edit</button>' +
+                        '<button onclick="confirmDelete(\'partner\',' + item.id + ')" class="flex-1 text-xs font-semibold text-red-500 hover:bg-red-50 py-2 rounded-lg transition-colors"><i class="fas fa-trash mr-1"></i> Hapus</button>' +
+                        '</div>' +
+                        '</div>';
+                }).join('');
+            }
+
+            function renderAboutPreview() {
+                var data = getData();
+                var hero = data.aboutHero;
+                var el = document.getElementById('preview-about-hero');
+                if (!el) return;
+                el.innerHTML =
+                    '<div class="flex gap-4 mb-4">' +
+                    '<img src="' + (hero.image ? _resolveImgPath(hero.image) : 'https://via.placeholder.com/150') + '" class="w-24 h-24 object-cover rounded-lg shadow-sm">' +
+                    '<div class="flex-1">' +
+                    '<h3 class="text-xl font-bold text-heading mb-1 leading-tight">' + hero.title + '</h3>' +
+                    '<p class="text-xs text-gray-500 line-clamp-2">' + hero.subtitle + '</p>' +
+                    '</div>' +
+                    '</div>' +
+                    '<div class="text-xs text-gray-400">Badge Relawan: ' + hero.volunteerCount + '</div>';
+            }
+
+            function renderDonationPreview() {
+                var data = getData();
+                var s = data.donationSettings;
+                var el = document.getElementById('preview-donation');
+                if (!el) return;
+
+                el.innerHTML =
+                    '<div class="grid grid-cols-2 gap-4 text-sm">' +
+                    '<div><strong>Hero Title:</strong><br>' + _esc(s.heroTitle) + '</div>' +
+                    '<div><strong>Strip Text:</strong><br>' + _esc(s.stripText) + '</div>' +
+                    '<div class="col-span-2"><strong>Bank Info:</strong> ' + _esc(s.bankName) + ' - ' + _esc(s.accountNumber) + '</div>' +
+                    '</div>';
+            }
+
+            function _esc(str) {
+                if (!str) return '';
+                return str.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+            }
+
+            /* =========================================
+               MODAL — OPEN ADD
+               ========================================= */
+            window.openAddModal = function (section) {
+                editingItem = null;
+                editingSection = section;
+                uploadedImage = null;
+                uploadedQrisImage = null;
+                renderModalForm(section, null);
+                openModal();
+            };
+
+            window.openEditModal = function (section, id) {
+                var data = getData();
+                var list;
+                var item = null;
+
+                if (section === 'about-hero') {
+                    item = data.aboutHero;
+                } else if (section === 'donation-settings') {
+                    item = data.donationSettings;
+                } else {
+                    switch (section) {
+                        case 'external': list = data.externalTestimonials; break;
+                        case 'internal': list = data.internalTestimonials; break;
+                        case 'faq': list = data.faqs; break;
+                        case 'locations': list = data.locations; break;
+                        case 'team': list = data.team; break;
+                        case 'activity-card': list = data.activityCards; break;
+                        case 'podcast': list = data.podcasts; break;
+                        case 'partner': list = data.partners; break;
+                    }
+                    list = list || [];
+                    item = list.find(function (i) { return i.id === id; });
+                }
+
+                if (!item) return;
+                editingItem = item;
+                editingSection = section;
+
+                uploadedImage = (item.image && item.image.startsWith('data:')) ? item.image : null;
+                if (section === 'podcast' && item.thumbnail) {
+                    uploadedImage = (item.thumbnail && item.thumbnail.startsWith('data:')) ? item.thumbnail : null;
+                }
+                if (section === 'donation-settings' && item.qrisImage) {
+                    uploadedQrisImage = item.qrisImage.startsWith('data:') ? item.qrisImage : null;
+                } else {
+                    uploadedQrisImage = null;
+                }
+
+                renderModalForm(section, item);
+                openModal();
+            };
+
+            /* =========================================
+               MODAL — RENDER FORM
+               ========================================= */
+            function renderModalForm(section, item) {
+                var isEdit = !!item;
+                var label;
+                if (section === 'external' || section === 'internal') label = 'Testimoni';
+                else if (section === 'faq') label = 'FAQ';
+                else if (section === 'locations') label = 'Lokasi';
+                else if (section === 'team') label = 'Team Member';
+                else if (section === 'about-hero') label = 'Konten Hero';
+                else if (section === 'activity-card') label = 'Activity Card';
+                else if (section === 'podcast') label = 'Podcast Episode';
+                else if (section === 'partner') label = 'Partner';
+                else if (section === 'donation-settings') label = 'Pengaturan Donation';
+
+                document.getElementById('modal-title').textContent = (isEdit ? 'Edit ' : 'Tambah ') + label;
+                var html = '';
+
+                if (section === 'donation-settings') {
+                    html += formField('Judul Hero', 'f-hero-title', item ? item.heroTitle : '', 'text', 'Contoh: Support Our Mission');
+                    html += formTextarea('Sub Hero', 'f-hero-sub', item ? item.heroSubtitle : '', 'Deskripsi...');
+                    html += formField('Teks di Gambar Strip', 'f-strip-text', item ? item.stripText : '', 'text', 'Together We Can');
+
+                    html += '<div class="mb-4"><label class="block text-sm font-semibold text-heading mb-1.5">Gambar Strip (Banner Tengah)</label><div id="upload-zone" class="upload-zone rounded-xl p-4 text-center">';
+                    var existingStrip = '';
+                    if (item && item.stripImage) existingStrip = _resolveImgPath(item.stripImage);
+                    if (existingStrip) {
+                        html += '<div class="relative"><img src="' + escapeAttr(existingStrip) + '" class="w-full h-32 object-cover rounded-lg"><button type="button" onclick="removeUpload()" class="absolute top-1 right-1 w-7 h-7 bg-red-500 text-white rounded-full"><i class="fas fa-times"></i></button></div>';
+                    } else {
+                        html += '<div class="py-4 text-center text-gray-400 text-sm">Klik untuk upload gambar strip</div>';
+                    }
+                    html += '</div></div>';
+
+                    html += '<hr class="my-4"><h4 class="font-bold text-heading mb-4">Payment Details</h4>';
+                    html += formField('Nama Bank', 'f-bank-name', item ? item.bankName : '', 'text', 'BCA');
+                    html += formField('Atas Nama', 'f-acc-name', item ? item.accountName : '', 'text', 'Yuni Triandini');
+                    html += formField('Nomor Rekening', 'f-acc-num', item ? item.accountNumber : '', 'text', '466...');
+
+                    html += '<div class="mb-4"><label class="block text-sm font-semibold text-heading mb-1.5">Gambar QRIS</label><div id="upload-zone-qris" class="upload-zone rounded-xl p-4 text-center border border-dashed border-gray-300">';
+                    var existingQris = '';
+                    if (item && item.qrisImage) existingQris = _resolveImgPath(item.qrisImage);
+                    if (existingQris) {
+                        html += '<div class="relative"><img src="' + escapeAttr(existingQris) + '" class="w-24 h-24 object-contain mx-auto bg-gray-50 rounded"><button type="button" onclick="removeUploadQris()" class="absolute top-0 right-0 bg-red-500 text-white p-1 rounded-full text-xs">X</button></div>';
+                    } else {
+                        html += '<div class="py-4 text-center text-gray-400 text-sm border border-dashed border-gray-300 rounded">Upload QRIS</div>';
+                    }
+                    html += '</div></div>';
+                }
+                else if (section === 'about-hero') {
+                    html += formField('Judul (Support HTML)', 'f-title', item ? item.title : '', 'text', 'Judul besar...');
+                    html += formTextarea('Subtitle', 'f-subtitle', item ? item.subtitle : '', 'Deskripsi singkat...');
+                    html += formField('Label Relawan (Contoh: 1k+)', 'f-volunteer', item ? item.volunteerCount : '1k+', 'text', '1k+');
+
+                    html += '<div class="mb-4">' +
+                        '<label class="block text-sm font-semibold text-heading mb-1.5">Gambar Background Hero</label>' +
+                        '<div id="upload-zone" class="upload-zone rounded-xl p-4 text-center">';
+                    var existingHeroSrc = '';
+                    if (item && item.image) existingHeroSrc = _resolveImgPath(item.image);
+                    if (existingHeroSrc) {
+                        html += '<div class="relative"><img src="' + escapeAttr(existingHeroSrc) + '" class="w-full h-40 object-cover rounded-lg bg-gray-50"><button type="button" onclick="removeUpload()" class="absolute top-1 right-1 w-7 h-7 bg-red-500 text-white rounded-full"><i class="fas fa-times"></i></button></div><p class="text-xs text-green-600 mt-2">Gambar Hero tersedia</p>';
+                    } else {
+                        html += '<div class="py-6 text-center"><i class="fas fa-image text-3xl text-gray-300 mb-2"></i><p class="text-sm text-gray-500">Klik untuk ganti gambar</p></div>';
+                    }
+                    html += '</div></div>';
+                }
+                else if (section === 'external' || section === 'internal') {
+                    html += formField('Nama', 'f-name', item ? item.name : '', 'text', 'Nama lengkap');
+                    if (section === 'external') html += formField('Jabatan / Title', 'f-title', item ? item.title : '', 'text', 'Co-Founder');
+                    else html += formField('Peran / Role', 'f-role', item ? item.role : '', 'text', 'Community Coordinator');
+                    html += formTextarea('Quote', 'f-quote', item ? item.quote : '', 'Kutipan...');
+
+                    var existingSrc = '';
+                    if (item && item.image) existingSrc = _resolveImgPath(item.image);
+                    html += '<div class="mb-4"><label class="block text-sm font-semibold text-heading mb-1.5">Foto</label><div id="upload-zone" class="upload-zone rounded-xl p-4 text-center">';
+                    if (existingSrc) html += '<div class="relative"><img src="' + escapeAttr(existingSrc) + '" class="w-full h-40 object-contain rounded-lg bg-gray-50"><button type="button" onclick="removeUpload()" class="absolute top-1 right-1 w-7 h-7 bg-red-500 text-white rounded-full"><i class="fas fa-times"></i></button></div><p class="text-xs text-green-600 mt-2">Gambar tersedia</p>';
+                    else html += '<div class="py-6 text-center"><i class="fas fa-cloud-upload-alt text-3xl text-gray-300 mb-2"></i><p class="text-sm text-gray-500">Upload Foto</p></div>';
+                    html += '</div></div>';
+                }
+                else if (section === 'faq') {
+                    html += formField('Pertanyaan', 'f-question', item ? item.question : '', 'text', 'Pertanyaan...');
+                    html += formTextarea('Jawaban', 'f-answer', item ? item.answer : '', 'Jawaban...');
+                }
+                else if (section === 'locations') {
+                    html += formField('Nama Lokasi', 'f-name', item ? item.name : '', 'text', 'Jakarta');
+
+                    html += '<div class="mb-4">' +
+                        '<label class="block text-sm font-semibold text-heading mb-1.5">Pilih Lokasi di Peta (Geser Pin)</label>' +
+                        '<div id="map-cms"></div>' +
+                        '<p class="text-[10px] text-gray-500 mt-1 italic"><i class="fas fa-info-circle mr-1"></i>Geser pin untuk menentukan koordinat secara otomatis.</p>' +
+                        '</div>';
+
+                    html += '<div class="grid grid-cols-2 gap-3">' +
+                        formField('Latitude', 'f-lat', item ? item.lat : '', 'number', '-6.2088', 'step="any" readonly class="bg-gray-50"') +
+                        formField('Longitude', 'f-lng', item ? item.lng : '', 'number', '106.8456', 'step="any" readonly class="bg-gray-50"') +
+                        '</div>';
+                    html += formField('Jumlah Relawan', 'f-volunteers', item ? item.volunteers : '', 'number', '1', 'min="1"');
+                }
+                else if (section === 'team') {
+                    html += formField('Nama', 'f-name', item ? item.name : '', 'text', 'Nama Lengkap');
+                    html += formField('Role', 'f-role', item ? item.role : '', 'text', 'Founder');
+                    html += formField('LinkedIn', 'f-linkedin', item ? item.linkedin : '', 'text', 'URL LinkedIn');
+                    html += formField('Instagram', 'f-instagram', item ? item.instagram : '', 'text', 'URL Instagram');
+
+                    var existingSrc = '';
+                    if (item && item.image) existingSrc = _resolveImgPath(item.image);
+                    html += '<div class="mb-4"><label class="block text-sm font-semibold text-heading mb-1.5">Foto Profil</label><div id="upload-zone" class="upload-zone rounded-xl p-4 text-center">';
+                    if (existingSrc) html += '<div class="relative"><img src="' + escapeAttr(existingSrc) + '" class="w-full h-40 object-contain rounded-lg bg-gray-50"><button type="button" onclick="removeUpload()" class="absolute top-1 right-1 w-7 h-7 bg-red-500 text-white rounded-full"><i class="fas fa-times"></i></button></div><p class="text-xs text-green-600 mt-2">Foto tersedia</p>';
+                    else html += '<div class="py-6 text-center"><i class="fas fa-cloud-upload-alt text-3xl text-gray-300 mb-2"></i><p class="text-sm text-gray-500">Upload Foto</p></div>';
+                    html += '</div></div>';
+                }
+                else if (section === 'activity-card') {
+                    html += formField('Judul Kegiatan', 'f-title', item ? item.title : '', 'text', 'Judul lengkap...');
+                    html += formField('Kategori', 'f-category', item ? item.category : '', 'text', 'Contoh: Education');
+                    html += formField('Tanggal', 'f-date', item ? item.date : '', 'text', '10 November 2025');
+                    html += formTextarea('Deskripsi Singkat (untuk Kartu)', 'f-desc', item ? item.description : '', 'Ringkasan...');
+
+                    html += '<div class="mb-4">' +
+                        '<label class="block text-sm font-semibold text-heading mb-1.5">Full Story (Detail Artikel)</label>' +
+                        '<p class="text-xs text-gray-400 mb-2">Anda bisa menggunakan tag HTML sederhana seperti &lt;p&gt;, &lt;br&gt;, &lt;b&gt;.</p>' +
+                        '<textarea id="f-full-story" rows="10" placeholder="Tulis cerita lengkap di sini..." class="w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm text-heading focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all">' + escapeHtml(item ? (item.fullStory || '') : '') + '</textarea>' +
+                        '</div>';
+
+                    var existingSrc = '';
+                    if (item && item.image) existingSrc = _resolveImgPath(item.image);
+                    html += '<div class="mb-4"><label class="block text-sm font-semibold text-heading mb-1.5">Gambar Cover</label><div id="upload-zone" class="upload-zone rounded-xl p-4 text-center">';
+                    if (existingSrc) html += '<div class="relative"><img src="' + escapeAttr(existingSrc) + '" class="w-full h-40 object-cover rounded-lg bg-gray-50"><button type="button" onclick="removeUpload()" class="absolute top-1 right-1 w-7 h-7 bg-red-500 text-white rounded-full"><i class="fas fa-times"></i></button></div><p class="text-xs text-green-600 mt-2">Gambar tersedia</p>';
+                    else html += '<div class="py-6 text-center"><i class="fas fa-image text-3xl text-gray-300 mb-2"></i><p class="text-sm text-gray-500">Upload Gambar</p></div>';
+                    html += '</div></div>';
+                }
+                else if (section === 'podcast') {
+                    html += formField('Judul Episode', 'f-title', item ? item.title : '', 'text', 'Judul Podcast...');
+                    html += formField('Nomor Episode', 'f-episode', item ? item.episode : '', 'text', 'Episode 1');
+                    html += formField('Link Spotify', 'f-spotify-link', item ? item.spotifyLink : '', 'text', 'https://open.spotify.com/...');
+
+                    var existingThumb = '';
+                    if (item && item.thumbnail) existingThumb = _resolveImgPath(item.thumbnail);
+                    html += '<div class="mb-4"><label class="block text-sm font-semibold text-heading mb-1.5">Thumbnail Cover</label><div id="upload-zone" class="upload-zone rounded-xl p-4 text-center">';
+                    if (existingThumb) {
+                        html += '<div class="relative"><img src="' + escapeAttr(existingThumb) + '" class="w-full h-40 object-cover rounded-lg bg-gray-50"><button type="button" onclick="removeUpload()" class="absolute top-1 right-1 w-7 h-7 bg-red-500 text-white rounded-full"><i class="fas fa-times"></i></button></div><p class="text-xs text-green-600 mt-2">Thumbnail tersedia</p>';
+                    } else {
+                        html += '<div class="py-6 text-center"><i class="fas fa-image text-3xl text-gray-300 mb-2"></i><p class="text-sm text-gray-500">Upload Thumbnail</p></div>';
+                    }
+                    html += '</div></div>';
+                }
+                else if (section === 'partner') {
+                    html += formField('Nama Partner', 'f-name', item ? item.name : '', 'text', 'Contoh: Qatar HR Forum');
+                    html += formTextarea('Deskripsi Singkat', 'f-desc', item ? item.description : '', 'Deskripsi singkat...');
+
+                    html += '<div class="mb-4">' +
+                        '<label class="block text-sm font-semibold text-heading mb-1.5">Link Partner (URL)</label>' +
+                        '<div class="relative">' +
+                        '<span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"><i class="fas fa-link text-xs"></i></span>' +
+                        '<input type="url" id="f-link" value="' + (item ? (item.link || '#') : 'https://') + '" placeholder="https://website-partner.com" class="w-full pl-9 pr-3 py-2.5 border border-gray-200 rounded-lg text-sm text-heading focus:outline-none focus:border-primary">' +
+                        '</div>' +
+                        '<p class="text-[10px] text-gray-400 mt-1">Masukkan URL lengkap (dengan https://)</p>' +
+                        '</div>';
+
+                    html += '<div class="mb-4">' +
+                        '<label class="block text-sm font-semibold text-heading mb-1.5">Pilih Icon</label>' +
+                        '<select id="f-icon" class="w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm text-heading focus:outline-none focus:border-primary">' +
+                        '<option value="fa-handshake" ' + (item && item.icon === 'fa-handshake' ? 'selected' : '') + '>Handshake (Kerjasama)</option>' +
+                        '<option value="fa-users-cog" ' + (item && item.icon === 'fa-users-cog' ? 'selected' : '') + '>Users Cog (Komunitas)</option>' +
+                        '<option value="fa-spa" ' + (item && item.icon === 'fa-spa' ? 'selected' : '') + '>Spa (Kesehatan/Kecantikan)</option>' +
+                        '<option value="fa-flask" ' + (item && item.icon === 'fa-flask' ? 'selected' : '') + '>Flask (Sains/Lab)</option>' +
+                        '<option value="fa-school" ' + (item && item.icon === 'fa-school' ? 'selected' : '') + '>School (Pendidikan)</option>' +
+                        '<option value="fa-building" ' + (item && item.icon === 'fa-building' ? 'selected' : '') + '>Building (Korporat)</option>' +
+                        '<option value="fa-heart" ' + (item && item.icon === 'fa-heart' ? 'selected' : '') + '>Heart (Sosial)</option>' +
+                        '<option value="fa-globe" ' + (item && item.icon === 'fa-globe' ? 'selected' : '') + '>Globe (Global)</option>' +
+                        '<option value="fa-spotify" ' + (item && item.icon === 'fa-spotify' ? 'selected' : '') + '>Spotify (Musik/Podcast)</option>' +
+                        '</select>' +
+                        '</div>';
+
+                    html += '<div class="mb-4">' +
+                        '<label class="block text-sm font-semibold text-heading mb-1.5">Warna Latar</label>' +
+                        '<select id="f-color" class="w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm text-heading focus:outline-none focus:border-primary">' +
+                        '<option value="blue" ' + (item && item.color === 'blue' ? 'selected' : '') + '>Biru</option>' +
+                        '<option value="pink" ' + (item && item.color === 'pink' ? 'selected' : '') + '>Pink</option>' +
+                        '<option value="purple" ' + (item && item.color === 'purple' ? 'selected' : '') + '>Ungu</option>' +
+                        '<option value="green" ' + (item && item.color === 'green' ? 'selected' : '') + '>Hijau</option>' +
+                        '<option value="yellow" ' + (item && item.color === 'yellow' ? 'selected' : '') + '>Kuning</option>' +
+                        '<option value="gray" ' + (item && item.color === 'gray' ? 'selected' : '') + '>Abu-abu</option>' +
+                        '</select>' +
+                        '</div>';
+
+                    var existingSrc = '';
+                    if (item && item.image) existingSrc = _resolveImgPath(item.image);
+                    html += '<div class="mb-4"><label class="block text-sm font-semibold text-heading mb-1.5">Logo Partner (Opsional)</label><p class="text-[10px] text-gray-400 mb-2">Jika diupload, akan menggantikan icon di atas.</p><div id="upload-zone" class="upload-zone rounded-xl p-4 text-center">';
+                    if (existingSrc) html += '<div class="relative"><img src="' + escapeAttr(existingSrc) + '" class="w-full h-40 object-contain rounded-lg bg-gray-50"><button type="button" onclick="removeUpload()" class="absolute top-1 right-1 w-7 h-7 bg-red-500 text-white rounded-full"><i class="fas fa-times"></i></button></div><p class="text-xs text-green-600 mt-2">Logo tersedia</p>';
+                    else html += '<div class="py-6 text-center"><i class="fas fa-cloud-upload-alt text-3xl text-gray-300 mb-2"></i><p class="text-sm text-gray-500">Upload Logo</p></div>';
+                    html += '</div></div>';
+                }
+
+                html += '<div class="flex gap-3 mt-6 pt-4 border-t border-gray-100">' +
+                    '<button type="button" onclick="closeModal()" class="flex-1 py-2.5 border border-gray-200 text-heading font-semibold rounded-lg hover:bg-gray-50 transition-colors text-sm">Batal</button>' +
+                    '<button type="button" onclick="saveItem()" class="flex-1 py-2.5 bg-primary hover:bg-primaryDark text-white font-semibold rounded-lg transition-colors text-sm">' + (isEdit ? 'Simpan' : 'Tambah') + '</button>' +
+                    '</div>';
+
+                document.getElementById('modal-body').innerHTML = html;
+
+                if (section === 'donation-settings') {
+                    initDragDrop('strip');
+                    var qrisZone = document.getElementById('upload-zone-qris');
+                    if (qrisZone) {
+                        qrisZone.addEventListener('click', (function () { triggerUpload('qris'); }));
+                        qrisZone.addEventListener('dragover', function (e) {
+                            e.preventDefault(); qrisZone.classList.add('dragover');
+                        });
+                        qrisZone.addEventListener('dragleave', function () { qrisZone.classList.remove('dragover'); });
+                        qrisZone.addEventListener('drop', function (e) {
+                            e.preventDefault(); qrisZone.classList.remove('dragover');
+                            var file = e.dataTransfer.files[0];
+                            if (!file || !file.type.startsWith('image/')) return showToast('File harus gambar', 'error');
+                            if (file.size > 10 * 1024 * 1024) return showToast('File terlalu besar', 'error');
+                            qrisZone.innerHTML = '<div class="py-6 text-center text-gray-400"><i class="fas fa-spinner fa-spin text-2xl mb-2 block"></i><p class="text-xs">Memproses QRIS...</p></div>';
+                            compressImage(file, 400, 0.7, function (base64) {
+                                uploadedQrisImage = base64;
+                                updateUploadPreviewQris(base64);
+                            });
+                        });
+                    }
+                } else if (section === 'external' || section === 'internal' || section === 'team' || section === 'about-hero' || section === 'activity-card' || section === 'podcast' || section === 'partner') {
+                    initDragDrop('main');
+                } else if (section === 'locations') {
+                    initCmsMap(item);
+                }
+            }
+
+            function formField(label, id, value, type, placeholder, extra) {
+                return '<div class="mb-4">' +
+                    '<label class="block text-sm font-semibold text-heading mb-1.5">' + label + '</label>' +
+                    '<input type="' + type + '" id="' + id + '" value="' + escapeAttr(value) + '" placeholder="' + escapeAttr(placeholder) + '" ' + (extra || '') + ' class="w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm text-heading focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all">' +
+                    '</div>';
+            }
+
+            function formTextarea(label, id, value, placeholder) {
+                return '<div class="mb-4">' +
+                    '<label class="block text-sm font-semibold text-heading mb-1.5">' + label + '</label>' +
+                    '<textarea id="' + id + '" rows="3" placeholder="' + escapeAttr(placeholder) + '" class="w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm text-heading focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all">' + escapeHtml(value) + '</textarea>' +
+                    '</div>';
+            }
+
+            function openModal() {
+                document.getElementById('modal').classList.remove('hidden');
+                document.body.style.overflow = 'hidden';
+                setTimeout(function () {
+                    var firstInput = document.querySelector('#modal-body input, #modal-body textarea');
+                    if (firstInput) firstInput.focus();
+                }, 100);
+            }
+
+            window.closeModal = function () {
+                document.getElementById('modal').classList.add('hidden');
+                document.body.style.overflow = '';
+                editingItem = null;
+                editingSection = null;
+                uploadedImage = null;
+                uploadedQrisImage = null;
+            };
+
+            /* =========================================
+               SAVE ITEM
+               ========================================= */
+            window.saveItem = function () {
+                var section = editingSection;
+                var data = getData();
+                var isEdit = !!editingItem;
+
+                if (section === 'about-hero') {
+                    if (!data.aboutHero) data.aboutHero = {};
+                    data.aboutHero.title = document.getElementById('f-title').value.trim();
+                    data.aboutHero.subtitle = document.getElementById('f-subtitle').value.trim();
+                    data.aboutHero.volunteerCount = document.getElementById('f-volunteer').value.trim();
+
+                    if (uploadedImage) {
+                        data.aboutHero.image = uploadedImage;
+                    } else if (isEdit) {
+                        if (editingItem && editingItem.image) data.aboutHero.image = editingItem.image;
+                    } else {
+                        if (DEFAULT_DATA.aboutHero && DEFAULT_DATA.aboutHero.image) data.aboutHero.image = DEFAULT_DATA.aboutHero.image;
+                    }
+
+                    if (!data.aboutHero.title) { showToast('Judul wajib diisi.', 'error'); return; }
+                }
+                else if (section === 'external' || section === 'internal') {
+                    var name = document.getElementById('f-name').value.trim();
+                    var quote = document.getElementById('f-quote').value.trim();
+                    if (!name || !quote) { showToast('Nama dan quote wajib diisi.', 'error'); return; }
+
+                    var image = '';
+                    if (uploadedImage) image = uploadedImage;
+                    else if (isEdit && editingItem.image && !editingItem.image.startsWith('data:')) image = editingItem.image;
+
+                    var obj = { id: isEdit ? editingItem.id : Date.now(), name: name, quote: quote, image: image };
+
+                    if (section === 'external') {
+                        if (!data.externalTestimonials) data.externalTestimonials = [];
+                    } else {
+                        if (!data.internalTestimonials) data.internalTestimonials = [];
+                    }
+                    var list = (section === 'external') ? data.externalTestimonials : data.internalTestimonials;
+
+                    if (section === 'external') obj.title = document.getElementById('f-title').value.trim() || '';
+                    else obj.role = document.getElementById('f-role').value.trim() || '';
+
+                    if (isEdit) {
+                        var idx = list.findIndex(function (i) { return i.id === editingItem.id; });
+                        if (idx !== -1) list[idx] = obj;
+                    } else {
+                        list.push(obj);
+                    }
+
+                } else if (section === 'faq') {
+                    var question = document.getElementById('f-question').value.trim();
+                    var answer = document.getElementById('f-answer').value.trim();
+                    if (!question || !answer) { showToast('Pertanyaan dan jawaban wajib diisi.', 'error'); return; }
+
+                    var obj = { id: isEdit ? editingItem.id : Date.now(), question: question, answer: answer };
+
+                    if (!data.faqs) data.faqs = [];
+                    var list = data.faqs;
+                    if (isEdit) {
+                        var idx = list.findIndex(function (i) { return i.id === editingItem.id; });
+                        if (idx !== -1) list[idx] = obj;
+                    } else {
+                        list.push(obj);
+                    }
+
+                } else if (section === 'locations') {
+                    var name = document.getElementById('f-name').value.trim();
+                    var lat = parseFloat(document.getElementById('f-lat').value);
+                    var lng = parseFloat(document.getElementById('f-lng').value);
+                    var volunteers = parseInt(document.getElementById('f-volunteers').value) || 1;
+                    if (!name || isNaN(lat) || isNaN(lng)) { showToast('Data lokasi tidak lengkap.', 'error'); return; }
+
+                    var obj = { id: isEdit ? editingItem.id : Date.now(), name: name, lat: lat, lng: lng, volunteers: volunteers };
+
+                    if (!data.locations) data.locations = [];
+                    var list = data.locations;
+                    if (isEdit) {
+                        var idx = list.findIndex(function (i) { return i.id === editingItem.id; });
+                        if (idx !== -1) list[idx] = obj;
+                    } else {
+                        list.push(obj);
+                    }
+                }
+                else if (section === 'team') {
+                    var name = document.getElementById('f-name').value.trim();
+                    var role = document.getElementById('f-role').value.trim();
+                    if (!name || !role) { showToast('Nama dan role wajib diisi.', 'error'); return; }
+
+                    var image = '';
+                    if (uploadedImage) image = uploadedImage;
+                    else if (isEdit && editingItem.image && !editingItem.image.startsWith('data:')) image = editingItem.image;
+
+                    var obj = {
+                        id: isEdit ? editingItem.id : Date.now(),
+                        name: name, role: role,
+                        linkedin: document.getElementById('f-linkedin').value.trim() || '#',
+                        instagram: document.getElementById('f-instagram').value.trim() || '#',
+                        image: image
+                    };
+
+                    if (!data.team) data.team = [];
+                    var list = data.team;
+                    if (isEdit) {
+                        var idx = list.findIndex(function (i) { return i.id === editingItem.id; });
+                        if (idx !== -1) list[idx] = obj;
+                    } else {
+                        list.push(obj);
+                    }
+                }
+                else if (section === 'activity-card') {
+                    var title = document.getElementById('f-title').value.trim();
+                    var category = document.getElementById('f-category').value.trim();
+                    if (!title) { showToast('Judul wajib diisi.', 'error'); return; }
+
+                    var image = '';
+                    if (uploadedImage) image = uploadedImage;
+                    else if (isEdit && editingItem.image && !editingItem.image.startsWith('data:')) image = editingItem.image;
+
+                    var fullStoryVal = document.getElementById('f-full-story').value;
+
+                    var obj = {
+                        id: isEdit ? editingItem.id : Date.now(),
+                        title: title,
+                        category: category,
+                        date: document.getElementById('f-date').value.trim(),
+                        description: document.getElementById('f-desc').value.trim(),
+                        image: image,
+                        link: '#',
+                        fullStory: fullStoryVal
+                    };
+
+                    if (!data.activityCards) data.activityCards = [];
+                    var list = data.activityCards;
+                    if (isEdit) {
+                        var idx = list.findIndex(function (i) { return i.id === editingItem.id; });
+                        if (idx !== -1) list[idx] = obj;
+                    } else {
+                        list.push(obj);
+                    }
+                }
+                else if (section === 'podcast') {
+                    var title = document.getElementById('f-title').value.trim();
+                    var episode = document.getElementById('f-episode').value.trim();
+                    var spotifyLink = document.getElementById('f-spotify-link').value.trim();
+
+                    if (!title) { showToast('Judul wajib diisi.', 'error'); return; }
+
+                    var image = '';
+                    if (uploadedImage) {
+                        image = uploadedImage;
+                    } else if (isEdit && editingItem.thumbnail && !editingItem.thumbnail.startsWith('data:')) {
+                        image = editingItem.thumbnail;
+                    }
+
+                    var obj = {
+                        id: isEdit ? editingItem.id : Date.now(),
+                        episode: episode,
+                        title: title,
+                        thumbnail: image,
+                        spotifyLink: spotifyLink || '#'
+                    };
+
+                    if (!data.podcasts) data.podcasts = [];
+                    var list = data.podcasts;
+                    if (isEdit) {
+                        var idx = list.findIndex(function (i) { return i.id === editingItem.id; });
+                        if (idx !== -1) list[idx] = obj;
+                    } else {
+                        list.push(obj);
+                    }
+                }
+                else if (section === 'partner') {
+                    var name = document.getElementById('f-name').value.trim();
+                    var description = document.getElementById('f-desc').value.trim();
+                    if (!name) { showToast('Nama partner wajib diisi.', 'error'); return; }
+
+                    var image = '';
+                    if (uploadedImage) image = uploadedImage;
+                    else if (isEdit && editingItem.image && !editingItem.image.startsWith('data:')) image = editingItem.image;
+
+                    var obj = {
+                        id: isEdit ? editingItem.id : Date.now(),
+                        name: name,
+                        description: description,
+                        icon: document.getElementById('f-icon').value,
+                        color: document.getElementById('f-color').value,
+                        image: image,
+                        link: document.getElementById('f-link').value.trim() || '#'
+                    };
+
+                    if (!data.partners) data.partners = [];
+                    var list = data.partners;
+                    if (isEdit) {
+                        var idx = list.findIndex(function (i) { return i.id === editingItem.id; });
+                        if (idx !== -1) list[idx] = obj;
+                    } else {
+                        list.push(obj);
+                    }
+                }
+                else if (section === 'donation-settings') {
+                    if (!data.donationSettings) data.donationSettings = {};
+                    data.donationSettings.heroTitle = document.getElementById('f-hero-title').value.trim();
+                    data.donationSettings.heroSubtitle = document.getElementById('f-hero-sub').value.trim();
+                    data.donationSettings.stripText = document.getElementById('f-strip-text').value.trim();
+
+                    if (uploadedImage) {
+                        data.donationSettings.stripImage = uploadedImage;
+                    } else if (isEdit) {
+                        if (item && item.stripImage && !item.stripImage.startsWith('data:')) {
+                            data.donationSettings.stripImage = item.stripImage;
+                        }
+                    }
+
+                    data.donationSettings.bankName = document.getElementById('f-bank-name').value.trim();
+                    data.donationSettings.accountName = document.getElementById('f-acc-name').value.trim();
+                    data.donationSettings.accountNumber = document.getElementById('f-acc-num').value.trim();
+
+                    if (uploadedQrisImage) {
+                        data.donationSettings.qrisImage = uploadedQrisImage;
+                    } else if (isEdit) {
+                        if (item && item.qrisImage && !item.qrisImage.startsWith('data:')) {
+                            data.donationSettings.qrisImage = item.qrisImage;
+                        }
+                    }
+                }
+
+                if (!saveData(data)) return;
+                closeModal();
+                renderAllLists();
+                if (section === 'about-hero') renderAboutPreview();
+                if (section === 'donation-settings') renderDonationPreview();
+                showToast(isEdit ? 'Data berhasil diperbarui.' : 'Data berhasil ditambahkan.', 'success');
+            };
+
+            /* =========================================
+               DELETE
+               ========================================= */
+            window.confirmDelete = function (section, id) {
+                deletingSection = section;
+                deletingId = id;
+                document.getElementById('confirm-dialog').classList.remove('hidden');
+                document.body.style.overflow = 'hidden';
+                document.getElementById('confirm-delete-btn').onclick = function () { executeDelete(); };
+            };
+
+            window.closeConfirm = function () {
+                document.getElementById('confirm-dialog').classList.add('hidden');
+                document.body.style.overflow = '';
+                deletingSection = null;
+                deletingId = null;
+            };
+
+            function executeDelete() {
+                var data = getData();
+                var section = deletingSection;
+                var id = deletingId;
+                switch (section) {
+                    case 'external': data.externalTestimonials = (data.externalTestimonials || []).filter(function (i) { return i.id !== id; }); break;
+                    case 'internal': data.internalTestimonials = (data.internalTestimonials || []).filter(function (i) { return i.id !== id; }); break;
+                    case 'faq': data.faqs = (data.faqs || []).filter(function (i) { return i.id !== id; }); break;
+                    case 'locations': data.locations = (data.locations || []).filter(function (i) { return i.id !== id; }); break;
+                    case 'team': data.team = (data.team || []).filter(function (i) { return i.id !== id; }); break;
+                    case 'activity-card': data.activityCards = (data.activityCards || []).filter(function (i) { return i.id !== id; }); break;
+                    case 'podcast': data.podcasts = (data.podcasts || []).filter(function (i) { return i.id !== id; }); break;
+                    case 'partner': data.partners = (data.partners || []).filter(function (i) { return i.id !== id; }); break;
+                }
+                if (!saveData(data)) return;
+                closeConfirm();
+                renderAllLists();
+                showToast('Data berhasil dihapus.', 'success');
+            }
+
+            window.resetData = async function () {
+                if (!confirm('Reset semua data ke default?')) return;
+                memoryData = JSON.parse(JSON.stringify(DEFAULT_DATA));
+                await window.saveFirebaseData(memoryData);
+                renderAllLists();
+                renderAboutPreview();
+                renderDonationPreview();
+                showToast('Data berhasil direset.', 'success');
+            };
+
+            window.logout = function () {
+                firebase.auth().signOut().then(function () {
+                    window.location.href = 'Login.html';
+                }).catch(function (error) {
+                    console.error("Logout error", error);
+                });
+            };
+
+            /* =========================================
+               TOAST
+               ========================================= */
+            var toastTimer = null;
+            function showToast(message, type) {
+                var toast = document.getElementById('toast');
+                var inner = document.getElementById('toast-inner');
+                var icon = document.getElementById('toast-icon');
+                var text = document.getElementById('toast-text');
+                if (toastTimer) clearTimeout(toastTimer);
+                text.textContent = message;
+                if (type === 'success') {
+                    inner.className = 'flex items-center gap-3 px-5 py-3 rounded-xl shadow-lg text-sm font-medium bg-green-600 text-white toast-enter';
+                    icon.className = 'fas fa-check-circle';
+                } else {
+                    inner.className = 'flex items-center gap-3 px-5 py-3 rounded-xl shadow-lg text-sm font-medium bg-red-500 text-white toast-enter';
+                    icon.className = 'fas fa-exclamation-circle';
+                }
+                toast.classList.remove('hidden');
+                toastTimer = setTimeout(function () {
+                    inner.classList.remove('toast-enter');
+                    inner.classList.add('toast-exit');
+                    setTimeout(function () {
+                        toast.classList.add('hidden');
+                        inner.classList.remove('toast-exit');
+                    }, 300);
+                }, 3000);
+            }
+
+            function escapeHtml(str) {
+                if (!str) return '';
+                var div = document.createElement('div');
+                div.textContent = str;
+                return div.innerHTML;
+            }
+
+            function escapeAttr(str) {
+                if (!str) return '';
+                return str.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/'/g, '&#39;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            }
+
+            document.addEventListener('keydown', function (e) {
+                if (e.key === 'Escape') {
+                    if (!document.getElementById('confirm-dialog').classList.contains('hidden')) { closeConfirm(); }
+                    else if (!document.getElementById('modal').classList.contains('hidden')) { closeModal(); }
+                }
+            });
+
+            /* =========================================
+               STATISTICS
+               ========================================= */
+            var visitorChartInstance = null;
+            var unsubscribeVisitorStats = null;
+            var lastStatsData = null;
+
+            function generateMockStatistics() {
+                var pages = {
+                    'Home': 542,
+                    'About Us': 214,
+                    'Activities': 324,
+                    'Partners': 125,
+                    'Donation': 89,
+                    'Gallery': 56
+                };
+                var daily = {};
+                var total = 0;
+                var keys = Object.keys(pages);
+                for (var k = 0; k < keys.length; k++) {
+                    total += pages[keys[k]];
+                }
+
+                var now = new Date();
+                for (var i = 6; i >= 0; i--) {
+                    var date = new Date(now);
+                    date.setDate(now.getDate() - i);
+                    var dateStr = date.getFullYear() + '-' + String(date.getMonth() + 1).padStart(2, '0') + '-' + String(date.getDate()).padStart(2, '0');
+                    daily[dateStr] = Math.floor(Math.random() * 90) + 30;
+                }
+
+                return {
+                    total: total,
+                    pages: pages,
+                    daily: daily
+                };
+            }
+
+            function renderVisitorChart(dailyData) {
+                var ctx = document.getElementById('visitorChart').getContext('2d');
+                var labels = [];
+                var data = [];
+                var now = new Date();
+
+                for (var i = 6; i >= 0; i--) {
+                    var date = new Date(now);
+                    date.setDate(now.getDate() - i);
+                    var dateStr = date.getFullYear() + '-' + String(date.getMonth() + 1).padStart(2, '0') + '-' + String(date.getDate()).padStart(2, '0');
+
+                    var dayLabel = date.toLocaleDateString('id-ID', { day: 'numeric', month: 'short' });
+                    labels.push(dayLabel);
+                    data.push(dailyData[dateStr] || 0);
+                }
+
+                if (visitorChartInstance) {
+                    visitorChartInstance.destroy();
+                }
+
+                visitorChartInstance = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Pengunjung Harian',
+                            data: data,
+                            borderColor: '#3B82F6',
+                            backgroundColor: 'rgba(59, 130, 246, 0.05)',
+                            borderWidth: 3,
+                            fill: true,
+                            tension: 0.4,
+                            pointBackgroundColor: '#3B82F6',
+                            pointBorderColor: '#ffffff',
+                            pointBorderWidth: 2,
+                            pointRadius: 5,
+                            pointHoverRadius: 7
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            },
+                            tooltip: {
+                                backgroundColor: '#1E293B',
+                                titleColor: '#ffffff',
+                                bodyColor: '#ffffff',
+                                padding: 12,
+                                cornerRadius: 8,
+                                displayColors: false
+                            }
+                        },
+                        scales: {
+                            y: {
+                                grid: {
+                                    color: 'rgba(241, 245, 249, 1)'
+                                },
+                                ticks: {
+                                    font: {
+                                        family: 'Inter',
+                                        size: 11
+                                    },
+                                    color: '#64748B',
+                                    precision: 0
+                                }
+                            },
+                            x: {
+                                grid: {
+                                    display: false
+                                },
+                                ticks: {
+                                    font: {
+                                        family: 'Inter',
+                                        size: 11
+                                    },
+                                    color: '#64748B'
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            function updateStatisticsUI(stats) {
+                if (!stats) return;
+                document.getElementById('stat-total-visitors').textContent = stats.total || 0;
+
+                var now = new Date();
+                var todayStr = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0') + '-' + String(now.getDate()).padStart(2, '0');
+                document.getElementById('stat-today-visitors').textContent = (stats.daily && stats.daily[todayStr]) ? stats.daily[todayStr] : 0;
+
+                var tbody = document.getElementById('stat-page-views-tbody');
+                var pages = stats.pages || {};
+
+                var pageList = Object.keys(pages).map(function (p) {
+                    return { name: p, views: pages[p] };
+                }).sort(function (a, b) {
+                    return b.views - a.views;
+                });
+
+                if (pageList.length > 0) {
+                    document.getElementById('stat-top-page').textContent = pageList[0].name;
+                } else {
+                    document.getElementById('stat-top-page').textContent = '-';
+                }
+
+                var totalPageViews = 0;
+                for (var j = 0; j < pageList.length; j++) {
+                    totalPageViews += pageList[j].views;
+                }
+                if (totalPageViews === 0) totalPageViews = 1;
+
+                if (pageList.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="4" class="text-center py-6 text-gray-400">Belum ada data kunjungan.</td></tr>';
+                } else {
+                    tbody.innerHTML = pageList.map(function (p) {
+                        var pct = Math.round((p.views / totalPageViews) * 100);
+                        var colorClass = '';
+                        if (pct < 50) {
+                            colorClass = 'text-green-600 font-semibold';
+                        } else if (pct >= 50 && pct <= 80) {
+                            colorClass = 'text-yellow-500 font-semibold';
+                        } else {
+                            colorClass = 'text-red-600 font-semibold';
+                        }
+
+                        var activePages = ['Home', 'About Us', 'Activities', 'Partners', 'Donation', 'Gallery'];
+                        var isActive = activePages.indexOf(p.name) !== -1;
+                        var statusBadge = isActive
+                            ? '<span class="bg-green-600 text-white text-[10px] font-semibold px-2 py-0.5 rounded shadow-sm">Active</span>'
+                            : '<span class="bg-red-500 text-white text-[10px] font-semibold px-2 py-0.5 rounded shadow-sm">Inactive</span>';
+
+                        return '<tr class="border-b border-gray-100 hover:bg-gray-50 transition-colors">' +
+                            '<td class="px-3 py-2.5 font-medium text-heading text-xs">' + escapeHtml(p.name) + '</td>' +
+                            '<td class="px-3 py-2.5 text-center">' + statusBadge + '</td>' +
+                            '<td class="px-3 py-2.5 text-right font-semibold text-xs">' + p.views + '</td>' +
+                            '<td class="px-3 py-2.5 text-right text-xs ' + colorClass + '">' + pct + '%</td>' +
+                            '</tr>';
+                    }).join('');
+                }
+
+                var homepageView = document.getElementById('view-homepage');
+                if (homepageView && !homepageView.classList.contains('hidden')) {
+                    renderVisitorChart(stats.daily || {});
+                }
+            }
+
+            function initStatisticsListener() {
+                if (unsubscribeVisitorStats) return;
+
+                var docRef = db.collection('heyyouth').doc('visitor_stats');
+                unsubscribeVisitorStats = docRef.onSnapshot(async function (docSnap) {
+                    var stats = null;
+                    if (docSnap.exists) {
+                        stats = docSnap.data();
+                    } else {
+                        stats = generateMockStatistics();
+                        await docRef.set(stats);
+                    }
+                    lastStatsData = stats;
+                    updateStatisticsUI(stats);
+                }, function (error) {
+                    console.error("Error loading statistics: ", error);
+                    showToast("Gagal memuat statistik pengunjung real-time", "error");
+                });
+            }
+
+            function initThemeToggle() {
+                var toggles = document.querySelectorAll('.theme-toggle-btn');
+                if (!toggles.length) return;
+
+                var currentTheme = localStorage.getItem('heyyouth_theme') || 'light';
+
+                function setTheme(theme) {
+                    if (theme === 'dark') {
+                        document.documentElement.classList.add('dark');
+                    } else {
+                        document.documentElement.classList.remove('dark');
+                    }
+                    localStorage.setItem('heyyouth_theme', theme);
+
+                    toggles.forEach(function (btn) {
+                        var iconSun = btn.querySelector('.theme-icon-sun');
+                        var iconMoon = btn.querySelector('.theme-icon-moon');
+                        if (iconSun && iconMoon) {
+                            if (theme === 'dark') {
+                                iconSun.classList.remove('hidden');
+                                iconMoon.classList.add('hidden');
+                            } else {
+                                iconSun.classList.add('hidden');
+                                iconMoon.classList.remove('hidden');
+                            }
+                        }
+                    });
+                }
+
+                setTheme(currentTheme);
+
+                toggles.forEach(function (btn) {
+                    btn.addEventListener('click', function () {
+                        var theme = document.documentElement.classList.contains('dark') ? 'light' : 'dark';
+                        setTheme(theme);
+                    });
+                });
+            }
+
+            async function initDashboard() {
+                var data = await window.getFirebaseData(DEFAULT_DATA);
+                memoryData = data;
+                renderAllLists();
+                initStatisticsListener();
+                initThemeToggle();
+            }
+        })();
+    </script>
+</body>
+
+</html>

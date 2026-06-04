@@ -1,0 +1,257 @@
+/* ========================================
+   HEY YOUTH! — Global Stylesheet (EXACT MATCH)
+   ======================================== */
+
+/* --- Navigation Link Underline Effect --- */
+.nav-link {
+    position: relative;
+}
+.nav-link::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: -4px;
+    left: 0;
+    background-color: #1D4ED8;
+    transition: width 0.3s ease;
+}
+.nav-link:hover::after {
+    width: 100%;
+}
+
+/* --- Scroll Offset --- */
+html { scroll-padding-top: 80px; }
+
+/* --- Custom Scrollbar --- */
+::-webkit-scrollbar { width: 10px; }
+::-webkit-scrollbar-track { background: #f1f1f1; }
+::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 5px; }
+
+/* =========================================
+   ANIMASI FAQ (ACCORDION)
+   ========================================= */
+.faq-content {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.faq-content.open { grid-template-rows: 1fr; }
+.faq-inner { overflow: hidden; }
+.faq-item.active {
+    border-color: #1D4ED8;
+    background-color: #EFF6FF;
+    box-shadow: 0 4px 6px -1px rgba(29, 78, 216, 0.1);
+}
+.faq-item.active .faq-header-text { color: #1D4ED8; font-weight: 700; }
+.faq-item.active .faq-icon {
+    transform: rotate(180deg);
+    background-color: #1D4ED8;
+    color: #ffffff;
+}
+
+/* =========================================
+   LEAFLET MAP & CUSTOM MARKER PIN (EXACT MATCH)
+   ========================================= */
+
+#map {
+    position: relative; 
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+.custom-div-icon {
+    background: transparent !important;
+    border: none !important;
+}
+
+/* Container yang lebih kecil agar lebih rapi di peta */
+.marker-pin-container {
+    position: relative !important;
+    width: 36px;  /* DIKECILKAN: Sebelumnya 40px */
+    height: 44px; /* DIKECILKAN: Sebelumnya 50px */
+    z-index: 9999 !important;
+    pointer-events: none;
+}
+
+/* --- 1. PIN BODY (Biru) --- */
+.marker-pin-body {
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 32px !important; /* DIKECILKAN: Sebelumnya 36px */
+    height: 32px !important;
+    background-color: #1D4ED8 !important;
+    border-radius: 50% 50% 50% 0 !important; 
+    transform: rotate(-45deg) !important; /* Posisi standard pin */
+    box-shadow: 0 3px 5px rgba(29, 78, 216, 0.4) !important; /* Shadow lebih halus */
+    z-index: 1 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+/* Lingkaran Putih Dalam */
+.marker-pin-body::after {
+    content: '' !important;
+    position: absolute !important;
+    width: 22px !important; /* Disesuaikan dengan ukuran baru */
+    height: 22px !important;
+    background-color: white !important;
+    border-radius: 50% !important;
+    z-index: 2 !important;
+}
+
+/* --- 2. IKON USER (SVG) --- */
+/* 
+   Trik Matematika Akhir:
+   Parent rotasi -45deg. 
+   Kita rotasi +45deg agar ikon tegak.
+   Geser sedikit (-50% - 1px) agar optik pas di tengah mata.
+*/
+.marker-icon {
+    position: absolute !important;
+    top: 50% !important;
+    left: 50% !important;
+    width: 16px !important; /* Ikon sedikit lebih kecil */
+    height: 16px !important;
+    color: #1D4ED8 !important;
+    
+    transform: translate(-51%, -51%) rotate(45deg) !important; 
+    
+    z-index: 3 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+/* --- 3. BADGE (Oranye) - TEKNIK EXACT MATCH --- */
+/* 
+   PERUBAHAN BESAR:
+   Alih-alih menggunakan 'bottom/right', kita menggunakan 'left/top' dengan nilai diagonal.
+   
+   Pada kotak 32px yang diputar -45deg:
+   - Titik pojok kanan bawah kira-kira ada di koordinat x=22px, y=22px (diagonal).
+   - Kita letakkan badge di koordinat itu.
+   - Lalu kita geser badge sendiri 50% (-9px) agar pusat badge berada tepat di garis pinggir.
+   - Hasilnya: Badge akan MENEMPEL TEPAT di dinding pin, tidak melayang.
+*/
+.marker-badge {
+    position: absolute !important;
+    top: 22px !important;    /* Posisi diagonal (lebih dari setengah ukuran pin) */
+    left: 22px !important;   /* Posisi diagonal */
+    
+    background-color: #F59E0B !important;
+    color: white !important;
+    border-radius: 50% !important;
+    width: 16px !important; /* Badge sedikit lebih kecil agar proporsional */
+    height: 16px !important;
+    font-size: 8px !important;
+    font-weight: bold !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    border: 2px solid white !important;
+    
+    /* Geser badge ke kiri atas agar pusatnya berada di koordinat (22,22) */
+    margin-top: -8px !important; 
+    margin-left: -8px !important;
+    
+    z-index: 10 !important; 
+    box-shadow: 0 2px 3px rgba(0,0,0,0.2) !important;
+}
+/* =========================================
+   LANGUAGE SWITCH
+   ========================================= */
+body.lang-en .lang-id { display: none !important; }
+body.lang-id .lang-en { display: none !important; }
+
+/* =========================================
+   GLOBAL DARK MODE STYLES
+   ========================================= */
+html.dark {
+    color-scheme: dark;
+}
+html.dark body {
+    background-color: #0b0f19 !important; /* slate-950 */
+    color: #cbd5e1 !important; /* slate-300 */
+}
+html.dark #navbar {
+    background-color: rgba(11, 15, 25, 0.9) !important; /* slate-950/90 */
+    border-color: #1e293b !important; /* slate-800 */
+}
+html.dark #navbar a.nav-link {
+    color: #cbd5e1 !important;
+}
+html.dark #navbar a.nav-link:hover {
+    color: #1D4ED8 !important;
+}
+html.dark #mobile-menu {
+    background-color: #0b0f19 !important;
+    border-color: #1e293b !important;
+}
+html.dark #mobile-menu a {
+    color: #cbd5e1 !important;
+}
+html.dark #mobile-menu a.bg-blue-50 {
+    background-color: rgba(30, 41, 59, 0.5) !important;
+    color: #1D4ED8 !important;
+}
+html.dark #mobile-menu a:hover {
+    background-color: #1e293b !important;
+    color: #1D4ED8 !important;
+}
+html.dark .bg-white {
+    background-color: #111827 !important; /* gray-900 */
+    color: #cbd5e1 !important;
+}
+html.dark .bg-bg {
+    background-color: #0b0f19 !important;
+}
+html.dark .bg-surface {
+    background-color: #111827 !important; /* gray-900 */
+    border-color: #1e293b !important;
+}
+html.dark .text-heading {
+    color: #f8fafc !important; /* slate-50 */
+}
+html.dark .text-body {
+    color: #94a3b8 !important; /* slate-400 */
+}
+html.dark .border-gray-100, 
+html.dark .border-gray-200 {
+    border-color: #1e293b !important;
+}
+html.dark .faq-item {
+    border-color: #1e293b !important;
+    background-color: #111827 !important;
+}
+html.dark .faq-item.active {
+    background-color: #1e293b !important;
+    border-color: #1D4ED8 !important;
+}
+html.dark .faq-item.active .faq-header-text {
+    color: #3b82f6 !important;
+}
+html.dark .faq-item.active .faq-icon {
+    background-color: #1D4ED8 !important;
+}
+html.dark .faq-header:hover {
+    background-color: #1e293b !important;
+}
+html.dark footer {
+    background-color: #0b0f19 !important;
+    border-color: #1e293b !important;
+}
+html.dark footer .bg-gray-800 {
+    background-color: #1e293b !important;
+}
+html.dark .marker-pin-body {
+    border: 1px solid #111827 !important;
+}
+/* Leaflet map dark style filter */
+html.dark #map {
+    filter: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%);
+}
+

@@ -1,0 +1,25 @@
+{
+  "name": "preview-heyyouth",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "build:css": "tailwindcss -i ./src/input.css -o ./assets/Style/tailwind.css --minify",
+    "watch:css": "tailwindcss -i ./src/input.css -o ./assets/Style/tailwind.css --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Henripras/preview-heyyouth.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Henripras/preview-heyyouth/issues"
+  },
+  "homepage": "https://github.com/Henripras/preview-heyyouth#readme",
+  "description": "",
+  "devDependencies": {
+    "tailwindcss": "^3.4.17"
+  }
+}

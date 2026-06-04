@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+
+<head>
+  <meta charset="UTF-8">
+  <script>
+    (function () {
+      var savedTheme = localStorage.getItem('heyyouth_theme') || 'light';
+      if (savedTheme === 'dark') {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+    })();
+  </script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About Us - Hey Youth!</title>
+  <meta name="description" content="Mengenal lebih dekat visi, misi, dan tim di balik gerakan sosial Hey Youth!">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Merriweather:ital,wght@0,700;1,400&display=swap"
+    rel="stylesheet">
+
+  <link rel="stylesheet" href="../assets/Style/tailwind.css">
+  <link rel="stylesheet" href="../assets/Style/Style.css">
+</head>
+
+<body class="lang-en bg-bg text-body font-sans antialiased selection:bg-primary selection:text-white">
+
+  <!-- Navigation Bar -->
+  <nav id="navbar"
+    class="fixed w-full z-50 transition-all duration-300 bg-white/90 backdrop-blur-md border-b border-gray-100">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-20">
+        <a href="index.html" class="flex-shrink-0 flex items-center gap-2 group">
+          <img src="../assets/img/NEW HEY YOUTH Sep 2025.png" alt="Hey Youth Logo"
+            class="h-10 w-auto object-contain group-hover:scale-105 transition-transform duration-300">
+        </a>
+        <div class="hidden md:flex space-x-8 items-center">
+          <a href="index.html" class="nav-link text-body hover:text-primary transition-colors">Home</a>
+          <a href="about us.html" class="nav-link text-primary font-bold hover:text-primaryDark transition-colors">About
+            us</a>
+          <a href="activities.html" class="nav-link text-body hover:text-primary transition-colors">Activities</a>
+          <a href="partner.html" class="nav-link text-body hover:text-primary transition-colors">Partners</a>
+          <a href="donation.html" class="nav-link text-body hover:text-primary transition-colors">Donation</a>
+        </div>
+        <div class="hidden md:flex items-center gap-3">
+          <a href="../CMS/Login.html"
+            class="text-body hover:text-primary px-3 py-2.5 rounded-lg font-medium transition-colors text-sm flex items-center gap-1.5"><i
+              class="fas fa-lock text-xs"></i> Dashboard</a>
+          <a href="https://bit.ly/HYOprec"
+            class="bg-primary hover:bg-primaryDark text-white px-6 py-2.5 rounded-full font-semibold transition-all shadow-md hover:shadow-lg hover:-translate-y-0.5 focus:ring-2 focus:ring-offset-2 focus:ring-primary">Join
+            Us!</a>
+          <button type="button"
+            class="theme-toggle-btn ml-2 p-2.5 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-700 transition-all focus:outline-none dark:bg-slate-800 dark:hover:bg-slate-700 dark:text-yellow-400 w-9 h-9 flex items-center justify-center"
+            aria-label="Toggle Theme">
+            <i class="fas fa-sun theme-icon-sun text-sm hidden"></i>
+            <i class="fas fa-moon theme-icon-moon text-sm"></i>
+          </button>
+          <div
+            class="btn-group lang-toggle-group ml-2 bg-gray-200 rounded-full p-1 relative flex items-center w-[84px] h-9 dark:bg-slate-800"
+            role="group" aria-label="Language Switch">
+            <div
+              class="absolute left-1 bg-white h-7 w-9 rounded-full shadow-sm transition-transform duration-300 lang-slider-bg dark:bg-slate-900"
+              style="transform: translateX(0);"></div>
+            <button type="button"
+              class="btn btn-secondary flex-1 text-xs font-bold text-gray-800 relative z-10 lang-btn dark:text-slate-200"
+              data-lang="id">ID</button>
+            <button type="button"
+              class="btn btn-secondary flex-1 text-xs font-bold text-gray-800 relative z-10 lang-btn dark:text-slate-200"
+              data-lang="en">EN</button>
+          </div>
+        </div>
+        <div class="md:hidden flex items-center">
+          <button id="mobile-menu-btn" class="text-heading hover:text-primary focus:outline-none p-2"
+            aria-label="Toggle menu">
+            <svg id="icon-menu" class="h-6 w-6 transition-transform duration-300" fill="none" viewBox="0 0 24 24"
+              stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+            <svg id="icon-close" class="h-6 w-6 hidden transition-transform duration-300" fill="none"
+              viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div id="mobile-menu"
+      class="hidden md:hidden bg-white border-t border-gray-100 absolute w-full shadow-xl transform transition-all duration-300 origin-top">
+      <div class="px-4 pt-4 pb-6 space-y-2">
+        <a href="index.html"
+          class="block px-4 py-3 rounded-xl text-base font-medium text-body hover:text-primary hover:bg-gray-50">Home</a>
+        <a href="about us.html"
+          class="block px-4 py-3 rounded-xl text-base font-medium text-primary font-bold bg-blue-50">About us</a>
+        <a href="activities.html"
+          class="block px-4 py-3 rounded-xl text-base font-medium text-body hover:text-primary hover:bg-gray-50">Activities</a>
+        <a href="partner.html"
+          class="block px-4 py-3 rounded-xl text-base font-medium text-body hover:text-primary hover:bg-gray-50">Partners</a>
+        <a href="donation.html"
+          class="block px-4 py-3 rounded-xl text-base font-medium text-body hover:text-primary hover:bg-gray-50">Donation</a>
+        <div class="pt-4 border-t border-gray-100 mt-4 space-y-2">
+          <a href="../CMS/Login.html"
+            class="block w-full text-center border-2 border-gray-200 text-heading font-semibold px-4 py-3 rounded-xl hover:border-primary hover:text-primary transition-colors flex items-center justify-center gap-2"><i
+              class="fas fa-lock text-sm"></i> Dashboard</a>
+          <a href="https://bit.ly/HYOprec"
+            class="block w-full text-center bg-accent text-white px-4 py-3 rounded-xl font-bold hover:bg-yellow-600 transition-colors shadow-md">Join
+            Us Now!</a>
+          <div class="flex justify-center mt-4 pt-2 gap-3 items-center">
+            <div
+              class="btn-group lang-toggle-group bg-gray-200 rounded-full p-1 relative flex items-center w-[84px] h-9 dark:bg-slate-800"
+              role="group" aria-label="Language Switch">
+              <div
+                class="absolute left-1 bg-white h-7 w-9 rounded-full shadow-sm transition-transform duration-300 lang-slider-bg dark:bg-slate-900"
+                style="transform: translateX(0);"></div>
+              <button type="button"
+                class="btn btn-secondary flex-1 text-xs font-bold text-gray-800 relative z-10 lang-btn dark:text-slate-200"
+                data-lang="id">ID</button>
+              <button type="button"
+                class="btn btn-secondary flex-1 text-xs font-bold text-gray-800 relative z-10 lang-btn dark:text-slate-200"
+                data-lang="en">EN</button>
+            </div>
+            <button type="button"
+              class="theme-toggle-btn p-2.5 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-700 transition-all focus:outline-none dark:bg-slate-800 dark:text-yellow-400 w-9 h-9 flex items-center justify-center"
+              aria-label="Toggle Theme">
+              <i class="fas fa-sun theme-icon-sun text-sm hidden"></i>
+              <i class="fas fa-moon theme-icon-moon text-sm"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <main class="pt-20">
+
+    <!-- Hero Section (DINAMIS) -->
+    <section id="about-hero" class="relative overflow-hidden py-20 lg:py-28 bg-white">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid lg:grid-cols-2 gap-12 items-center">
+          <div class="order-2 lg:order-1 animate-fade-in-up">
+            <span class="text-accent font-bold tracking-wider uppercase text-sm mb-4 block"><span
+                class="lang-id">Tentang Hey Youth</span><span class="lang-en">About Hey Youth</span></span>
+            <h1 id="hero-title" class="text-4xl lg:text-6xl font-bold text-heading leading-tight mb-6 font-serif"></h1>
+            <p id="hero-subtitle" class="text-lg text-body mb-8 leading-relaxed"></p>
+            <div class="flex items-center gap-4">
+              <div class="flex -space-x-3">
+                <img class="w-10 h-10 rounded-full border-2 border-white" src="https://picsum.photos/seed/p1/100/100"
+                  alt="Member">
+                <img class="w-10 h-10 rounded-full border-2 border-white" src="https://picsum.photos/seed/p2/100/100"
+                  alt="Member">
+                <img class="w-10 h-10 rounded-full border-2 border-white" src="https://picsum.photos/seed/p3/100/100"
+                  alt="Member">
+                <div id="hero-volunteer-badge"
+                  class="w-10 h-10 rounded-full border-2 border-white bg-surface flex items-center justify-center text-xs font-bold text-primary">
+                </div>
+              </div>
+              <span class="text-sm font-semibold text-body"><span class="lang-id">Relawan muda telah
+                  bergabung</span><span class="lang-en">Young volunteers have joined</span></span>
+            </div>
+          </div>
+
+          <div class="order-1 lg:order-2 relative">
+            <div class="absolute top-0 right-0 -mr-10 -mt-10 w-64 h-64 bg-primary/10 rounded-full blur-3xl z-0"></div>
+            <div class="absolute bottom-0 left-0 -ml-10 -mb-10 w-48 h-48 bg-accent/10 rounded-full blur-3xl z-0"></div>
+            <div
+              class="relative z-10 rounded-3xl overflow-hidden shadow-2xl border-4 border-white transform rotate-3 hover:rotate-0 transition-transform duration-500">
+              <img id="hero-image-display"
+                src="https://images.unsplash.com/photo-1481627834876-b7833e8f5570?q=80&w=2070&auto=format&fit=crop"
+                alt="About Hey Youth Education" class="w-full h-auto object-cover">
+              <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Vision & Mission Section -->
+    <section class="py-20 bg-surface relative overflow-hidden">
+      <div
+        class="absolute top-0 right-0 w-96 h-96 bg-white opacity-50 rounded-full blur-3xl -mr-20 -mt-20 pointer-events-none">
+      </div>
+      <div
+        class="absolute bottom-0 left-0 w-64 h-64 bg-blue-100 opacity-50 rounded-full blur-3xl -ml-10 -mb-10 pointer-events-none">
+      </div>
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div class="text-center mb-16 max-w-3xl mx-auto">
+          <h2 class="text-base text-primary font-bold tracking-wide uppercase mb-2"><span class="lang-id">Tujuan
+              Kami</span><span class="lang-en">Our Purpose</span></h2>
+          <h3 class="text-3xl lg:text-4xl font-extrabold text-heading"><span class="lang-id">Visi &amp; Misi
+              Kami</span><span class="lang-en">Our Vision &amp; Mission</span></h3>
+          <p class="mt-4 text-body text-lg"><span class="lang-id">Kami berdiri atas dasar impian untuk menciptakan
+              ekosistem belajar yang inklusif di seluruh nusantara.</span><span class="lang-en">We stand on the dream of
+              creating an inclusive learning ecosystem throughout the archipelago.</span></p>
+        </div>
+        <div class="grid md:grid-cols-2 gap-8 mb-20">
+          <div
+            class="bg-white p-10 rounded-3xl shadow-lg border border-blue-100 relative overflow-hidden group hover:-translate-y-2 transition-transform duration-300">
+            <div class="absolute top-0 right-0 p-6 opacity-10 group-hover:opacity-20 transition-opacity"><i
+                class="fas fa-eye text-9xl text-primary"></i></div>
+            <div class="w-14 h-14 bg-blue-100 rounded-2xl flex items-center justify-center text-primary mb-6"><i
+                class="fas fa-eye text-2xl"></i></div>
+            <h4 class="text-2xl font-bold text-heading mb-4"><span class="lang-id">Visi</span><span
+                class="lang-en">Vision</span></h4>
+            <p class="text-body text-lg leading-relaxed"><span class="lang-id">Mewujudkan akses pendidikan yang setara
+                dan berkualitas bagi setiap pemuda di Indonesia, tanpa memandang latar belakang sosial maupun
+                ekonomi.</span><span class="lang-en">Realizing equal and quality access to education for every youth in
+                Indonesia, regardless of social or economic background.</span></p>
+          </div>
+          <div
+            class="bg-white p-10 rounded-3xl shadow-lg border border-blue-100 relative overflow-hidden group hover:-translate-y-2 transition-transform duration-300">
+            <div class="absolute top-0 right-0 p-6 opacity-10 group-hover:opacity-20 transition-opacity"><i
+                class="fas fa-bullseye text-9xl text-accent"></i></div>
+            <div class="w-14 h-14 bg-yellow-100 rounded-2xl flex items-center justify-center text-accent mb-6"><i
+                class="fas fa-bullseye text-2xl"></i></div>
+            <h4 class="text-2xl font-bold text-heading mb-4"><span class="lang-id">Misi</span><span
+                class="lang-en">Mission</span></h4>
+            <p class="text-body text-lg leading-relaxed"><span class="lang-id">Menghubungkan pemimpin muda yang
+                berpotensi dengan komunitas yang membutuhkan dukungan pendidikan, serta memberdayakan mereka melalui
+                program mentoring intensif.</span><span class="lang-en">Connecting potential young leaders with
+                communities that need educational support, and empowering them through intensive mentoring
+                programs.</span></p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Core Values Section -->
+    <section class="py-20 bg-white">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16">
+          <h2 class="text-base text-primary font-bold tracking-wide uppercase mb-2"><span class="lang-id">Budaya
+              Kami</span><span class="lang-en">Our Culture</span></h2>
+          <h3 class="text-3xl lg:text-4xl font-extrabold text-heading"><span class="lang-id">Nilai-Nilai
+              Kami</span><span class="lang-en">Our Values</span></h3>
+        </div>
+        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div class="text-center group p-6 rounded-2xl hover:bg-surface transition-colors duration-300">
+            <div
+              class="w-20 h-20 mx-auto bg-blue-50 rounded-full flex items-center justify-center text-primary mb-6 group-hover:scale-110 group-hover:bg-primary group-hover:text-white transition-all duration-300 shadow-sm">
+              <i class="fas fa-star text-3xl"></i></div>
+            <h4 class="text-xl font-bold text-heading mb-3"><span class="lang-id">Keunggulan</span><span
+                class="lang-en">Excellence</span></h4>
+            <p class="text-sm text-body leading-relaxed"><span class="lang-id">Kami berkomitmen mengejar standar
+                tertinggi untuk memastikan dampak pendidikan yang nyata dan berkelanjutan.</span><span
+                class="lang-en">We are committed to pursuing the highest standards to ensure real and sustainable
+                educational impact.</span></p>
+          </div>
+          <div class="text-center group p-6 rounded-2xl hover:bg-surface transition-colors duration-300">
+            <div
+              class="w-20 h-20 mx-auto bg-indigo-50 rounded-full flex items-center justify-center text-indigo-600 mb-6 group-hover:scale-110 group-hover:bg-indigo-600 group-hover:text-white transition-all duration-300 shadow-sm">
+              <i class="fas fa-users text-3xl"></i></div>
+            <h4 class="text-xl font-bold text-heading mb-3"><span class="lang-id">Kolaborasi</span><span
+                class="lang-en">Collaboration</span></h4>
+            <p class="text-sm text-body leading-relaxed"><span class="lang-id">Kami percaya bahwa perubahan komunitas
+                besar tercapai melalui kolaborasi yang erat antara relawan dan mitra.</span><span class="lang-en">We
+                believe major community change is achieved through close collaboration between volunteers and
+                partners.</span></p>
+          </div>
+          <div class="text-center group p-6 rounded-2xl hover:bg-surface transition-colors duration-300">
+            <div
+              class="w-20 h-20 mx-auto bg-teal-50 rounded-full flex items-center justify-center text-teal-600 mb-6 group-hover:scale-110 group-hover:bg-teal-600 group-hover:text-white transition-all duration-300 shadow-sm">
+              <i class="fas fa-lightbulb text-3xl"></i></div>
+            <h4 class="text-xl font-bold text-heading mb-3"><span class="lang-id">Inovasi</span><span
+                class="lang-en">Innovation</span></h4>
+            <p class="text-sm text-body leading-relaxed"><span class="lang-id">Kami selalu mencari cara kreatif dan
+                inovatif untuk memecahkan tantangan pendidikan di era digital.</span><span class="lang-en">We always
+                seek creative and innovative ways to solve educational challenges in the digital era.</span></p>
+          </div>
+          <div class="text-center group p-6 rounded-2xl hover:bg-surface transition-colors duration-300">
+            <div
+              class="w-20 h-20 mx-auto bg-orange-50 rounded-full flex items-center justify-center text-orange-500 mb-6 group-hover:scale-110 group-hover:bg-orange-500 group-hover:text-white transition-all duration-300 shadow-sm">
+              <i class="fas fa-heart text-3xl"></i></div>
+            <h4 class="text-xl font-bold text-heading mb-3"><span class="lang-id">Kepedulian</span><span
+                class="lang-en">Compassion</span></h4>
+            <p class="text-sm text-body leading-relaxed"><span class="lang-id">Empati dan kepedulian terhadap sesama
+                adalah inti dari setiap langkah yang kami ambil dalam membantu komunitas.</span><span
+                class="lang-en">Empathy and care for others are at the core of every step we take in helping the
+                community.</span></p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Milestones Section -->
+    <section class="py-20 bg-bg relative overflow-hidden">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16">
+          <h2 class="text-base text-primary font-bold tracking-wide uppercase mb-2"><span
+              class="lang-id">Sejarah</span><span class="lang-en">History</span></h2>
+          <h3 class="text-3xl lg:text-4xl font-extrabold text-heading"><span class="lang-id">Pencapaian &amp;
+              Pertumbuhan</span><span class="lang-en">Milestones &amp; Growth</span></h3>
+          <p class="mt-4 text-body"><span class="lang-id">Momen-momen penting yang membentuk gerakan kami</span><span
+              class="lang-en">Key moments that shaped our movement</span></p>
+        </div>
+        <div class="relative">
+          <div class="hidden md:block absolute left-1/2 transform -translate-x-1/2 h-full w-1 bg-blue-100 rounded-full">
+          </div>
+          <div class="space-y-12">
+            <div class="flex flex-col md:flex-row items-center justify-between group">
+              <div class="md:w-5/12 text-center md:text-right mb-4 md:mb-0">
+                <div
+                  class="inline-block bg-white p-4 rounded-xl shadow-sm border border-gray-100 group-hover:shadow-md transition-shadow">
+                  <h4 class="font-bold text-primary text-lg">2018</h4>
+                  <p class="font-bold text-heading mb-1"><span class="lang-id">Awal Mula</span><span class="lang-en">The
+                      Beginning</span></p>
+                  <p class="text-sm text-gray-500"><span class="lang-id">Memulai program pemberdayaan pendidikan di
+                      Banten Selatan.</span><span class="lang-en">Started the educational empowerment program in South
+                      Banten.</span></p>
+                </div>
+              </div>
+              <div
+                class="z-10 w-10 h-10 rounded-full bg-accent border-4 border-white shadow-md flex items-center justify-center text-white font-bold text-xs">
+                1</div>
+              <div class="md:w-5/12 hidden md:block"></div>
+            </div>
+            <div class="flex flex-col md:flex-row items-center justify-between group">
+              <div class="md:w-5/12 hidden md:block"></div>
+              <div
+                class="z-10 w-10 h-10 rounded-full bg-primary border-4 border-white shadow-md flex items-center justify-center text-white font-bold text-xs">
+                2</div>
+              <div class="md:w-5/12 text-center md:text-left mt-4 md:mt-0">
+                <div
+                  class="inline-block bg-white p-4 rounded-xl shadow-sm border border-gray-100 group-hover:shadow-md transition-shadow">
+                  <h4 class="font-bold text-primary text-lg">2019</h4>
+                  <p class="font-bold text-heading mb-1"><span class="lang-id">Memperluas Jangkauan</span><span
+                      class="lang-en">Expanding Reach</span></p>
+                  <p class="text-sm text-gray-500"><span class="lang-id">Volunteer melebihi 50 orang, mengajar di daerah
+                      terpencil.</span><span class="lang-en">Volunteers exceeded 50, teaching in remote areas.</span>
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="flex flex-col md:flex-row items-center justify-between group">
+              <div class="md:w-5/12 text-center md:text-right mb-4 md:mb-0">
+                <div
+                  class="inline-block bg-white p-4 rounded-xl shadow-sm border border-gray-100 group-hover:shadow-md transition-shadow">
+                  <h4 class="font-bold text-primary text-lg">2020</h4>
+                  <p class="font-bold text-heading mb-1"><span class="lang-id">Masuk Digital</span><span
+                      class="lang-en">Going Digital</span></p>
+                  <p class="text-sm text-gray-500"><span class="lang-id">Adaptasi pembelajaran virtual &amp; webinar
+                      beasiswa pertama.</span><span class="lang-en">Adapted to virtual learning &amp; hosted the first
+                      scholarship webinar.</span></p>
+                </div>
+              </div>
+              <div
+                class="z-10 w-10 h-10 rounded-full bg-primary border-4 border-white shadow-md flex items-center justify-center text-white font-bold text-xs">
+                3</div>
+              <div class="md:w-5/12 hidden md:block"></div>
+            </div>
+            <div class="flex flex-col md:flex-row items-center justify-between group">
+              <div class="md:w-5/12 hidden md:block"></div>
+              <div
+                class="z-10 w-10 h-10 rounded-full bg-primary border-4 border-white shadow-md flex items-center justify-center text-white font-bold text-xs">
+                4</div>
+              <div class="md:w-5/12 text-center md:text-left mt-4 md:mt-0">
+                <div
+                  class="inline-block bg-white p-4 rounded-xl shadow-sm border border-gray-100 group-hover:shadow-md transition-shadow">
+                  <h4 class="font-bold text-primary text-lg">2021</h4>
+                  <p class="font-bold text-heading mb-1"><span class="lang-id">Jaringan Global</span><span
+                      class="lang-en">Global Network</span></p>
+                  <p class="text-sm text-gray-500"><span class="lang-id">Kontributor dari 10 negara bergabung, membangun
+                      komunitas global.</span><span class="lang-en">Contributors from 10 countries joined, building a
+                      global community.</span></p>
+                </div>
+              </div>
+            </div>
+            <div class="flex flex-col md:flex-row items-center justify-between group">
+              <div class="md:w-5/12 text-center md:text-right mb-4 md:mb-0">
+                <div
+                  class="inline-block bg-white p-4 rounded-xl shadow-sm border border-gray-100 group-hover:shadow-md transition-shadow">
+                  <h4 class="font-bold text-primary text-lg">2025</h4>
+                  <p class="font-bold text-heading mb-1"><span class="lang-id">Terus Melangkah</span><span
+                      class="lang-en">Moving Forward</span></p>
+                  <p class="text-sm text-gray-500"><span class="lang-id">Mencapai 1000+ Relawan, 1000+ Aktivitas, dan
+                      mendukung SDGs.</span><span class="lang-en">Reached 1000+ Volunteers, 1000+ Activities, and
+                      supporting SDGs.</span></p>
+                </div>
+              </div>
+              <div
+                class="z-10 w-10 h-10 rounded-full bg-accent border-4 border-white shadow-md flex items-center justify-center text-white font-bold text-xs">
+                5</div>
+              <div class="md:w-5/12 hidden md:block"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Leadership Team Section (DINAMIS) -->
+    <section class="py-20 bg-white">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16">
+          <h2 class="text-base text-primary font-bold tracking-wide uppercase mb-2"><span class="lang-id">Orang-Orang di
+              Balik Layar</span><span class="lang-en">People Behind The Scene</span></h2>
+          <h3 class="text-3xl lg:text-4xl font-extrabold text-heading"><span class="lang-id">Tim Kepemimpinan
+              Kami</span><span class="lang-en">Our Leadership Team</span></h3>
+          <p class="mt-4 text-body"><span class="lang-id">Kenali individu-individu bersemangat yang menggerakkan misi
+              kami untuk mengubah pendidikan di seluruh Indonesia.</span><span class="lang-en">Meet the passionate
+              individuals driving our mission to transform education across Indonesia.</span></p>
+        </div>
+
+        <div id="team-container" class="grid md:grid-cols-3 gap-8">
+          <div class="col-span-full text-center py-10"><span class="lang-id">Memuat data tim...</span><span
+              class="lang-en">Loading team data...</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Secondary CTA Section -->
+    <section class="py-20 bg-bg text-center">
+      <div class="max-w-4xl mx-auto px-4">
+        <h2 class="text-3xl lg:text-5xl font-bold text-heading mb-6">
+          <span class="lang-id">Siap menjadi bagian dari gerakan ini?</span>
+          <span class="lang-en">Ready to be part of the movement?</span>
+        </h2>
+        <p class="text-lg text-gray-600 mb-10 max-w-2xl mx-auto">
+          <span class="lang-id">Bersama-sama, kita bisa menciptakan masa depan yang lebih cerah bagi generasi
+            penerus.</span>
+          <span class="lang-en">Together, we can create a brighter future for the next generation.</span>
+        </p>
+        <div class="flex flex-col sm:flex-row justify-center gap-4">
+          <a href="https://bit.ly/HYOprec"
+            class="bg-primary hover:bg-primaryDark text-white px-8 py-3.5 rounded-full font-bold transition-all shadow-lg hover:-translate-y-1"><span
+              class="lang-id">Bergabung dengan Hey Youth!</span><span class="lang-en">Join Hey Youth Today!</span></a>
+          <a href="index.html#contact"
+            class="bg-white border border-gray-300 text-heading hover:border-primary hover:text-primary px-8 py-3.5 rounded-full font-bold transition-all shadow-sm hover:shadow-md"><span
+              class="lang-id">Hubungi Kami</span><span class="lang-en">Contact Us</span></a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-heading text-gray-400 py-12 border-t border-gray-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid md:grid-cols-3 gap-8 mb-8">
+        <div>
+          <span class="text-2xl font-bold text-white block mb-4">Hey Youth!</span>
+          <p class="mt-4 text-sm leading-relaxed text-gray-400">Helping youths grow through webinar, mentoring &amp;
+            volunteering<br>Est. 2018 | 5K+ learners | 📩 Join our team to make a real impact 🌏</p>
+        </div>
+        <div>
+          <h4 class="text-white font-bold mb-4 uppercase text-xs tracking-wider">Contact</h4>
+          <ul class="space-y-2 text-sm">
+            <li class="flex items-center gap-2"><i class="fas fa-envelope text-accent"></i> hey.youth.id@gmail.com</li>
+            <li class="flex items-center gap-2"><i class="fas fa-map-marker-alt text-accent"></i> Jakarta, Indonesia
+            </li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="text-white font-bold mb-4 uppercase text-xs tracking-wider">Follow Us</h4>
+          <div class="flex space-x-4">
+            <a href="#"
+              class="w-8 h-8 rounded bg-gray-800 flex items-center justify-center hover:bg-primary hover:text-white transition-all"><i
+                class="fab fa-instagram"></i></a>
+            <a href="#"
+              class="w-8 h-8 rounded bg-gray-800 flex items-center justify-center hover:bg-primary hover:text-white transition-all"><i
+                class="fab fa-linkedin-in"></i></a>
+            <a href="#"
+              class="w-8 h-8 rounded bg-gray-800 flex items-center justify-center hover:bg-primary hover:text-white transition-all"><i
+                class="fab fa-youtube"></i></a>
+            <a href="#"
+              class="w-8 h-8 rounded bg-gray-800 flex items-center justify-center hover:bg-primary hover:text-white transition-all"><i
+                class="fab fa-tiktok"></i></a>
+            <a href="#"
+              class="w-8 h-8 rounded bg-gray-800 flex items-center justify-center hover:bg-primary hover:text-white transition-all"><i
+                class="fa-brands fa-x-twitter"></i></a>
+          </div>
+        </div>
+      </div>
+      <div class="border-t border-gray-800 pt-8 text-center text-xs">&copy; Hey Youth. Made with ❤ for Golden Future.
+        All right reserved.</div>
+    </div>
+  </footer>
+
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+  <script src="../assets/Javascript/firebase-init.js"></script>
+  <script src="../assets/Javascript/Script.js"></script>
+  <script>
+    (function () {
+      function _esc(s) {
+        if (!s) return '';
+        var d = document.createElement('div');
+        d.textContent = s;
+        return d.innerHTML;
+      }
+
+      var _DEFAULT_ABOUT = {
+        hero: {
+          title: '<span class="lang-id">Mendidik Untuk <br><span class="text-primary">Masa Depan Indonesia</span></span><span class="lang-en">Educating For <br><span class="text-primary">Indonesia\'s Future</span></span>',
+          subtitle: '<span class="lang-id">Hey Youth adalah sebuah komunitas pemuda di Indonesia yang didedikasikan untuk melakukan perubahan melalui pendidikan. Kami menyediakan akses ke pendidikan berkualitas dan peluang mentoring bagi mereka yang membutuhkan.</span><span class="lang-en">Hey Youth is a youth community in Indonesia dedicated to making changes through education. We provide access to quality education and mentoring opportunities for those in need.</span>',
+          volunteerCount: '1k+'
+        },
+        team: [
+          { id: 201, name: 'Yuni Triandini', role: 'Founder', image: '../assets/img/ceo.jpeg', linkedin: '#', instagram: '#' },
+          { id: 202, name: 'Rama', role: 'Head of Marketing', image: 'https://ui-avatars.com/api/?name=Rama&size=100&background=random&color=fff', linkedin: '#', instagram: '#' },
+          { id: 203, name: 'Dzikri', role: 'Head of Graphic Designer', image: 'https://ui-avatars.com/api/?name=Dzikri&size=100&background=random&color=fff', linkedin: '#', instagram: '#' }
+        ]
+      };
+
+      function renderHero(heroData) {
+        var titleEl = document.getElementById('hero-title');
+        var subEl = document.getElementById('hero-subtitle');
+        var badgeEl = document.getElementById('hero-volunteer-badge');
+        var imgEl = document.getElementById('hero-image-display');
+
+        if (titleEl) titleEl.innerHTML = heroData.title_id || heroData.title_en
+          ? '<span class="lang-id">' + (heroData.title_id || heroData.title || '') + '</span><span class="lang-en">' + (heroData.title_en || heroData.title || '') + '</span>'
+          : (heroData.title || '');
+        if (subEl) subEl.innerHTML = heroData.subtitle_id || heroData.subtitle_en
+          ? '<span class="lang-id">' + (heroData.subtitle_id || heroData.subtitle || '') + '</span><span class="lang-en">' + (heroData.subtitle_en || heroData.subtitle || '') + '</span>'
+          : (heroData.subtitle || '');
+        if (badgeEl) badgeEl.textContent = heroData.volunteerCount || '1k+';
+
+        if (imgEl && heroData.image) {
+          imgEl.src = heroData.image;
+          imgEl.onerror = function () {
+            this.src = 'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?q=80&w=2070&auto=format&fit=crop';
+          };
+        }
+      }
+
+      function renderTeam(teamData) {
+        var container = document.getElementById('team-container');
+        if (!container) return;
+
+        var html = '';
+        for (var i = 0; i < teamData.length; i++) {
+          var member = teamData[i];
+          var imgSrc = member.image || '';
+          var displaySrc = imgSrc ? window._resolveImgPath(imgSrc) : 'https://picsum.photos/seed/' + member.id + '/200/200';
+          var fallback = 'https://ui-avatars.com/api/?name=' + encodeURIComponent(member.name) + '&size=100&background=random&color=fff';
+
+          var roleHtml = member.role_id || member.role_en
+            ? '<span class="lang-id">' + _esc(member.role_id || member.role || '') + '</span><span class="lang-en">' + _esc(member.role_en || member.role || '') + '</span>'
+            : _esc(member.role || '');
+
+          html += '<div class="bg-bg rounded-3xl p-6 text-center hover:shadow-xl transition-all duration-300 border border-gray-100">' +
+            '<div class="w-32 h-32 mx-auto rounded-full p-1 bg-gradient-to-tr from-primary to-accent mb-4">' +
+            '<img src="' + _esc(displaySrc) + '" alt="' + _esc(member.name) + '" class="w-full h-full rounded-full object-cover border-4 border-white" onerror="this.src=\'' + fallback + '\'">' +
+            '</div>' +
+            '<h4 class="text-xl font-bold text-heading">' + _esc(member.name) + '</h4>' +
+            '<p class="text-primary font-semibold text-sm mb-4">' + roleHtml + '</p>' +
+            '<div class="flex justify-center space-x-3">' +
+            '<a href="' + _esc(member.linkedin) + '" class="text-gray-400 hover:text-primary"><i class="fab fa-linkedin-in"></i></a>' +
+            '<a href="' + _esc(member.instagram) + '" class="text-gray-400 hover:text-primary"><i class="fab fa-instagram"></i></a>' +
+            '</div>' +
+            '</div>';
+        }
+        container.innerHTML = html;
+      }
+
+      async function initAbout() {
+        var data = await window.getFirebaseData({ aboutHero: _DEFAULT_ABOUT.hero, team: _DEFAULT_ABOUT.team });
+        renderHero(data.aboutHero || _DEFAULT_ABOUT.hero);
+        renderTeam(data.team || _DEFAULT_ABOUT.team);
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initAbout);
+      } else {
+        initAbout();
+      }
+
+    })();
+  </script>
+</body>
+
+</html>
