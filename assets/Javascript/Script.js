@@ -252,7 +252,7 @@ function _bilingualHtml(idVal, enVal, fallback) {
         bankName: 'Bank Central Asia (BCA)',
         accountName: 'Yuni Triandini',
         accountNumber: '466 0070 724',
-        qrisImage: 'https://via.placeholder.com/200?text=QRIS' 
+        qrisImage: 'img/qris-mockup.png' 
     },
 
     // DYNAMIC HOME/ABOUT/ACTIVITIES DATA FOR SYNC

@@ -18,7 +18,16 @@ window.getFirebaseData = async function(defaultData) {
         const docRef = db.collection('heyyouth').doc('cms_data');
         const docSnap = await docRef.get();
         if (docSnap.exists) {
-            return docSnap.data();
+            const data = docSnap.data();
+            if (data && data.donationSettings) {
+                if (!data.donationSettings.qrisImage || data.donationSettings.qrisImage.includes('via.placeholder.com')) {
+                    data.donationSettings.qrisImage = 'img/qris-mockup.png';
+                }
+                if (!data.donationSettings.stripImage || data.donationSettings.stripImage.includes('Front Card.webp')) {
+                    data.donationSettings.stripImage = 'img/Front Card.webp';
+                }
+            }
+            return data;
         } else {
             // Seed default data if it doesn't exist
             if (defaultData) {
@@ -28,6 +37,14 @@ window.getFirebaseData = async function(defaultData) {
         }
     } catch (e) {
         console.error("Error reading from Firebase:", e);
+        if (defaultData && defaultData.donationSettings) {
+            if (!defaultData.donationSettings.qrisImage || defaultData.donationSettings.qrisImage.includes('via.placeholder.com')) {
+                defaultData.donationSettings.qrisImage = 'img/qris-mockup.png';
+            }
+            if (!defaultData.donationSettings.stripImage || defaultData.donationSettings.stripImage.includes('Front Card.webp')) {
+                defaultData.donationSettings.stripImage = 'img/Front Card.webp';
+            }
+        }
         return JSON.parse(JSON.stringify(defaultData)); // Fallback
     }
 };

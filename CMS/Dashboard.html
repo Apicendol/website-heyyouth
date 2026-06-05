@@ -940,7 +940,7 @@
                     bankName: 'Bank Central Asia (BCA)',
                     accountName: 'Yuni Triandini',
                     accountNumber: '466 0070 724',
-                    qrisImage: 'https://via.placeholder.com/200?text=QRIS'
+                    qrisImage: 'img/qris-mockup.png'
                 },
                 aboutHero: {
                     title: 'Mendidik Untuk <br><span class="text-primary">Masa Depan Indonesia</span>',
@@ -1750,7 +1750,7 @@
                     html += formTextarea('Sub Hero', 'f-hero-sub', item ? item.heroSubtitle : '', 'Deskripsi...');
                     html += formField('Teks di Gambar Strip', 'f-strip-text', item ? item.stripText : '', 'text', 'Together We Can');
 
-                    html += '<div class="mb-4"><label class="block text-sm font-semibold text-heading mb-1.5">Gambar Strip (Banner Tengah)</label><div id="upload-zone" class="upload-zone rounded-xl p-4 text-center">';
+                    html += '<div class="mb-4"><label class="block text-sm font-semibold text-heading mb-1.5">Gambar Strip (Banner Tengah)</label><p class="text-[10px] text-gray-400 mb-2">Rekomendasi ukuran: 1200 x 400 px (Rasio 3:1)</p><div id="upload-zone" class="upload-zone rounded-xl p-4 text-center">';
                     var existingStrip = '';
                     if (item && item.stripImage) existingStrip = _resolveImgPath(item.stripImage);
                     if (existingStrip) {
@@ -1765,7 +1765,7 @@
                     html += formField('Atas Nama', 'f-acc-name', item ? item.accountName : '', 'text', 'Yuni Triandini');
                     html += formField('Nomor Rekening', 'f-acc-num', item ? item.accountNumber : '', 'text', '466...');
 
-                    html += '<div class="mb-4"><label class="block text-sm font-semibold text-heading mb-1.5">Gambar QRIS</label><div id="upload-zone-qris" class="upload-zone rounded-xl p-4 text-center border border-dashed border-gray-300">';
+                    html += '<div class="mb-4"><label class="block text-sm font-semibold text-heading mb-1.5">Gambar QRIS</label><p class="text-[10px] text-gray-400 mb-2">Rekomendasi ukuran: 500 x 500 px (Rasio 1:1, Square)</p><div id="upload-zone-qris" class="upload-zone rounded-xl p-4 text-center border border-dashed border-gray-300">';
                     var existingQris = '';
                     if (item && item.qrisImage) existingQris = _resolveImgPath(item.qrisImage);
                     if (existingQris) {
@@ -1782,6 +1782,7 @@
 
                     html += '<div class="mb-4">' +
                         '<label class="block text-sm font-semibold text-heading mb-1.5">Gambar Background Hero</label>' +
+                        '<p class="text-[10px] text-gray-400 mb-2">Rekomendasi ukuran: 1200 x 800 px atau 1920 x 1080 px (Rasio 3:2 atau 16:9)</p>' +
                         '<div id="upload-zone" class="upload-zone rounded-xl p-4 text-center">';
                     var existingHeroSrc = '';
                     if (item && item.image) existingHeroSrc = _resolveImgPath(item.image);
@@ -1800,7 +1801,7 @@
 
                     var existingSrc = '';
                     if (item && item.image) existingSrc = _resolveImgPath(item.image);
-                    html += '<div class="mb-4"><label class="block text-sm font-semibold text-heading mb-1.5">Foto</label><div id="upload-zone" class="upload-zone rounded-xl p-4 text-center">';
+                    html += '<div class="mb-4"><label class="block text-sm font-semibold text-heading mb-1.5">Foto</label><p class="text-[10px] text-gray-400 mb-2">Rekomendasi ukuran: 300 x 300 px (Rasio 1:1, Square)</p><div id="upload-zone" class="upload-zone rounded-xl p-4 text-center">';
                     if (existingSrc) html += '<div class="relative"><img src="' + escapeAttr(existingSrc) + '" class="w-full h-40 object-contain rounded-lg bg-gray-50"><button type="button" onclick="removeUpload()" class="absolute top-1 right-1 w-7 h-7 bg-red-500 text-white rounded-full"><i class="fas fa-times"></i></button></div><p class="text-xs text-green-600 mt-2">Gambar tersedia</p>';
                     else html += '<div class="py-6 text-center"><i class="fas fa-cloud-upload-alt text-3xl text-gray-300 mb-2"></i><p class="text-sm text-gray-500">Upload Foto</p></div>';
                     html += '</div></div>';
@@ -1832,7 +1833,7 @@
 
                     var existingSrc = '';
                     if (item && item.image) existingSrc = _resolveImgPath(item.image);
-                    html += '<div class="mb-4"><label class="block text-sm font-semibold text-heading mb-1.5">Foto Profil</label><div id="upload-zone" class="upload-zone rounded-xl p-4 text-center">';
+                    html += '<div class="mb-4"><label class="block text-sm font-semibold text-heading mb-1.5">Foto Profil</label><p class="text-[10px] text-gray-400 mb-2">Rekomendasi ukuran: 400 x 400 px (Rasio 1:1, Square)</p><div id="upload-zone" class="upload-zone rounded-xl p-4 text-center">';
                     if (existingSrc) html += '<div class="relative"><img src="' + escapeAttr(existingSrc) + '" class="w-full h-40 object-contain rounded-lg bg-gray-50"><button type="button" onclick="removeUpload()" class="absolute top-1 right-1 w-7 h-7 bg-red-500 text-white rounded-full"><i class="fas fa-times"></i></button></div><p class="text-xs text-green-600 mt-2">Foto tersedia</p>';
                     else html += '<div class="py-6 text-center"><i class="fas fa-cloud-upload-alt text-3xl text-gray-300 mb-2"></i><p class="text-sm text-gray-500">Upload Foto</p></div>';
                     html += '</div></div>';
@@ -1851,7 +1852,7 @@
 
                     var existingSrc = '';
                     if (item && item.image) existingSrc = _resolveImgPath(item.image);
-                    html += '<div class="mb-4"><label class="block text-sm font-semibold text-heading mb-1.5">Gambar Cover</label><div id="upload-zone" class="upload-zone rounded-xl p-4 text-center">';
+                    html += '<div class="mb-4"><label class="block text-sm font-semibold text-heading mb-1.5">Gambar Cover</label><p class="text-[10px] text-gray-400 mb-2">Rekomendasi ukuran: 800 x 500 px (Rasio 16:10 atau 4:3)</p><div id="upload-zone" class="upload-zone rounded-xl p-4 text-center">';
                     if (existingSrc) html += '<div class="relative"><img src="' + escapeAttr(existingSrc) + '" class="w-full h-40 object-cover rounded-lg bg-gray-50"><button type="button" onclick="removeUpload()" class="absolute top-1 right-1 w-7 h-7 bg-red-500 text-white rounded-full"><i class="fas fa-times"></i></button></div><p class="text-xs text-green-600 mt-2">Gambar tersedia</p>';
                     else html += '<div class="py-6 text-center"><i class="fas fa-image text-3xl text-gray-300 mb-2"></i><p class="text-sm text-gray-500">Upload Gambar</p></div>';
                     html += '</div></div>';
@@ -1863,7 +1864,7 @@
 
                     var existingThumb = '';
                     if (item && item.thumbnail) existingThumb = _resolveImgPath(item.thumbnail);
-                    html += '<div class="mb-4"><label class="block text-sm font-semibold text-heading mb-1.5">Thumbnail Cover</label><div id="upload-zone" class="upload-zone rounded-xl p-4 text-center">';
+                    html += '<div class="mb-4"><label class="block text-sm font-semibold text-heading mb-1.5">Thumbnail Cover</label><p class="text-[10px] text-gray-400 mb-2">Rekomendasi ukuran: 500 x 500 px (Rasio 1:1, Square)</p><div id="upload-zone" class="upload-zone rounded-xl p-4 text-center">';
                     if (existingThumb) {
                         html += '<div class="relative"><img src="' + escapeAttr(existingThumb) + '" class="w-full h-40 object-cover rounded-lg bg-gray-50"><button type="button" onclick="removeUpload()" class="absolute top-1 right-1 w-7 h-7 bg-red-500 text-white rounded-full"><i class="fas fa-times"></i></button></div><p class="text-xs text-green-600 mt-2">Thumbnail tersedia</p>';
                     } else {
@@ -1913,7 +1914,7 @@
 
                     var existingSrc = '';
                     if (item && item.image) existingSrc = _resolveImgPath(item.image);
-                    html += '<div class="mb-4"><label class="block text-sm font-semibold text-heading mb-1.5">Logo Partner (Opsional)</label><p class="text-[10px] text-gray-400 mb-2">Jika diupload, akan menggantikan icon di atas.</p><div id="upload-zone" class="upload-zone rounded-xl p-4 text-center">';
+                    html += '<div class="mb-4"><label class="block text-sm font-semibold text-heading mb-1.5">Logo Partner (Opsional)</label><p class="text-[10px] text-gray-400 mb-2">Rekomendasi ukuran: 400 x 200 px atau 300 x 300 px (PNG Transparan disukai). Jika diupload, akan menggantikan icon di atas.</p><div id="upload-zone" class="upload-zone rounded-xl p-4 text-center">';
                     if (existingSrc) html += '<div class="relative"><img src="' + escapeAttr(existingSrc) + '" class="w-full h-40 object-contain rounded-lg bg-gray-50"><button type="button" onclick="removeUpload()" class="absolute top-1 right-1 w-7 h-7 bg-red-500 text-white rounded-full"><i class="fas fa-times"></i></button></div><p class="text-xs text-green-600 mt-2">Logo tersedia</p>';
                     else html += '<div class="py-6 text-center"><i class="fas fa-cloud-upload-alt text-3xl text-gray-300 mb-2"></i><p class="text-sm text-gray-500">Upload Logo</p></div>';
                     html += '</div></div>';
