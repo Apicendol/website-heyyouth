@@ -492,19 +492,6 @@
         return d.innerHTML;
       }
 
-      var _DEFAULT_ABOUT = {
-        hero: {
-          title: '<span class="lang-id">Mendidik Untuk <br><span class="text-primary">Masa Depan Indonesia</span></span><span class="lang-en">Educating For <br><span class="text-primary">Indonesia\'s Future</span></span>',
-          subtitle: '<span class="lang-id">Hey Youth adalah sebuah komunitas pemuda di Indonesia yang didedikasikan untuk melakukan perubahan melalui pendidikan. Kami menyediakan akses ke pendidikan berkualitas dan peluang mentoring bagi mereka yang membutuhkan.</span><span class="lang-en">Hey Youth is a youth community in Indonesia dedicated to making changes through education. We provide access to quality education and mentoring opportunities for those in need.</span>',
-          volunteerCount: '1k+'
-        },
-        team: [
-          { id: 201, name: 'Yuni Triandini', role: 'Founder', image: 'assets/img/ceo.jpeg', linkedin: '#', instagram: '#' },
-          { id: 202, name: 'Rama', role: 'Head of Marketing', image: 'https://ui-avatars.com/api/?name=Rama&size=100&background=random&color=fff', linkedin: '#', instagram: '#' },
-          { id: 203, name: 'Dzikri', role: 'Head of Graphic Designer', image: 'https://ui-avatars.com/api/?name=Dzikri&size=100&background=random&color=fff', linkedin: '#', instagram: '#' }
-        ]
-      };
-
       function renderHero(heroData) {
         var titleEl = document.getElementById('hero-title');
         var subEl = document.getElementById('hero-subtitle');
@@ -558,9 +545,9 @@
       }
 
       async function initAbout() {
-        var data = await window.getFirebaseData({ aboutHero: _DEFAULT_ABOUT.hero, team: _DEFAULT_ABOUT.team });
-        renderHero(data.aboutHero || _DEFAULT_ABOUT.hero);
-        renderTeam(data.team || _DEFAULT_ABOUT.team);
+        var data = await window.getFirebaseData(window.HEY_YOUTH_DEFAULT_DATA);
+        renderHero(data.aboutHero || window.HEY_YOUTH_DEFAULT_DATA.aboutHero);
+        renderTeam(data.team || window.HEY_YOUTH_DEFAULT_DATA.team);
       }
 
       if (document.readyState === 'loading') {

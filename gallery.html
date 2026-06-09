@@ -225,45 +225,7 @@
         (function () {
             'use strict';
 
-            var CMS_KEY = 'hey_youth_cms';
-            var DEFAULT_DATA = {
-                activityCards: [
-                    {
-                        id: 301,
-                        category: 'Education',
-                        date: '10 November 2025',
-                        title: 'Dream Big, Learn Bigger: Inspiring the Next Generation at Yos Sudarso',
-                        description: 'Kami mengunjungi sekolah di Yos Sudarso untuk berbagi inspirasi dan materi pendidikan interaktif kepada ratusan siswa, membantu mereka bermimpi lebih besar.',
-                        image: 'assets/img/Donation.jpeg',
-                        link: '#',
-                        fullStory: '<p>Pada hari yang cerah, tim Hey Youth berkunjung ke SD Yos Sudarso. Antusiasme siswa-siswi sangat luar biasa ketika kami memperkenalkan program mentoring kami.</p><p>Kegiatan ini diawali dengan sesi ice breaking yang diikuti oleh seluruh siswa kelas 5 dan 6. Dilanjutkan dengan materi tentang "Membangun Mimpi Sejak Dini".</p><br><p>Kami berharap kunjungan ini dapat menjadi inspirasi bagi mereka untuk terus belajar dan giat meraih cita-cita.</p>'
-                    },
-                    {
-                        id: 302,
-                        category: 'Community',
-                        date: '14 April 2025',
-                        title: 'Instilling Education, Igniting Dreams: Hey Youth\'s Visit to TBM Kolong',
-                        description: 'Kunjungan spesial ke TBM Kolong untuk mendukung literasi di lingkungan sekitar, mendonasikan buku, dan mengadakan sesi membaca bersama anak-anak.',
-                        image: 'assets/img/Front Card.webp',
-                        link: '#',
-                        fullStory: '<p>TBM Kolong adalah salah satu tempat baca yang sangat bersemangat di daerah kami. Kami mendonasikan 100 eksemplar buku cerita dan ensiklopedia anak.</p><p>Selain donasi buku, relawan kami juga membacakan cerita rakyat Nusantara kepada anak-anak dengan penuh ekspresi.</p>'
-                    }
-                ],
-                podcasts: [
-                    {
-                        id: 401,
-                        episode: 'Episode 2',
-                        title: 'Suicide Is Not The Answer: Here\'s Why',
-                        link: '#'
-                    },
-                    {
-                        id: 402,
-                        episode: 'Episode 1',
-                        title: 'The Power of Self-Affirmation: Transforming Our Lives',
-                        link: '#'
-                    }
-                ]
-            };
+            // CMS Data fallback is handled via window.HEY_YOUTH_DEFAULT_DATA
 
             function _esc(s) {
                 if (!s) return '';
@@ -352,9 +314,9 @@
             }
 
             async function initGallery() {
-                var data = await window.getFirebaseData(DEFAULT_DATA);
-                renderActivityCards(data.activityCards || DEFAULT_DATA.activityCards);
-                renderPodcasts(data.podcasts || DEFAULT_DATA.podcasts);
+                var data = await window.getFirebaseData(window.HEY_YOUTH_DEFAULT_DATA);
+                renderActivityCards(data.activityCards || window.HEY_YOUTH_DEFAULT_DATA.activityCards);
+                renderPodcasts(data.podcasts || window.HEY_YOUTH_DEFAULT_DATA.podcasts);
             }
 
             if (document.readyState === 'loading') {
