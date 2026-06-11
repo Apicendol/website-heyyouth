@@ -3,6 +3,7 @@ module.exports = {
   content: [
     "./Landing-Page/**/*.html",
     "./CMS/**/*.html",
+    "./CMS/js/**/*.js",
     "./*.html",
     "./assets/Javascript/**/*.js"
   ],

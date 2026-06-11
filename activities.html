@@ -206,6 +206,78 @@
       </div>
     </section>
 
+    <!-- Event Calendar Section -->
+    <section id="event-calendar" class="py-20 bg-surface border-t border-b border-gray-100 dark:border-slate-800">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16">
+          <span class="text-primary font-bold tracking-wider uppercase text-sm">
+            <span class="lang-id">Jangan Lewatkan</span><span class="lang-en">Don't Miss Out</span>
+          </span>
+          <h2 class="text-3xl lg:text-4xl font-bold text-heading mt-2 mb-4 font-serif">
+            <span class="lang-id">Kalender Acara Kami</span><span class="lang-en">Our Event Calendar</span>
+          </h2>
+          <p class="text-lg text-body max-w-2xl mx-auto">
+            <span class="lang-id">Ikuti berbagai kegiatan seru, webinar, mentoring, dan aksi sosial yang akan datang.</span>
+            <span class="lang-en">Join our upcoming exciting activities, webinars, mentoring, and social actions.</span>
+          </p>
+        </div>
+
+        <div class="grid lg:grid-cols-12 gap-8 items-start">
+          <!-- Left: Calendar Widget (Col-span 5) -->
+          <div class="lg:col-span-5 bg-white dark:bg-slate-900 border border-gray-100 dark:border-slate-800 rounded-2xl p-6 shadow-md hover:shadow-xl transition-all duration-300">
+            <div class="flex items-center justify-between mb-6">
+              <h3 id="calendar-month-year" class="font-bold text-heading text-lg font-serif">June 2026</h3>
+              <div class="flex gap-2">
+                <button id="prev-month-btn" class="w-8 h-8 rounded-full border border-gray-200 dark:border-slate-700 flex items-center justify-center text-heading hover:bg-primary hover:text-white transition-colors">
+                  <i class="fas fa-chevron-left text-xs"></i>
+                </button>
+                <button id="next-month-btn" class="w-8 h-8 rounded-full border border-gray-200 dark:border-slate-700 flex items-center justify-center text-heading hover:bg-primary hover:text-white transition-colors">
+                  <i class="fas fa-chevron-right text-xs"></i>
+                </button>
+              </div>
+            </div>
+            <!-- Calendar Grid -->
+            <div class="grid grid-cols-7 gap-y-3 text-center text-sm">
+              <!-- Days of week headers -->
+              <div class="font-bold text-gray-400 text-xs">Min</div>
+              <div class="font-bold text-gray-400 text-xs">Sen</div>
+              <div class="font-bold text-gray-400 text-xs">Sel</div>
+              <div class="font-bold text-gray-400 text-xs">Rab</div>
+              <div class="font-bold text-gray-400 text-xs">Kam</div>
+              <div class="font-bold text-gray-400 text-xs">Jum</div>
+              <div class="font-bold text-gray-400 text-xs">Sab</div>
+              <!-- Days numbers container -->
+              <div id="calendar-days-container" class="col-span-7 grid grid-cols-7 gap-y-3">
+                <!-- Dynamically populated -->
+              </div>
+            </div>
+            <!-- Legend -->
+            <div class="flex items-center gap-4 mt-6 pt-4 border-t border-gray-100 dark:border-slate-800 text-xs text-body justify-center">
+              <div class="flex items-center gap-1.5">
+                <span class="w-2.5 h-2.5 rounded-full bg-primary inline-block"></span>
+                <span><span class="lang-id">Acara Mendatang</span><span class="lang-en">Upcoming Event</span></span>
+              </div>
+              <div class="flex items-center gap-1.5">
+                <span class="w-2.5 h-2.5 rounded-full bg-accent inline-block"></span>
+                <span><span class="lang-id">Acara Hari Ini</span><span class="lang-en">Today's Event</span></span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right: Event Cards List (Col-span 7) -->
+          <div class="lg:col-span-7 space-y-6">
+            <h3 class="font-bold text-heading text-xl flex items-center gap-2 mb-4 font-serif">
+              <i class="far fa-clock text-primary"></i>
+              <span><span class="lang-id">Daftar Acara Terdekat</span><span class="lang-en">Upcoming Schedule</span></span>
+            </h3>
+            <div id="calendar-events-list" class="space-y-4 max-h-[500px] overflow-y-auto pr-2">
+              <!-- Dynamically populated -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- Podcast Section -->
     <section class="py-20 bg-white relative">
       <div
@@ -381,8 +453,8 @@
       }
 
       /* =========================================
- RENDER — PODCASTS
- ========================================= */
+         RENDER — PODCASTS
+         ========================================= */
       function renderPodcasts(items) {
         var container = document.getElementById('podcast-container');
         if (!container) return;
@@ -401,22 +473,211 @@
 
           var episodeHtml = _bilEsc(item.episode_id, item.episode_en, item.episode);
           var titleHtml = _bilEsc(item.title_id, item.title_en, item.title);
+          var embedUrl = window.getSpotifyEmbedUrl ? window.getSpotifyEmbedUrl(targetLink) : '';
 
-          return '<div class="flex flex-col bg-bg border border-gray-100 rounded-2xl p-8 hover:shadow-xl transition-all duration-300">' +
-            '<div class="flex justify-center mb-6 relative group">' +
-            '<div class="w-32 h-32 rounded-xl flex-shrink-0 flex items-center justify-center shadow-lg overflow-hidden bg-gray-200">' +
-            '<img src="' + _escA(imgSrc) + '" alt="' + _escA(item.title) + '" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" onerror="this.src=\'' + fallbackImg + '\'">' +
-            '</div>' +
+          var mediaHtml = '';
+          if (embedUrl) {
+            mediaHtml = '<iframe src="' + _escA(embedUrl) + '" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy" class="rounded-2xl shadow-sm"></iframe>';
+          } else {
+            mediaHtml = '<div class="w-full h-[152px] rounded-2xl flex-shrink-0 flex items-center justify-center shadow-md overflow-hidden bg-gray-200">' +
+              '<img src="' + _escA(imgSrc) + '" alt="' + _escA(item.title) + '" class="w-full h-full object-cover" onerror="this.src=\'' + fallbackImg + '\'">' +
+              '</div>';
+          }
+
+          return '<div class="flex flex-col bg-white border border-gray-100 rounded-3xl p-6 shadow-md hover:shadow-xl transition-all duration-300 h-full justify-between">' +
+            '<div class="mb-6">' +
+            mediaHtml +
             '</div>' +
             '<div class="text-center flex-grow mb-6">' +
-            '<span class="text-xs font-bold text-accent uppercase tracking-wide">' + episodeHtml + '</span>' +
-            '<h3 class="text-xl font-bold text-heading mt-1 mb-3 leading-snug">' + titleHtml + '</h3>' +
+            '<span class="text-xs font-bold text-accent uppercase tracking-wider block mb-2">' + episodeHtml + '</span>' +
+            '<h3 class="text-lg lg:text-xl font-bold text-heading leading-snug font-sans px-2">' + titleHtml + '</h3>' +
             '</div>' +
             '<div class="mt-auto">' +
-            '<a href="' + _escA(targetLink) + '" target="_blank" rel="noopener noreferrer" class="w-full inline-flex items-center justify-center text-sm font-bold text-white bg-green-500 hover:bg-green-600 px-4 py-3 rounded-full transition-colors shadow-md hover:shadow-lg transform hover:-translate-y-0.5"><i class="fab fa-spotify mr-2"></i> <span class="lang-id">Dengarkan di Spotify</span><span class="lang-en">Listen on Spotify</span></a>' +
+            '<a href="' + _escA(targetLink) + '" target="_blank" rel="noopener noreferrer" class="w-full inline-flex items-center justify-center text-sm font-bold text-white bg-green-500 hover:bg-green-600 px-6 py-3.5 rounded-full transition-all shadow-md hover:shadow-lg transform hover:-translate-y-0.5"><i class="fab fa-spotify mr-2"></i> <span class="lang-id">Dengarkan di Spotify</span><span class="lang-en">Listen on Spotify</span></a>' +
             '</div>' +
             '</div>';
         }).join('');
+      }
+
+      /* =========================================
+         EVENT CALENDAR
+         ========================================= */
+      var calendarState = {
+        currentYear: new Date().getFullYear(),
+        currentMonth: new Date().getMonth()
+      };
+      var globalEvents = [];
+
+      function renderCalendar(events) {
+        var daysContainer = document.getElementById('calendar-days-container');
+        var monthYearHeader = document.getElementById('calendar-month-year');
+        if (!daysContainer || !monthYearHeader) return;
+
+        var year = calendarState.currentYear;
+        var month = calendarState.currentMonth;
+
+        var monthNamesID = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+        var monthNamesEN = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
+        var isEn = document.body.classList.contains('lang-en');
+        monthYearHeader.textContent = (isEn ? monthNamesEN[month] : monthNamesID[month]) + " " + year;
+
+        var firstDayIndex = new Date(year, month, 1).getDay();
+        var lastDay = new Date(year, month + 1, 0).getDate();
+        var prevLastDay = new Date(year, month, 0).getDate();
+
+        var daysHtml = '';
+
+        for (var x = firstDayIndex; x > 0; x--) {
+          daysHtml += '<div class="text-gray-300 dark:text-slate-600 py-1.5 text-center select-none text-xs">' + (prevLastDay - x + 1) + '</div>';
+        }
+
+        var today = new Date();
+        var todayStr = today.getFullYear() + '-' + String(today.getMonth() + 1).padStart(2, '0') + '-' + String(today.getDate()).padStart(2, '0');
+
+        for (var i = 1; i <= lastDay; i++) {
+          var dayStr = year + '-' + String(month + 1).padStart(2, '0') + '-' + String(i).padStart(2, '0');
+          var dayEvents = events.filter(function(ev) {
+            return ev.date === dayStr;
+          });
+
+          var hasEvents = dayEvents.length > 0;
+          var isToday = dayStr === todayStr;
+
+          var cellClass = 'py-1.5 w-8 h-8 mx-auto rounded-full flex items-center justify-center transition-all cursor-pointer relative text-xs ';
+          if (isToday) {
+            cellClass += 'bg-accent text-white font-bold ';
+          } else if (hasEvents) {
+            cellClass += 'bg-primary/10 text-primary font-semibold hover:bg-primary hover:text-white ';
+          } else {
+            cellClass += 'text-heading hover:bg-gray-100 dark:hover:bg-slate-800 ';
+          }
+
+          var dotHtml = '';
+          if (hasEvents && !isToday) {
+            dotHtml = '<span class="absolute bottom-0.5 left-1/2 -translate-x-1/2 w-1 h-1 bg-primary rounded-full"></span>';
+          } else if (hasEvents && isToday) {
+            dotHtml = '<span class="absolute bottom-0.5 left-1/2 -translate-x-1/2 w-1 h-1 bg-white rounded-full"></span>';
+          }
+
+          var clickAction = '';
+          if (hasEvents) {
+            clickAction = 'onclick="scrollToEvent(\'' + dayStr + '\')"';
+          }
+
+          daysHtml += '<div class="' + cellClass + '" ' + clickAction + ' title="' + (hasEvents ? dayEvents.length + ' event(s)' : '') + '">' + i + dotHtml + '</div>';
+        }
+
+        var totalCells = firstDayIndex + lastDay;
+        var nextDays = (7 - (totalCells % 7)) % 7;
+        for (var j = 1; j <= nextDays; j++) {
+          daysHtml += '<div class="text-gray-300 dark:text-slate-600 py-1.5 text-center select-none text-xs">' + j + '</div>';
+        }
+
+        daysContainer.innerHTML = daysHtml;
+      }
+
+      window.scrollToEvent = function(dayStr) {
+        var el = document.getElementById('event-card-' + dayStr);
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          el.classList.add('ring-2', 'ring-primary', 'border-primary');
+          setTimeout(function() {
+            el.classList.remove('ring-2', 'ring-primary', 'border-primary');
+          }, 2000);
+        }
+      };
+
+      function renderEventsList(events) {
+        var container = document.getElementById('calendar-events-list');
+        if (!container) return;
+
+        if (!events || events.length === 0) {
+          container.innerHTML = '<div class="text-center py-10 text-gray-400"><span class="lang-id">Belum ada jadwal acara terdekat.</span><span class="lang-en">No upcoming events scheduled.</span></div>';
+          return;
+        }
+
+        var sortedEvents = events.slice().sort(function(a, b) {
+          return new Date(a.date) - new Date(b.date);
+        });
+
+        var monthNamesShortID = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des"];
+        var monthNamesShortEN = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+        container.innerHTML = sortedEvents.map(function (item) {
+          var dateObj = new Date(item.date);
+          var dayNum = isNaN(dateObj.getDate()) ? '?' : dateObj.getDate();
+          var monthIndex = dateObj.getMonth();
+          
+          var isEn = document.body.classList.contains('lang-en');
+          var monthText = isNaN(monthIndex) ? '' : (isEn ? monthNamesShortEN[monthIndex] : monthNamesShortID[monthIndex]);
+          var yearNum = isNaN(dateObj.getFullYear()) ? '' : dateObj.getFullYear();
+
+          var titleHtml = _bilEsc(item.title_id, item.title_en, item.title);
+          var locHtml = _bilEsc(item.location_id, item.location_en, item.location);
+          var descHtml = _bilEsc(item.description_id, item.description_en, item.description);
+
+          var registrationBtn = '';
+          if (item.link && item.link !== '#') {
+            registrationBtn = '<a href="' + _escA(item.link) + '" target="_blank" rel="noopener noreferrer" class="mt-4 inline-flex items-center text-xs font-bold bg-primary hover:bg-primaryDark text-white px-4 py-2 rounded-full transition-colors shadow-md hover:shadow-lg transform hover:-translate-y-0.5"><span class="lang-id">Daftar Acara</span><span class="lang-en">Register Now</span> <i class="fas fa-external-link-alt ml-1.5 text-[10px]"></i></a>';
+          }
+
+          return '<div id="event-card-' + item.date + '" class="flex gap-4 bg-white dark:bg-slate-900 border border-gray-100 dark:border-slate-800 rounded-2xl p-5 hover:shadow-lg transition-all duration-300 border-l-4 border-l-primary scroll-mt-6">' +
+            '<!-- Date Badge -->' +
+            '<div class="flex flex-col items-center justify-center bg-gray-50 dark:bg-slate-800 rounded-xl p-3 w-16 h-18 border border-gray-100 dark:border-slate-700 flex-shrink-0">' +
+            '<span class="text-2xl font-bold text-primary leading-none">' + dayNum + '</span>' +
+            '<span class="text-[10px] font-bold text-accent uppercase mt-1">' + monthText + '</span>' +
+            '<span class="text-[9px] text-gray-400 mt-0.5">' + yearNum + '</span>' +
+            '</div>' +
+            '<!-- Event Details -->' +
+            '<div class="flex-grow min-w-0 flex flex-col justify-between">' +
+            '<div>' +
+            '<h4 class="font-bold text-heading text-lg mb-1 leading-snug hover:text-primary transition-colors">' + titleHtml + '</h4>' +
+            '<div class="flex flex-wrap gap-x-4 gap-y-1 text-xs text-gray-500 font-semibold mb-2">' +
+            '<span><i class="far fa-clock text-accent mr-1"></i>' + _esc(item.time) + '</span>' +
+            '<span><i class="fas fa-map-marker-alt text-primary mr-1"></i>' + locHtml + '</span>' +
+            '</div>' +
+            '<p class="text-body text-sm line-clamp-2">' + descHtml + '</p>' +
+            '</div>' +
+            '<div>' +
+            registrationBtn +
+            '</div>' +
+            '</div>' +
+            '</div>';
+        }).join('');
+      }
+
+      function setupCalendarListeners(events) {
+        var prevBtn = document.getElementById('prev-month-btn');
+        var nextBtn = document.getElementById('next-month-btn');
+        if (!prevBtn || !nextBtn) return;
+
+        prevBtn.onclick = function() {
+          calendarState.currentMonth--;
+          if (calendarState.currentMonth < 0) {
+            calendarState.currentMonth = 11;
+            calendarState.currentYear--;
+          }
+          renderCalendar(events);
+        };
+
+        nextBtn.onclick = function() {
+          calendarState.currentMonth++;
+          if (calendarState.currentMonth > 11) {
+            calendarState.currentMonth = 0;
+            calendarState.currentYear++;
+          }
+          renderCalendar(events);
+        };
+
+        // Listen to language switch buttons to update calendar month-year text dynamically
+        document.querySelectorAll('.lang-btn').forEach(function(btn) {
+          btn.addEventListener('click', function() {
+            setTimeout(function() {
+              renderCalendar(events);
+            }, 50);
+          });
+        });
       }
 
       /* =========================================
@@ -427,9 +688,14 @@
 
         var latestActivity = (data.activityCards || window.HEY_YOUTH_DEFAULT_DATA.activityCards).slice().reverse().slice(0, 2);
         var latestPodcast = (data.podcasts || window.HEY_YOUTH_DEFAULT_DATA.podcasts).slice().reverse().slice(0, 2);
+        globalEvents = data.events || window.HEY_YOUTH_DEFAULT_DATA.events || [];
 
         renderActivityCards(latestActivity);
         renderPodcasts(latestPodcast);
+
+        renderCalendar(globalEvents);
+        renderEventsList(globalEvents);
+        setupCalendarListeners(globalEvents);
       }
 
       if (document.readyState === 'loading') {

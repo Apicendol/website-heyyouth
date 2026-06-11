@@ -295,19 +295,27 @@
 
                     var episodeHtml = _bilEsc(item.episode_id, item.episode_en, item.episode);
                     var titleHtml = _bilEsc(item.title_id, item.title_en, item.title);
+                    var embedUrl = window.getSpotifyEmbedUrl ? window.getSpotifyEmbedUrl(targetLink) : '';
 
-                    return '<div class="flex flex-col bg-surface border border-gray-100 rounded-2xl p-6 hover:shadow-xl transition-all duration-300">' +
-                        '<div class="flex justify-center mb-6 relative group">' +
-                        '<div class="w-28 h-28 rounded-xl flex-shrink-0 flex items-center justify-center shadow-lg overflow-hidden bg-gray-200">' +
-                        '<img src="' + _escA(imgSrc) + '" alt="' + _escA(item.title) + '" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" onerror="this.src=\'' + fallbackImg + '\'">' +
-                        '</div>' +
+                    var mediaHtml = '';
+                    if (embedUrl) {
+                        mediaHtml = '<iframe src="' + _escA(embedUrl) + '" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy" class="rounded-2xl shadow-sm"></iframe>';
+                    } else {
+                        mediaHtml = '<div class="w-full h-[152px] rounded-2xl flex-shrink-0 flex items-center justify-center shadow-md overflow-hidden bg-gray-200">' +
+                            '<img src="' + _escA(imgSrc) + '" alt="' + _escA(item.title) + '" class="w-full h-full object-cover" onerror="this.src=\'' + fallbackImg + '\'">' +
+                            '</div>';
+                    }
+
+                    return '<div class="flex flex-col bg-white border border-gray-100 rounded-3xl p-6 hover:shadow-xl transition-all duration-300 h-full justify-between">' +
+                        '<div class="mb-6">' +
+                        mediaHtml +
                         '</div>' +
                         '<div class="text-center flex-grow mb-6">' +
-                        '<span class="text-xs font-bold text-accent uppercase tracking-wide">' + episodeHtml + '</span>' +
-                        '<h3 class="text-lg font-bold text-heading mt-1 mb-3 leading-snug line-clamp-2">' + titleHtml + '</h3>' +
+                        '<span class="text-xs font-bold text-accent uppercase tracking-wider block mb-2">' + episodeHtml + '</span>' +
+                        '<h3 class="text-lg font-bold text-heading leading-snug font-sans px-2 line-clamp-2">' + titleHtml + '</h3>' +
                         '</div>' +
                         '<div class="mt-auto">' +
-                        '<a href="' + _escA(targetLink) + '" target="_blank" rel="noopener noreferrer" class="w-full inline-flex items-center justify-center text-sm font-bold text-white bg-green-500 hover:bg-green-600 px-4 py-3 rounded-full transition-colors shadow-md hover:shadow-lg transform hover:-translate-y-0.5"><i class="fab fa-spotify mr-2"></i> <span class="lang-id">Dengarkan di Spotify</span><span class="lang-en">Listen on Spotify</span></a>' +
+                        '<a href="' + _escA(targetLink) + '" target="_blank" rel="noopener noreferrer" class="w-full inline-flex items-center justify-center text-sm font-bold text-white bg-green-500 hover:bg-green-600 px-6 py-3.5 rounded-full transition-all shadow-md hover:shadow-lg transform hover:-translate-y-0.5"><i class="fab fa-spotify mr-2"></i> <span class="lang-id">Dengarkan di Spotify</span><span class="lang-en">Listen on Spotify</span></a>' +
                         '</div>' +
                         '</div>';
                 }).join('');

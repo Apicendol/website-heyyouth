@@ -110,7 +110,7 @@
         } else if (tab === 'activities') {
             document.getElementById('view-activities').classList.remove('hidden');
             document.getElementById('page-title').textContent = 'Activities';
-            document.getElementById('page-desc').textContent = 'Kelola berita kegiatan dan episode podcast terbaru';
+            document.getElementById('page-desc').textContent = 'Kelola berita kegiatan, event calendar, dan episode podcast terbaru';
         } else if (tab === 'partners') {
             document.getElementById('view-partners').classList.remove('hidden');
             document.getElementById('page-title').textContent = 'Partners';
@@ -135,6 +135,7 @@
         renderTeam(data.team);
         renderActivityCards(data.activityCards);
         renderPodcasts(data.podcasts);
+        renderEvents(data.events);
         renderPartners(data.partners);
         updateCounts(data);
     }
@@ -161,6 +162,7 @@
         var actCards = (data.activityCards || []).length;
         var pods = (data.podcasts || []).length;
         var partners = (data.partners || []).length;
+        var events = (data.events || []).length;
 
         document.getElementById('count-external').textContent = ext;
         document.getElementById('count-internal').textContent = int;
@@ -170,12 +172,13 @@
 
         document.getElementById('count-activity-cards').textContent = actCards;
         document.getElementById('count-podcasts').textContent = pods;
+        document.getElementById('count-events').textContent = events;
         document.getElementById('count-partners').textContent = partners;
         document.getElementById('count-partners-list').textContent = partners;
 
         document.getElementById('count-homepage').textContent = ext + int + faq + loc;
         document.getElementById('count-about').textContent = team + 1;
-        document.getElementById('count-activities').textContent = actCards + pods;
+        document.getElementById('count-activities').textContent = actCards + pods + events;
     }
 
     /* =========================================
@@ -574,6 +577,30 @@
         }).join('');
     }
 
+    function renderEvents(items) {
+        var container = document.getElementById('list-events');
+        if (!container) return;
+        items = items || [];
+        if (items.length === 0) {
+            container.innerHTML = '<div class="col-span-full text-center py-10 text-gray-400"><p>Belum ada event.</p></div>';
+            return;
+        }
+        container.innerHTML = items.map(function (item) {
+            return '<div class="cms-card bg-white rounded-xl border border-gray-200 p-4 flex flex-col justify-between">' +
+                '<div>' +
+                '<h4 class="font-bold text-heading text-sm mb-1">' + escapeHtml(item.title) + '</h4>' +
+                '<div class="text-xs text-primary font-semibold mb-2"><i class="far fa-calendar-alt mr-1"></i>' + escapeHtml(item.date) + ' ' + escapeHtml(item.time) + '</div>' +
+                '<div class="text-xs text-gray-500 mb-2"><i class="fas fa-map-marker-alt mr-1"></i>' + escapeHtml(item.location) + '</div>' +
+                '<p class="text-xs text-gray-600 line-clamp-2">' + escapeHtml(item.description) + '</p>' +
+                '</div>' +
+                '<div class="mt-4 pt-3 border-t border-gray-100 flex gap-2">' +
+                '<button onclick="openEditModal(\'event\',' + item.id + ')" class="flex-1 text-xs font-semibold text-primary hover:bg-blue-50 py-1.5 rounded transition-colors">Edit</button>' +
+                '<button onclick="confirmDelete(\'event\',' + item.id + ')" class="flex-1 text-xs font-semibold text-red-500 hover:bg-red-50 py-1.5 rounded transition-colors">Hapus</button>' +
+                '</div>' +
+                '</div>';
+        }).join('');
+    }
+
     function renderPartners(items) {
         var container = document.getElementById('list-partners');
         if (!items || items.length === 0) {
@@ -682,6 +709,7 @@
                 case 'team': list = data.team; break;
                 case 'activity-card': list = data.activityCards; break;
                 case 'podcast': list = data.podcasts; break;
+                case 'event': list = data.events; break;
                 case 'partner': list = data.partners; break;
             }
             list = list || [];
@@ -719,6 +747,7 @@
         else if (section === 'about-hero') label = 'Konten Hero';
         else if (section === 'activity-card') label = 'Activity Card';
         else if (section === 'podcast') label = 'Podcast Episode';
+        else if (section === 'event') label = 'Event Calendar';
         else if (section === 'partner') label = 'Partner';
         else if (section === 'donation-settings') label = 'Pengaturan Donation';
 
@@ -851,6 +880,14 @@
                 html += '<div class="py-6 text-center"><i class="fas fa-image text-3xl text-gray-300 mb-2"></i><p class="text-sm text-gray-500">Upload Thumbnail</p></div>';
             }
             html += '</div></div>';
+        }
+        else if (section === 'event') {
+            html += formField('Nama Event / Judul', 'f-title', item ? item.title : '', 'text', 'Contoh: Webinar Menulis Essay');
+            html += formField('Tanggal Acara', 'f-date', item ? item.date : '', 'date', '');
+            html += formField('Waktu Acara', 'f-time', item ? item.time : '', 'text', 'Contoh: 19:00 - 20:30 WIB');
+            html += formField('Lokasi Acara', 'f-location', item ? item.location : '', 'text', 'Contoh: Zoom Meeting / Jakarta');
+            html += formTextarea('Deskripsi Singkat', 'f-desc', item ? item.description : '', 'Deskripsi singkat acara...');
+            html += formField('Link Registrasi / Info', 'f-link', item ? item.link : '', 'text', 'Contoh: https://bit.ly/HYEvent');
         }
         else if (section === 'partner') {
             html += formField('Nama Partner', 'f-name', item ? item.name : '', 'text', 'Contoh: Qatar HR Forum');
@@ -1142,6 +1179,35 @@
                 list.push(obj);
             }
         }
+        else if (section === 'event') {
+            var title = document.getElementById('f-title').value.trim();
+            var date = document.getElementById('f-date').value.trim();
+            var time = document.getElementById('f-time').value.trim();
+            var location = document.getElementById('f-location').value.trim();
+            var description = document.getElementById('f-desc').value.trim();
+            var link = document.getElementById('f-link').value.trim();
+
+            if (!title || !date) { showToast('Judul dan Tanggal wajib diisi.', 'error'); return; }
+
+            var obj = {
+                id: isEdit ? editingItem.id : Date.now(),
+                title: title,
+                date: date,
+                time: time,
+                location: location,
+                description: description,
+                link: link || '#'
+            };
+
+            if (!data.events) data.events = [];
+            var list = data.events;
+            if (isEdit) {
+                var idx = list.findIndex(function (i) { return i.id === editingItem.id; });
+                if (idx !== -1) list[idx] = obj;
+            } else {
+                list.push(obj);
+            }
+        }
         else if (section === 'partner') {
             var name = document.getElementById('f-name').value.trim();
             var description = document.getElementById('f-desc').value.trim();
@@ -1235,6 +1301,7 @@
             case 'team': data.team = (data.team || []).filter(function (i) { return i.id !== id; }); break;
             case 'activity-card': data.activityCards = (data.activityCards || []).filter(function (i) { return i.id !== id; }); break;
             case 'podcast': data.podcasts = (data.podcasts || []).filter(function (i) { return i.id !== id; }); break;
+            case 'event': data.events = (data.events || []).filter(function (i) { return i.id !== id; }); break;
             case 'partner': data.partners = (data.partners || []).filter(function (i) { return i.id !== id; }); break;
         }
         if (!saveData(data)) return;

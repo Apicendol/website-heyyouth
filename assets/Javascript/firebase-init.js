@@ -310,7 +310,49 @@ window.HEY_YOUTH_DEFAULT_DATA = {
             thumbnail: 'img/Podcast/Eps 1.png',
             spotifyLink: 'https://open.spotify.com/episode/1a0xUotfQZAdD6jtHT4l5g?si=l3nk1yvSSzK7XPMMFLMvHA&nd=1&dlsi=746e34d28eaa4e68'
         }
+    ],
+    events: [
+        {
+            id: 501,
+            title: 'Dream Big Webinar: Scholarship & Essay Mentoring',
+            title_id: 'Webinar Dream Big: Mentoring Beasiswa & Esai',
+            title_en: 'Dream Big Webinar: Scholarship & Essay Mentoring',
+            date: '2026-06-25',
+            time: '19:00 - 21:00 WIB',
+            location: 'Zoom Meeting',
+            location_id: 'Zoom Meeting',
+            location_en: 'Zoom Meeting',
+            description: 'Belajar langsung dari mentor berpengalaman mengenai tips mendapatkan beasiswa dan menulis esai yang memikat.',
+            description_id: 'Belajar langsung dari mentor berpengalaman mengenai tips mendapatkan beasiswa dan menulis esai yang memikat.',
+            description_en: 'Learn directly from experienced mentors about tips on getting scholarships and writing compelling essays.',
+            link: 'https://bit.ly/HYWebinar2026'
+        },
+        {
+            id: 502,
+            title: 'Hey Youth Community Gathering: Collaboration & Networking',
+            title_id: 'Kumpul Komunitas Hey Youth: Kolaborasi & Jejaring',
+            title_en: 'Hey Youth Community Gathering: Collaboration & Networking',
+            date: '2026-07-04',
+            time: '14:00 - 17:00 WIB',
+            location: 'Jakarta Creative Hub',
+            location_id: 'Jakarta Creative Hub',
+            location_en: 'Jakarta Creative Hub',
+            description: 'Kumpul perdana relawan dan anggota Hey Youth untuk mendiskusikan program kerja serta kolaborasi masa depan.',
+            description_id: 'Kumpul perdana relawan dan anggota Hey Youth untuk mendiskusikan program kerja serta kolaborasi masa depan.',
+            description_en: 'Inaugural gathering of Hey Youth volunteers and members to discuss work programs and future collaboration.',
+            link: '#'
+        }
     ]
+};
+
+// Global utility to convert Spotify Link to Embed Link
+window.getSpotifyEmbedUrl = function(url) {
+    if (!url) return '';
+    var match = url.match(/spotify\.com\/(episode|track|show|playlist|album)\/([a-zA-Z0-9]+)/);
+    if (match) {
+        return 'https://open.spotify.com/embed/' + match[1] + '/' + match[2] + '?utm_source=generator';
+    }
+    return '';
 };
 
 // Global utility to get data
