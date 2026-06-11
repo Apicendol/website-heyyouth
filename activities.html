@@ -34,7 +34,7 @@
 
   <!-- Navigation Bar -->
   <nav id="navbar"
-    class="fixed w-full z-50 transition-all duration-300 bg-white/90 backdrop-blur-md border-b border-gray-100">
+    class="fixed w-full z-[2000] transition-all duration-300 bg-white/90 backdrop-blur-md border-b border-gray-100">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex justify-between items-center h-20">
         <a href="index.html" class="flex-shrink-0 flex items-center gap-2 group">
@@ -217,21 +217,25 @@
             <span class="lang-id">Kalender Acara Kami</span><span class="lang-en">Our Event Calendar</span>
           </h2>
           <p class="text-lg text-body max-w-2xl mx-auto">
-            <span class="lang-id">Ikuti berbagai kegiatan seru, webinar, mentoring, dan aksi sosial yang akan datang.</span>
+            <span class="lang-id">Ikuti berbagai kegiatan seru, webinar, mentoring, dan aksi sosial yang akan
+              datang.</span>
             <span class="lang-en">Join our upcoming exciting activities, webinars, mentoring, and social actions.</span>
           </p>
         </div>
 
         <div class="grid lg:grid-cols-12 gap-8 items-start">
           <!-- Left: Calendar Widget (Col-span 5) -->
-          <div class="lg:col-span-5 bg-white dark:bg-slate-900 border border-gray-100 dark:border-slate-800 rounded-2xl p-6 shadow-md hover:shadow-xl transition-all duration-300">
+          <div
+            class="lg:col-span-5 bg-white dark:bg-slate-900 border border-gray-100 dark:border-slate-800 rounded-2xl p-6 shadow-md hover:shadow-xl transition-all duration-300">
             <div class="flex items-center justify-between mb-6">
               <h3 id="calendar-month-year" class="font-bold text-heading text-lg font-serif">June 2026</h3>
               <div class="flex gap-2">
-                <button id="prev-month-btn" class="w-8 h-8 rounded-full border border-gray-200 dark:border-slate-700 flex items-center justify-center text-heading hover:bg-primary hover:text-white transition-colors">
+                <button id="prev-month-btn"
+                  class="w-8 h-8 rounded-full border border-gray-200 dark:border-slate-700 flex items-center justify-center text-heading hover:bg-primary hover:text-white transition-colors">
                   <i class="fas fa-chevron-left text-xs"></i>
                 </button>
-                <button id="next-month-btn" class="w-8 h-8 rounded-full border border-gray-200 dark:border-slate-700 flex items-center justify-center text-heading hover:bg-primary hover:text-white transition-colors">
+                <button id="next-month-btn"
+                  class="w-8 h-8 rounded-full border border-gray-200 dark:border-slate-700 flex items-center justify-center text-heading hover:bg-primary hover:text-white transition-colors">
                   <i class="fas fa-chevron-right text-xs"></i>
                 </button>
               </div>
@@ -252,7 +256,8 @@
               </div>
             </div>
             <!-- Legend -->
-            <div class="flex items-center gap-4 mt-6 pt-4 border-t border-gray-100 dark:border-slate-800 text-xs text-body justify-center">
+            <div
+              class="flex items-center gap-4 mt-6 pt-4 border-t border-gray-100 dark:border-slate-800 text-xs text-body justify-center">
               <div class="flex items-center gap-1.5">
                 <span class="w-2.5 h-2.5 rounded-full bg-primary inline-block"></span>
                 <span><span class="lang-id">Acara Mendatang</span><span class="lang-en">Upcoming Event</span></span>
@@ -268,7 +273,8 @@
           <div class="lg:col-span-7 space-y-6">
             <h3 class="font-bold text-heading text-xl flex items-center gap-2 mb-4 font-serif">
               <i class="far fa-clock text-primary"></i>
-              <span><span class="lang-id">Daftar Acara Terdekat</span><span class="lang-en">Upcoming Schedule</span></span>
+              <span><span class="lang-id">Daftar Acara Terdekat</span><span class="lang-en">Upcoming
+                  Schedule</span></span>
             </h3>
             <div id="calendar-events-list" class="space-y-4 max-h-[500px] overflow-y-auto pr-2">
               <!-- Dynamically populated -->
@@ -537,7 +543,7 @@
 
         for (var i = 1; i <= lastDay; i++) {
           var dayStr = year + '-' + String(month + 1).padStart(2, '0') + '-' + String(i).padStart(2, '0');
-          var dayEvents = events.filter(function(ev) {
+          var dayEvents = events.filter(function (ev) {
             return ev.date === dayStr;
           });
 
@@ -577,12 +583,12 @@
         daysContainer.innerHTML = daysHtml;
       }
 
-      window.scrollToEvent = function(dayStr) {
+      window.scrollToEvent = function (dayStr) {
         var el = document.getElementById('event-card-' + dayStr);
         if (el) {
           el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
           el.classList.add('ring-2', 'ring-primary', 'border-primary');
-          setTimeout(function() {
+          setTimeout(function () {
             el.classList.remove('ring-2', 'ring-primary', 'border-primary');
           }, 2000);
         }
@@ -597,7 +603,7 @@
           return;
         }
 
-        var sortedEvents = events.slice().sort(function(a, b) {
+        var sortedEvents = events.slice().sort(function (a, b) {
           return new Date(a.date) - new Date(b.date);
         });
 
@@ -608,7 +614,7 @@
           var dateObj = new Date(item.date);
           var dayNum = isNaN(dateObj.getDate()) ? '?' : dateObj.getDate();
           var monthIndex = dateObj.getMonth();
-          
+
           var isEn = document.body.classList.contains('lang-en');
           var monthText = isNaN(monthIndex) ? '' : (isEn ? monthNamesShortEN[monthIndex] : monthNamesShortID[monthIndex]);
           var yearNum = isNaN(dateObj.getFullYear()) ? '' : dateObj.getFullYear();
@@ -652,7 +658,7 @@
         var nextBtn = document.getElementById('next-month-btn');
         if (!prevBtn || !nextBtn) return;
 
-        prevBtn.onclick = function() {
+        prevBtn.onclick = function () {
           calendarState.currentMonth--;
           if (calendarState.currentMonth < 0) {
             calendarState.currentMonth = 11;
@@ -661,7 +667,7 @@
           renderCalendar(events);
         };
 
-        nextBtn.onclick = function() {
+        nextBtn.onclick = function () {
           calendarState.currentMonth++;
           if (calendarState.currentMonth > 11) {
             calendarState.currentMonth = 0;
@@ -671,9 +677,9 @@
         };
 
         // Listen to language switch buttons to update calendar month-year text dynamically
-        document.querySelectorAll('.lang-btn').forEach(function(btn) {
-          btn.addEventListener('click', function() {
-            setTimeout(function() {
+        document.querySelectorAll('.lang-btn').forEach(function (btn) {
+          btn.addEventListener('click', function () {
+            setTimeout(function () {
               renderCalendar(events);
             }, 50);
           });
