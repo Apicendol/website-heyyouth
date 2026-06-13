@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <script>
+        (function () {
+            var savedTheme = localStorage.getItem('heyyouth_theme') || 'light';
+            if (savedTheme === 'dark') {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        })();
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CMS Dashboard - Hey Youth!</title>
+    <meta name="robots" content="noindex, nofollow">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Merriweather:ital,wght@0,700;1,400&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .sidebar-link.active {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-left: 3px solid #F59E0B;
+            color: #ffffff;
+        }
+
+        .sidebar-link:not(.active):hover {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        .cms-card {
+            transition: all 0.2s ease;
+        }
+
+        .cms-card:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .modal-overlay {
+            background: rgba(15, 23, 42, 0.5);
+            backdrop-filter: blur(4px);
+        }
+
+        .toast-enter {
+            animation: slideInRight 0.3s ease-out;
+        }
+
+        .toast-exit {
+            animation: slideOutRight 0.3s ease-in forwards;
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideOutRight {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+
+            to {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+        }
+
+        textarea {
+            resize: vertical;
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 3px;
+        }
+
+        .upload-zone {
+            border: 2px dashed #d1d5db;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .upload-zone:hover,
+        .upload-zone.dragover {
+            border-color: #1D4ED8;
+            background-color: #EFF6FF;
+        }
+
+        .upload-zone img {
+            max-height: 160px;
+            object-fit: contain;
+        }
+
+        #map-cms {
+            height: 250px;
+            width: 100%;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            z-index: 10;
+        }
+
+        /* ===== CMS DARK MODE STYLES ===== */
+        html.dark body {
+            background-color: #0b0f19 !important;
+            color: #94a3b8 !important;
+        }
+
+        html.dark .bg-bg {
+            background-color: #0b0f19 !important;
+        }
+
+        html.dark .bg-white {
+            background-color: #111827 !important;
+            color: #cbd5e1 !important;
+        }
+
+        html.dark header.bg-white {
+            background-color: #111827 !important;
+            border-color: #1e293b !important;
+        }
+
+        html.dark .text-heading {
+            color: #f8fafc !important;
+        }
+
+        html.dark .text-body {
+            color: #94a3b8 !important;
+        }
+
+        html.dark .text-gray-500 {
+            color: #94a3b8 !important;
+        }
+
+        html.dark .text-gray-400 {
+            color: #64748b !important;
+        }
+
+        html.dark .text-gray-600 {
+            color: #cbd5e1 !important;
+        }
+
+        html.dark .border-gray-100,
+        html.dark .border-gray-200 {
+            border-color: #1e293b !important;
+        }
+
+        html.dark .bg-gray-50 {
+            background-color: #1e293b !important;
+        }
+
+        html.dark .bg-gray-100 {
+            background-color: #1e293b !important;
+            color: #cbd5e1 !important;
+        }
+
+        html.dark .hover\:bg-gray-50:hover,
+        html.dark tr.hover\:bg-gray-50:hover {
+            background-color: #1e293b !important;
+        }
+
+        html.dark .hover\:bg-gray-100:hover {
+            background-color: #1e293b !important;
+        }
+
+        html.dark .bg-blue-100 {
+            background-color: #1e3a8a !important;
+            color: #93c5fd !important;
+        }
+
+        html.dark .bg-amber-100 {
+            background-color: #78350f !important;
+            color: #fde047 !important;
+        }
+
+        html.dark .bg-green-100 {
+            background-color: #064e3b !important;
+            color: #6ee7b7 !important;
+        }
+
+        html.dark .bg-purple-100 {
+            background-color: #581c87 !important;
+            color: #d8b4fe !important;
+        }
+
+        html.dark .bg-red-100 {
+            background-color: #7f1d1d !important;
+            color: #fca5a5 !important;
+        }
+
+        html.dark .bg-teal-100 {
+            background-color: #115e59 !important;
+            color: #5eead4 !important;
+        }
+
+        html.dark #modal .bg-white,
+        html.dark #modal .sticky.bg-white {
+            background-color: #111827 !important;
+        }
+
+        html.dark #confirm-dialog .bg-white {
+            background-color: #111827 !important;
+        }
+
+        html.dark input,
+        html.dark textarea,
+        html.dark select {
+            background-color: #1e293b !important;
+            color: #f8fafc !important;
+            border-color: #334155 !important;
+        }
+
+        html.dark input[readonly] {
+            background-color: #0f172a !important;
+            color: #64748b !important;
+            border-color: #1e293b !important;
+        }
+
+        html.dark #map-cms {
+            filter: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%);
+        }
+
+        html.dark .upload-zone {
+            border-color: #334155 !important;
+        }
+
+        html.dark .upload-zone:hover,
+        html.dark .upload-zone.dragover {
+            border-color: #3b82f6 !important;
+            background-color: #1e3a8a !important;
+        }
+    </style>
+    <link rel="stylesheet" href="../assets/Style/tailwind.css">
+</head>
+
+<body class="bg-bg text-body min-h-screen" style="display: none;">
+
+    <!-- ===== MOBILE TOP BAR ===== -->
+    <div
+        class="lg:hidden fixed top-0 left-0 right-0 z-50 bg-heading text-white h-14 flex items-center justify-between px-4 shadow-lg">
+        <button id="sidebar-toggle" class="p-2 hover:bg-white/10 rounded-lg transition-colors">
+            <i class="fas fa-bars text-lg"></i>
+        </button>
+        <span class="font-bold text-sm">CMS Dashboard</span>
+        <a href="../index.html" class="p-2 hover:bg-white/10 rounded-lg transition-colors" title="Lihat Beranda">
+            <i class="fas fa-external-link-alt text-sm"></i>
+        </a>
+    </div>
+
+    <!-- ===== SIDEBAR BACKDROP ===== -->
+    <div id="sidebar-backdrop" class="fixed inset-0 bg-black/40 z-50 hidden lg:hidden" onclick="closeSidebar()"></div>
+
+    <!-- ===== SIDEBAR ===== -->
+    <aside id="sidebar"
+        class="fixed top-0 left-0 h-full w-64 bg-heading text-gray-300 z-50 transform -translate-x-full lg:translate-x-0 transition-transform duration-300 flex flex-col">
+        <div class="p-5 border-b border-white/10">
+            <a href="Login.html" class="flex items-center gap-2">
+                <img src="../assets/img/NEW HEY YOUTH Sep 2025.png" alt="Logo" class="h-8 w-auto brightness-0 invert">
+            </a>
+            <p class="text-xs text-gray-500 mt-2 ml-1">Admin Panel</p>
+        </div>
+        <nav class="flex-1 py-4 space-y-1 px-3 overflow-y-auto">
+            <button onclick="switchTab('homepage')" data-tab="homepage"
+                class="sidebar-link active w-full text-left px-3 py-2.5 rounded-lg text-sm flex items-center gap-3 transition-all">
+                <i class="fas fa-home w-5 text-center text-xs"></i>
+                <span>Homepage</span>
+                <span id="count-homepage" class="ml-auto bg-white/10 text-xs px-2 py-0.5 rounded-full">0</span>
+            </button>
+            <button onclick="switchTab('about')" data-tab="about"
+                class="sidebar-link w-full text-left px-3 py-2.5 rounded-lg text-sm flex items-center gap-3 transition-all">
+                <i class="fas fa-users w-5 text-center text-xs"></i>
+                <span>About Us</span>
+                <span id="count-about" class="ml-auto bg-white/10 text-xs px-2 py-0.5 rounded-full">0</span>
+            </button>
+            <button onclick="switchTab('activities')" data-tab="activities"
+                class="sidebar-link w-full text-left px-3 py-2.5 rounded-lg text-sm flex items-center gap-3 transition-all">
+                <i class="fas fa-bolt w-5 text-center text-xs"></i>
+                <span>Activities</span>
+                <span id="count-activities" class="ml-auto bg-white/10 text-xs px-2 py-0.5 rounded-full">0</span>
+            </button>
+            <button onclick="switchTab('partners')" data-tab="partners"
+                class="sidebar-link w-full text-left px-3 py-2.5 rounded-lg text-sm flex items-center gap-3 transition-all">
+                <i class="fas fa-handshake w-5 text-center text-xs"></i>
+                <span>Partners</span>
+                <span id="count-partners" class="ml-auto bg-white/10 text-xs px-2 py-0.5 rounded-full">0</span>
+            </button>
+            <button onclick="switchTab('donation')" data-tab="donation"
+                class="sidebar-link w-full text-left px-3 py-2.5 rounded-lg text-sm flex items-center gap-3 transition-all">
+                <i class="fas fa-donate w-5 text-center text-xs"></i>
+                <span>Donation</span>
+            </button>
+
+        </nav>
+        <div class="p-4 border-t border-white/10 space-y-2">
+            <a href="../index.html"
+                class="flex items-center gap-2 px-3 py-2 text-sm text-gray-400 hover:text-white rounded-lg hover:bg-white/5 transition-all">
+                <i class="fas fa-external-link-alt w-5 text-center text-xs"></i>
+                <span>Lihat Beranda</span>
+            </a>
+            <button onclick="resetData()"
+                class="flex items-center gap-2 px-3 py-2 text-sm text-gray-400 hover:text-red-400 rounded-lg hover:bg-white/5 transition-all w-full text-left">
+                <i class="fas fa-undo w-5 text-center text-xs"></i>
+                <span>Reset ke Default</span>
+            </button>
+            <button onclick="logout()"
+                class="flex items-center gap-2 px-3 py-2 text-sm text-gray-400 hover:text-red-400 rounded-lg hover:bg-white/5 transition-all w-full text-left">
+                <i class="fas fa-sign-out-alt w-5 text-center text-xs"></i>
+                <span>Logout</span>
+            </button>
+        </div>
+    </aside>
+
+    <!-- ===== MAIN CONTENT ===== -->
+    <main class="lg:ml-64 pt-14 lg:pt-0 min-h-screen">
+        <header
+            class="bg-white border-b border-gray-200 px-6 lg:px-8 py-5 flex items-center justify-between sticky top-0 z-30">
+            <div>
+                <h1 id="page-title" class="text-xl font-bold text-heading">Homepage</h1>
+                <p id="page-desc" class="text-sm text-gray-500 mt-0.5">Kelola seluruh konten yang tampil di beranda</p>
+            </div>
+            <div class="flex items-center gap-3">
+                <button type="button"
+                    class="theme-toggle-btn p-2 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-700 transition-all focus:outline-none dark:bg-slate-800 dark:hover:bg-slate-700 dark:text-yellow-400 w-9 h-9 flex items-center justify-center"
+                    aria-label="Toggle Theme">
+                    <i class="fas fa-sun theme-icon-sun text-sm hidden"></i>
+                    <i class="fas fa-moon theme-icon-moon text-sm"></i>
+                </button>
+            </div>
+        </header>
+
+        <div id="content-area" class="p-6 lg:p-8 space-y-10">
+
+            <!-- VIEW: HOMEPAGE -->
+            <div id="view-homepage" class="space-y-10">
+                <div class="space-y-8">
+                    <div class="border-b border-gray-200 pb-4">
+                        <h2 class="text-lg font-bold text-heading flex items-center gap-2">
+                            <i class="fas fa-chart-line text-primary"></i> Statistik Pengunjung
+                        </h2>
+                        <p class="text-xs text-gray-500 mt-1">Analisis jumlah kunjungan halaman dan tren pengunjung
+                            secara real-time</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <!-- Total Visitors Card -->
+                        <div class="bg-white p-6 rounded-2xl border border-gray-200 shadow-sm flex items-center gap-4">
+                            <div
+                                class="w-12 h-12 bg-blue-100 text-primary rounded-xl flex items-center justify-center text-xl">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <div>
+                                <p class="text-sm font-semibold text-gray-400">Total Pengunjung</p>
+                                <h3 id="stat-total-visitors" class="text-2xl font-bold text-heading mt-0.5">-</h3>
+                            </div>
+                        </div>
+                        <div class="bg-white p-6 rounded-2xl border border-gray-200 shadow-sm flex items-center gap-4">
+                            <div
+                                class="w-12 h-12 bg-amber-100 text-accent rounded-xl flex items-center justify-center text-xl">
+                                <i class="fas fa-fire"></i>
+                            </div>
+                            <div>
+                                <p class="text-sm font-semibold text-gray-400">Halaman Terpopuler</p>
+                                <h3 id="stat-top-page"
+                                    class="text-xl font-bold text-heading mt-0.5 truncate max-w-[180px]">-</h3>
+                            </div>
+                        </div>
+                        <div class="bg-white p-6 rounded-2xl border border-gray-200 shadow-sm flex items-center gap-4">
+                            <div
+                                class="w-12 h-12 bg-green-100 text-green-600 rounded-xl flex items-center justify-center text-xl">
+                                <i class="fas fa-eye"></i>
+                            </div>
+                            <div>
+                                <p class="text-sm font-semibold text-gray-400">Kunjungan Hari Ini</p>
+                                <h3 id="stat-today-visitors" class="text-2xl font-bold text-heading mt-0.5">-</h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                        <!-- Graph Card (Col span 2) -->
+                        <div
+                            class="bg-white p-6 rounded-2xl border border-gray-200 shadow-sm lg:col-span-2 flex flex-col">
+                            <h3 class="font-bold text-heading text-lg mb-4 flex items-center gap-2">
+                                <i class="fas fa-chart-area text-primary text-sm"></i> Grafik Kunjungan (7 Hari
+                                Terakhir)
+                            </h3>
+                            <div class="relative flex-grow min-h-[300px]">
+                                <canvas id="visitorChart"></canvas>
+                            </div>
+                        </div>
+
+                        <div class="bg-white p-6 rounded-2xl border border-gray-200 shadow-sm flex flex-col">
+                            <h3 class="font-bold text-heading text-lg mb-4 flex items-center gap-2">
+                                <i class="fas fa-list-ol text-accent text-sm"></i> Detail Kunjungan Halaman
+                            </h3>
+                            <div class="overflow-x-auto flex-grow">
+                                <table class="w-full text-sm">
+                                    <thead class="bg-gray-50 border-b border-gray-200">
+                                        <tr>
+                                            <th class="text-left px-3 py-2.5 font-semibold text-heading text-xs">Halaman
+                                            </th>
+                                            <th class="text-center px-3 py-2.5 font-semibold text-heading text-xs">
+                                                Status</th>
+                                            <th class="text-right px-3 py-2.5 font-semibold text-heading text-xs">Jumlah
+                                                View</th>
+                                            <th class="text-right px-3 py-2.5 font-semibold text-heading text-xs">
+                                                Persentase</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="stat-page-views-tbody">
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <hr class="border-gray-200">
+
+                <div>
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center gap-3">
+                            <div
+                                class="w-8 h-8 bg-amber-100 rounded-lg flex items-center justify-center text-accent text-sm">
+                                <i class="fas fa-user-tie"></i></div>
+                            <h2 class="text-lg font-bold text-heading">Testimoni Eksternal</h2>
+                            <span id="count-external"
+                                class="text-xs bg-gray-100 text-gray-500 px-2 py-0.5 rounded-full font-medium">0</span>
+                        </div>
+                        <button onclick="openAddModal('external')"
+                            class="bg-primary hover:bg-primaryDark text-white px-3.5 py-2 rounded-lg text-xs font-semibold transition-colors shadow-sm flex items-center gap-1.5">
+                            <i class="fas fa-plus text-[10px]"></i> Tambah
+                        </button>
+                    </div>
+                    <div id="list-external" class="grid md:grid-cols-2 xl:grid-cols-3 gap-4"></div>
+                </div>
+                <hr class="border-gray-200">
+                <div>
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center gap-3">
+                            <div
+                                class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center text-primary text-sm">
+                                <i class="fas fa-users"></i></div>
+                            <h2 class="text-lg font-bold text-heading">Testimoni Internal</h2>
+                            <span id="count-internal"
+                                class="text-xs bg-gray-100 text-gray-500 px-2 py-0.5 rounded-full font-medium">0</span>
+                        </div>
+                        <button onclick="openAddModal('internal')"
+                            class="bg-primary hover:bg-primaryDark text-white px-3.5 py-2 rounded-lg text-xs font-semibold transition-colors shadow-sm flex items-center gap-1.5">
+                            <i class="fas fa-plus text-[10px]"></i> Tambah
+                        </button>
+                    </div>
+                    <div id="list-internal" class="grid md:grid-cols-2 xl:grid-cols-3 gap-4"></div>
+                </div>
+                <hr class="border-gray-200">
+                <div>
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center gap-3">
+                            <div
+                                class="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center text-green-600 text-sm">
+                                <i class="fas fa-question-circle"></i></div>
+                            <h2 class="text-lg font-bold text-heading">FAQ</h2>
+                            <span id="count-faq"
+                                class="text-xs bg-gray-100 text-gray-500 px-2 py-0.5 rounded-full font-medium">0</span>
+                        </div>
+                        <button onclick="openAddModal('faq')"
+                            class="bg-primary hover:bg-primaryDark text-white px-3.5 py-2 rounded-lg text-xs font-semibold transition-colors shadow-sm flex items-center gap-1.5">
+                            <i class="fas fa-plus text-[10px]"></i> Tambah
+                        </button>
+                    </div>
+                    <div id="list-faq" class="space-y-3 max-w-4xl"></div>
+                </div>
+                <hr class="border-gray-200">
+                <div>
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center gap-3">
+                            <div
+                                class="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center text-purple-600 text-sm">
+                                <i class="fas fa-map-marked-alt"></i></div>
+                            <h2 class="text-lg font-bold text-heading">Lokasi Peta</h2>
+                            <span id="count-locations"
+                                class="text-xs bg-gray-100 text-gray-500 px-2 py-0.5 rounded-full font-medium">0</span>
+                        </div>
+                        <button onclick="openAddModal('locations')"
+                            class="bg-primary hover:bg-primaryDark text-white px-3.5 py-2 rounded-lg text-xs font-semibold transition-colors shadow-sm flex items-center gap-1.5">
+                            <i class="fas fa-plus text-[10px]"></i> Tambah
+                        </button>
+                    </div>
+                    <div class="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm">
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-sm">
+                                <thead class="bg-gray-50 border-b border-gray-200">
+                                    <tr>
+                                        <th class="text-left px-4 py-3 font-semibold text-heading">#</th>
+                                        <th class="text-left px-4 py-3 font-semibold text-heading">Lokasi</th>
+                                        <th class="text-left px-4 py-3 font-semibold text-heading">Latitude</th>
+                                        <th class="text-left px-4 py-3 font-semibold text-heading">Longitude</th>
+                                        <th class="text-left px-4 py-3 font-semibold text-heading">Relawan</th>
+                                        <th class="text-right px-4 py-3 font-semibold text-heading">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="list-locations"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- VIEW: ABOUT US -->
+            <div id="view-about" class="hidden space-y-10">
+                <div>
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center gap-3">
+                            <div
+                                class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center text-primary text-sm">
+                                <i class="fas fa-image"></i></div>
+                            <h2 class="text-lg font-bold text-heading">Hero Section</h2>
+                        </div>
+                        <button onclick="openEditModal('about-hero', null)"
+                            class="bg-primary hover:bg-primaryDark text-white px-3.5 py-2 rounded-lg text-xs font-semibold transition-colors shadow-sm flex items-center gap-1.5">
+                            <i class="fas fa-pen text-[10px]"></i> Edit Konten
+                        </button>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+                        <p class="text-sm text-gray-500 mb-4">Pratinjau konten Hero Section di halaman About Us:</p>
+                        <div id="preview-about-hero" class="border border-gray-100 rounded-lg p-4 bg-gray-50"></div>
+                    </div>
+                </div>
+                <hr class="border-gray-200">
+                <div>
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center gap-3">
+                            <div
+                                class="w-8 h-8 bg-accent/20 rounded-lg flex items-center justify-center text-accent text-sm">
+                                <i class="fas fa-user-tie"></i></div>
+                            <h2 class="text-lg font-bold text-heading">Leadership Team</h2>
+                            <span id="count-team"
+                                class="text-xs bg-gray-100 text-gray-500 px-2 py-0.5 rounded-full font-medium">0</span>
+                        </div>
+                        <button onclick="openAddModal('team')"
+                            class="bg-primary hover:bg-primaryDark text-white px-3.5 py-2 rounded-lg text-xs font-semibold transition-colors shadow-sm flex items-center gap-1.5">
+                            <i class="fas fa-plus text-[10px]"></i> Tambah Anggota
+                        </button>
+                    </div>
+                    <div id="list-team" class="grid md:grid-cols-2 xl:grid-cols-4 gap-4"></div>
+                </div>
+            </div>
+
+            <!-- VIEW: ACTIVITIES -->
+            <div id="view-activities" class="hidden space-y-10">
+
+                <div>
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center gap-3">
+                            <div
+                                class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center text-primary text-sm">
+                                <i class="fas fa-newspaper"></i></div>
+                            <h2 class="text-lg font-bold text-heading">Activity Cards</h2>
+                            <span id="count-activity-cards"
+                                class="text-xs bg-gray-100 text-gray-500 px-2 py-0.5 rounded-full font-medium">0</span>
+                        </div>
+                        <button onclick="openAddModal('activity-card')"
+                            class="bg-primary hover:bg-primaryDark text-white px-3.5 py-2 rounded-lg text-xs font-semibold transition-colors shadow-sm flex items-center gap-1.5">
+                            <i class="fas fa-plus text-[10px]"></i> Tambah
+                        </button>
+                    </div>
+                    <div id="list-activity-cards" class="grid md:grid-cols-2 gap-4"></div>
+                </div>
+
+                <hr class="border-gray-200">
+
+                <div>
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center gap-3">
+                            <div
+                                class="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center text-green-600 text-sm">
+                                <i class="fas fa-microphone-alt"></i></div>
+                            <h2 class="text-lg font-bold text-heading">Podcasts</h2>
+                            <span id="count-podcasts"
+                                class="text-xs bg-gray-100 text-gray-500 px-2 py-0.5 rounded-full font-medium">0</span>
+                        </div>
+                        <button onclick="openAddModal('podcast')"
+                            class="bg-primary hover:bg-primaryDark text-white px-3.5 py-2 rounded-lg text-xs font-semibold transition-colors shadow-sm flex items-center gap-1.5">
+                            <i class="fas fa-plus text-[10px]"></i> Tambah
+                        </button>
+                    </div>
+                    <div id="list-podcasts" class="grid md:grid-cols-2 gap-4"></div>
+                </div>
+
+                <hr class="border-gray-200">
+
+                <div>
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 bg-amber-100 rounded-lg flex items-center justify-center text-accent text-sm">
+                                <i class="fas fa-calendar-alt"></i></div>
+                            <h2 class="text-lg font-bold text-heading">Event Calendar</h2>
+                            <span id="count-events"
+                                class="text-xs bg-gray-100 text-gray-500 px-2 py-0.5 rounded-full font-medium">0</span>
+                        </div>
+                        <button onclick="openAddModal('event')"
+                            class="bg-primary hover:bg-primaryDark text-white px-3.5 py-2 rounded-lg text-xs font-semibold transition-colors shadow-sm flex items-center gap-1.5">
+                            <i class="fas fa-plus text-[10px]"></i> Tambah
+                        </button>
+                    </div>
+                    <div id="list-events" class="grid md:grid-cols-2 gap-4"></div>
+                </div>
+            </div>
+
+            <!-- VIEW: PARTNERS -->
+            <div id="view-partners" class="hidden space-y-10">
+                <div>
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center gap-3">
+                            <div
+                                class="w-8 h-8 bg-teal-100 rounded-lg flex items-center justify-center text-teal-600 text-sm">
+                                <i class="fas fa-handshake"></i></div>
+                            <h2 class="text-lg font-bold text-heading">Daftar Partner</h2>
+                            <span id="count-partners-list"
+                                class="text-xs bg-gray-100 text-gray-500 px-2 py-0.5 rounded-full font-medium">0</span>
+                        </div>
+                        <button onclick="openAddModal('partner')"
+                            class="bg-primary hover:bg-primaryDark text-white px-3.5 py-2 rounded-lg text-xs font-semibold transition-colors shadow-sm flex items-center gap-1.5">
+                            <i class="fas fa-plus text-[10px]"></i> Tambah Partner
+                        </button>
+                    </div>
+                    <div id="list-partners" class="grid md:grid-cols-2 xl:grid-cols-4 gap-4"></div>
+                </div>
+            </div>
+
+            <!-- VIEW: DONATION (NEW) -->
+            <div id="view-donation" class="hidden space-y-10">
+                <div>
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center gap-3">
+                            <div
+                                class="w-8 h-8 bg-red-100 rounded-lg flex items-center justify-center text-red-600 text-sm">
+                                <i class="fas fa-heart"></i></div>
+                            <h2 class="text-lg font-bold text-heading">Pengaturan Halaman Donation</h2>
+                        </div>
+                        <button onclick="openEditModal('donation-settings', null)"
+                            class="bg-primary hover:bg-primaryDark text-white px-3.5 py-2 rounded-lg text-xs font-semibold transition-colors shadow-sm flex items-center gap-1.5">
+                            <i class="fas fa-pen text-[10px]"></i> Edit Konten
+                        </button>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+                        <p class="text-sm text-gray-500 mb-4">Kelola teks hero, gambar strip, dan detail rekening bank:
+                        </p>
+                        <div id="preview-donation" class="border border-gray-100 rounded-lg p-4 bg-gray-50"></div>
+                    </div>
+                </div>
+            </div>
+
+
+
+        </div>
+    </main>
+
+    <!-- ===== MODAL ===== -->
+    <div id="modal" class="fixed inset-0 z-[100] hidden flex items-center justify-center p-4">
+        <div class="modal-overlay absolute inset-0" onclick="closeModal()"></div>
+        <div class="relative bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto z-10">
+            <div
+                class="sticky top-0 bg-white px-6 py-4 border-b border-gray-100 flex items-center justify-between rounded-t-2xl z-10">
+                <h3 id="modal-title" class="font-bold text-heading text-lg">Tambah Item</h3>
+                <button onclick="closeModal()" class="text-gray-400 hover:text-heading transition-colors p-1">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div id="modal-body" class="px-6 py-5"></div>
+        </div>
+    </div>
+
+    <!-- ===== CONFIRM DIALOG ===== -->
+    <div id="confirm-dialog" class="fixed inset-0 z-[110] hidden flex items-center justify-center p-4">
+        <div class="modal-overlay absolute inset-0" onclick="closeConfirm()"></div>
+        <div class="relative bg-white rounded-2xl shadow-2xl w-full max-w-sm z-10 p-6 text-center">
+            <div class="w-14 h-14 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <i class="fas fa-trash-alt text-red-500 text-xl"></i>
+            </div>
+            <h3 class="font-bold text-heading text-lg mb-2">Hapus Item?</h3>
+            <p class="text-sm text-gray-500 mb-6">Data yang dihapus tidak dapat dikembalikan.</p>
+            <div class="flex gap-3">
+                <button onclick="closeConfirm()"
+                    class="flex-1 py-2.5 border border-gray-200 text-heading font-semibold rounded-lg hover:bg-gray-50 transition-colors text-sm">Batal</button>
+                <button id="confirm-delete-btn"
+                    class="flex-1 py-2.5 bg-red-500 hover:bg-red-600 text-white font-semibold rounded-lg transition-colors text-sm">Ya,
+                    Hapus</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== TOAST ===== -->
+    <div id="toast" class="fixed bottom-6 right-6 z-[120] hidden">
+        <div id="toast-inner" class="flex items-center gap-3 px-5 py-3 rounded-xl shadow-lg text-sm font-medium">
+            <i id="toast-icon"></i>
+            <span id="toast-text"></span>
+        </div>
+    </div>
+
+    <input type="file" id="file-input-hidden" accept="image/*" class="hidden">
+
+    <!-- ===== JAVASCRIPT ===== -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="../assets/Javascript/firebase-init.js"></script>
+    <script src="js/dashboard.js"></script>
+</body>
+
+</html>

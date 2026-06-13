@@ -1,276 +1,563 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id" class="scroll-smooth">
 
 <head>
   <meta charset="UTF-8">
+  <script>
+    (function () {
+      var savedTheme = localStorage.getItem('heyyouth_theme') || 'light';
+      if (savedTheme === 'dark') {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+    })();
+  </script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="shortcut icon" href="https://upld.zone.id/uploads/qkiacfviq/new-hey-youth-sep-2025.webp">
-  <title>HeyYouth - Empowering Communities</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <title>About Us - Hey Youth!</title>
+  <meta name="description" content="Mengenal lebih dekat visi, misi, dan tim di balik gerakan sosial Hey Youth!">
+
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
-  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-  <link rel="stylesheet" href="assets/style.css">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Merriweather:ital,wght@0,700;1,400&display=swap"
+    rel="stylesheet">
+
+  <link rel="stylesheet" href="assets/Style/tailwind.css">
+  <link rel="stylesheet" href="assets/Style/Style.css">
 </head>
 
-<body>
-  <nav class="navbar navbar-expand-lg sticky-top shadow" style="background-color: #efefef;">
-    <div class="container">
-      <a class="navbar-brand" href="#">
-        <img src="https://upld.zone.id/uploads/qkiacfviq/new-hey-youth-sep-2025.webp" alt="" height="50">
-      </a>
-      <a class="navbar-brand fw-bold" href="index.html">Hey Youth!</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-        <ul class="navbar-nav">
-          <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
-          <li class="nav-item fw-bold"><a class="nav-link active" aria-current="page" href="about us.html">About Us</a>
-          </li>
-          <li class="nav-item"><a class="nav-link" href="activities.html">Activities</a></li>
-          <li class="nav-item"><a class="nav-link" href="partner.html">Partners</a></li>
-          <li class="nav-item"><a class="nav-link" href="donation.html">Donation</a>
-          </li>
-        </ul>
-        <div class="">
-          <a href="https://bit.ly/HYOprec" target="_blank" class="btn btn-primary text-white">
-            Join Us!
-          </a>
+<body class="lang-en bg-bg text-body font-sans antialiased selection:bg-primary selection:text-white">
+
+  <!-- Navigation Bar -->
+  <nav id="navbar"
+    class="fixed w-full z-[2000] transition-all duration-300 bg-white/90 backdrop-blur-md border-b border-gray-100">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-20">
+        <a href="index.html" class="flex-shrink-0 flex items-center gap-2 group">
+          <img src="assets/img/NEW HEY YOUTH Sep 2025.png" alt="Hey Youth Logo"
+            class="h-10 w-auto object-contain group-hover:scale-105 transition-transform duration-300">
+        </a>
+        <div class="hidden md:flex space-x-8 items-center">
+          <a href="index.html" class="nav-link text-body hover:text-primary transition-colors">Home</a>
+          <a href="about us.html" class="nav-link text-primary font-bold hover:text-primaryDark transition-colors">About
+            us</a>
+          <a href="activities.html" class="nav-link text-body hover:text-primary transition-colors">Activities</a>
+          <a href="partner.html" class="nav-link text-body hover:text-primary transition-colors">Partners</a>
+          <a href="donation.html" class="nav-link text-body hover:text-primary transition-colors">Donation</a>
+        </div>
+        <div class="hidden md:flex items-center gap-3">
+          <a href="CMS/Login.html"
+            class="text-body hover:text-primary px-3 py-2.5 rounded-lg font-medium transition-colors text-sm flex items-center gap-1.5"><i
+              class="fas fa-lock text-xs"></i> Dashboard</a>
+          <a href="https://bit.ly/HYOprec"
+            class="bg-primary hover:bg-primaryDark text-white px-6 py-2.5 rounded-full font-semibold transition-all shadow-md hover:shadow-lg hover:-translate-y-0.5 focus:ring-2 focus:ring-offset-2 focus:ring-primary">Join
+            Us!</a>
+          <button type="button"
+            class="theme-toggle-btn ml-2 p-2.5 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-700 transition-all focus:outline-none dark:bg-slate-800 dark:hover:bg-slate-700 dark:text-yellow-400 w-9 h-9 flex items-center justify-center"
+            aria-label="Toggle Theme">
+            <i class="fas fa-sun theme-icon-sun text-sm hidden"></i>
+            <i class="fas fa-moon theme-icon-moon text-sm"></i>
+          </button>
+          <div
+            class="btn-group lang-toggle-group ml-2 bg-gray-200 rounded-full p-1 relative flex items-center w-[84px] h-9 dark:bg-slate-800"
+            role="group" aria-label="Language Switch">
+            <div
+              class="absolute left-1 bg-white h-7 w-9 rounded-full shadow-sm transition-transform duration-300 lang-slider-bg dark:bg-slate-900"
+              style="transform: translateX(0);"></div>
+            <button type="button"
+              class="btn btn-secondary flex-1 text-xs font-bold text-gray-800 relative z-10 lang-btn dark:text-slate-200"
+              data-lang="id">ID</button>
+            <button type="button"
+              class="btn btn-secondary flex-1 text-xs font-bold text-gray-800 relative z-10 lang-btn dark:text-slate-200"
+              data-lang="en">EN</button>
+          </div>
+        </div>
+        <div class="md:hidden flex items-center">
+          <button id="mobile-menu-btn" class="text-heading hover:text-primary focus:outline-none p-2"
+            aria-label="Toggle menu">
+            <svg id="icon-menu" class="h-6 w-6 transition-transform duration-300" fill="none" viewBox="0 0 24 24"
+              stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+            <svg id="icon-close" class="h-6 w-6 hidden transition-transform duration-300" fill="none"
+              viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div id="mobile-menu"
+      class="hidden md:hidden bg-white border-t border-gray-100 absolute w-full shadow-xl transform transition-all duration-300 origin-top">
+      <div class="px-4 pt-4 pb-6 space-y-2">
+        <a href="index.html"
+          class="block px-4 py-3 rounded-xl text-base font-medium text-body hover:text-primary hover:bg-gray-50">Home</a>
+        <a href="about us.html"
+          class="block px-4 py-3 rounded-xl text-base font-medium text-primary font-bold bg-blue-50">About us</a>
+        <a href="activities.html"
+          class="block px-4 py-3 rounded-xl text-base font-medium text-body hover:text-primary hover:bg-gray-50">Activities</a>
+        <a href="partner.html"
+          class="block px-4 py-3 rounded-xl text-base font-medium text-body hover:text-primary hover:bg-gray-50">Partners</a>
+        <a href="donation.html"
+          class="block px-4 py-3 rounded-xl text-base font-medium text-body hover:text-primary hover:bg-gray-50">Donation</a>
+        <div class="pt-4 border-t border-gray-100 mt-4 space-y-2">
+          <a href="CMS/Login.html"
+            class="block w-full text-center border-2 border-gray-200 text-heading font-semibold px-4 py-3 rounded-xl hover:border-primary hover:text-primary transition-colors flex items-center justify-center gap-2"><i
+              class="fas fa-lock text-sm"></i> Dashboard</a>
+          <a href="https://bit.ly/HYOprec"
+            class="block w-full text-center bg-accent text-white px-4 py-3 rounded-xl font-bold hover:bg-yellow-600 transition-colors shadow-md">Join
+            Us Now!</a>
+          <div class="flex justify-center mt-4 pt-2 gap-3 items-center">
+            <div
+              class="btn-group lang-toggle-group bg-gray-200 rounded-full p-1 relative flex items-center w-[84px] h-9 dark:bg-slate-800"
+              role="group" aria-label="Language Switch">
+              <div
+                class="absolute left-1 bg-white h-7 w-9 rounded-full shadow-sm transition-transform duration-300 lang-slider-bg dark:bg-slate-900"
+                style="transform: translateX(0);"></div>
+              <button type="button"
+                class="btn btn-secondary flex-1 text-xs font-bold text-gray-800 relative z-10 lang-btn dark:text-slate-200"
+                data-lang="id">ID</button>
+              <button type="button"
+                class="btn btn-secondary flex-1 text-xs font-bold text-gray-800 relative z-10 lang-btn dark:text-slate-200"
+                data-lang="en">EN</button>
+            </div>
+            <button type="button"
+              class="theme-toggle-btn p-2.5 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-700 transition-all focus:outline-none dark:bg-slate-800 dark:text-yellow-400 w-9 h-9 flex items-center justify-center"
+              aria-label="Toggle Theme">
+              <i class="fas fa-sun theme-icon-sun text-sm hidden"></i>
+              <i class="fas fa-moon theme-icon-moon text-sm"></i>
+            </button>
+          </div>
         </div>
       </div>
     </div>
   </nav>
 
-  <section class="hero text-center py-5">
-    <div class="container">
-      <div class="glass-card" data-aos="fade-down">
-        <h1 class="display-2 fw-bold mb-4">About Us</h1>
-        <p class="lead fw-semibold w-75 mx-auto">Together, we shape Indonesia's golden future by 2045. Make real
-          differences in children's lives through education</p>
-        <a href="#values" class="btn btn-lg mt-2 glass-button-primary">Learn More</a>
-      </div>
-    </div>
-  </section>
+  <main class="pt-20">
 
-  <section class="py-5" id="values">
-    <div class="container">
-      <div class="text-center mb-4 aos-init aos-animate" data-aos="fade-up">
-        <h2 class="fw-bold display-5">Our Values</h2>
-      </div>
-      <div class="row g-4">
-        <div class="col-md-3">
-          <div class="card p-3 shadow-sm h-100 glass-testimonial text-center aos-init aos-animate" data-aos="zoom-in">
-            <i class="fas fa-star display-6 mb-3"></i>
-            <h4>Excellence</h4>
-            <p class="mb-0">We strive for the highest standards in everything we do, ensuring quality education and
-              meaningful impact.</p>
-          </div>
-        </div>
-        <div class="col-md-3">
-          <div class="card p-3 shadow-sm h-100 glass-testimonial text-center aos-init aos-animate" data-aos="zoom-in">
-            <i class="fas fa-handshake display-6 mb-3"></i>
-            <h4>Collaboration</h4>
-            <p class="mb-0">We believe in the power of working together to create positive change in communities.</p>
-          </div>
-        </div>
-        <div class="col-md-3">
-          <div class="card p-3 shadow-sm h-100 glass-testimonial text-center aos-init aos-animate" data-aos="zoom-in">
-            <i class="fas fa-lightbulb display-6 mb-3"></i>
-            <h4>Innovation</h4>
-            <p class="mb-0">We embrace creative solutions and new approaches to educational challenges.</p>
-          </div>
-        </div>
-        <div class="col-md-3">
-          <div class="card p-3 shadow-sm h-100 glass-testimonial text-center aos-init aos-animate" data-aos="zoom-in">
-            <i class="fas fa-heart display-6 mb-3"></i>
-            <h4>Compassion</h4>
-            <p class="mb-0">We approach every interaction with empathy and genuine care for others.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="py-5">
-    <div class="container">
-      <div class="row g-4 justify-content-center">
-        <div class="col-lg-6">
-          <div class="card p-3 shadow-sm h-100 glass-testimonial aos-init aos-animate" data-aos="zoom-in">
-            <h2 class="section-title">About Hey Youth</h2>
-            <p class="lead">Hey Youth is a youth-driven community dedicated to transforming education across Indonesia.
-              We believe that every child deserves access to quality education and mentorship opportunities.</p>
-            <p class="lead">Our mission is to connect passionate young leaders with communities that need educational
-              support, creating a sustainable ecosystem of learning and growth that will help shape Indonesia's golden
-              future by 2045.</p>
-          </div>
-        </div>
-        <div class="col-lg-6">
-          <div class="card p-3 shadow-sm h-100 glass-testimonial aos-init aos-animate" data-aos="zoom-in">
-            <h2 class="section-title">Our Impact</h2>
-            <p class="lead">Since our founding, we've made significant strides in educational empowerment. Our programs
-              have reached over 5,000 children across Indonesia, providing them with quality education, mentorship, and
-              life skills.</p>
-            <p class="lead">We've built a network of 1,200+ dedicated volunteers and 500+ experienced mentors who work
-              tirelessly to make education accessible to all, regardless of background or circumstances.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="py-5">
-    <div class="container">
-      <div class="row g-4 justify-content-center">
-        <div class="col-lg-6">
-          <div class="card p-3 shadow-sm h-100 glass-testimonial text-center aos-init" data-aos="zoom-out">
-            <h3 class="section-title text-center">Vision</h3>
-            <p class="lead">To create an Indonesia where every child has access to quality education and the opportunity
-              to reach their full potential by 2045.</p>
-          </div>
-        </div>
-        <div class="col-lg-6">
-          <div class="card p-3 shadow-sm h-100 glass-testimonial text-center aos-init" data-aos="zoom-out">
-            <h3 class="section-title text-center">Mission</h3>
-            <p class="lead">Empowering communities through education by connecting youth mentors with children in need,
-              fostering growth and creating lasting impact.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="py-5">
-    <div class="container">
-      <div class="text-center mb-4 aos-init aos-animate" data-aos="fade-up">
-        <h2 class="fw-bold display-5">Our Leadership Team</h2>
-        <p class="lead fw-semibold">Meet the passionate individuals driving our mission to transform education across
-          Indonesia.</p>
-      </div>
-      <div class="row g-4">
-        <div class="col-lg-6">
-          <div class="team-card fade-in glass-testimonial h-100 aos-init aos-animate" data-aos="flip-right">
-            <div class="card-body p-4 text-center">
-              <div class="d-flex align-items-center justify-content-center rounded-circle mx-auto mb-4 bg-light"
-                style="width:120px; height:120px; font-size:3rem; position:relative; z-index:2; background: linear-gradient(135deg, #3b82f6, #06b6d4); color: white;">
-                <i class="fas fa-crown"></i>
+    <!-- Hero Section (DINAMIS) -->
+    <section id="about-hero" class="relative overflow-hidden py-20 lg:py-28 bg-white">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid lg:grid-cols-2 gap-12 items-center">
+          <div class="order-2 lg:order-1 animate-fade-in-up">
+            <span class="text-accent font-bold tracking-wider uppercase text-sm mb-4 block"><span
+                class="lang-id">Tentang Hey Youth</span><span class="lang-en">About Hey Youth</span></span>
+            <h1 id="hero-title" class="text-4xl lg:text-6xl font-bold text-heading leading-tight mb-6 font-serif"></h1>
+            <p id="hero-subtitle" class="text-lg text-body mb-8 leading-relaxed"></p>
+            <div class="flex items-center gap-4">
+              <div class="flex -space-x-3">
+                <img class="w-10 h-10 rounded-full border-2 border-white" src="https://picsum.photos/seed/p1/100/100"
+                  alt="Member">
+                <img class="w-10 h-10 rounded-full border-2 border-white" src="https://picsum.photos/seed/p2/100/100"
+                  alt="Member">
+                <img class="w-10 h-10 rounded-full border-2 border-white" src="https://picsum.photos/seed/p3/100/100"
+                  alt="Member">
+                <div id="hero-volunteer-badge"
+                  class="w-10 h-10 rounded-full border-2 border-white bg-surface flex items-center justify-center text-xs font-bold text-primary">
+                </div>
               </div>
-              <h5 class="card-title mb-1 fw-bold">Yuni Triandini</h5>
-              <p class="team-position mb-2 fw-semibold">Founder</p>
+              <span class="text-sm font-semibold text-body"><span class="lang-id">Relawan muda telah
+                  bergabung</span><span class="lang-en">Young volunteers have joined</span></span>
             </div>
           </div>
-        </div>
-        <div class="col-lg-6">
-          <div class="team-card fade-in glass-testimonial h-100 aos-init aos-animate" data-aos="flip-right">
-            <div class="card-body p-4 text-center">
-              <div class="d-flex align-items-center justify-content-center rounded-circle mx-auto mb-4 bg-light"
-                style="width:120px; height:120px; font-size:3rem; position:relative; z-index:2; background: linear-gradient(135deg, #3b82f6, #06b6d4); color: white;">
-                <i class="fas fa-bullhorn"></i>
-              </div>
-              <h5 class="card-title mb-1 fw-bold">Rama</h5>
-              <p class="team-position mb-2 fw-semibold">Head of Marketing</p>
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-6">
-          <div class="team-card fade-in glass-testimonial h-100 aos-init" data-aos="flip-right">
-            <div class="card-body p-4 text-center">
-              <div class="d-flex align-items-center justify-content-center rounded-circle mx-auto mb-4 bg-light"
-                style="width:120px; height:120px; font-size:3rem; position:relative; z-index:2; background: linear-gradient(135deg, #3b82f6, #06b6d4); color: white;">
-                <i class="fas fa-pen-fancy"></i>
-              </div>
-              <h5 class="card-title mb-1 fw-bold">Dzikri</h5>
-              <p class="team-position mb-2 fw-semibold">Head of Graphic Designer</p>
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-6">
-          <div class="team-card fade-in glass-testimonial h-100 aos-init" data-aos="flip-right">
-            <div class="card-body p-4 text-center">
-              <div class="d-flex align-items-center justify-content-center rounded-circle mx-auto mb-4 bg-light"
-                style="width:120px; height:120px; font-size:3rem; position:relative; z-index:2; background: linear-gradient(135deg, #3b82f6, #06b6d4); color: white;">
-                <i class="fas fa-calendar-alt"></i>
-              </div>
-              <h5 class="card-title mb-1 fw-bold">Nabila</h5>
-              <p class="team-position mb-2 fw-semibold">Head of Event Organizer</p>
+
+          <div class="order-1 lg:order-2 relative">
+            <div class="absolute top-0 right-0 -mr-10 -mt-10 w-64 h-64 bg-primary/10 rounded-full blur-3xl z-0"></div>
+            <div class="absolute bottom-0 left-0 -ml-10 -mb-10 w-48 h-48 bg-accent/10 rounded-full blur-3xl z-0"></div>
+            <div
+              class="relative z-10 rounded-3xl overflow-hidden shadow-2xl border-4 border-white transform rotate-3 hover:rotate-0 transition-transform duration-500">
+              <img id="hero-image-display"
+                src="https://images.unsplash.com/photo-1481627834876-b7833e8f5570?q=80&w=2070&auto=format&fit=crop"
+                alt="About Hey Youth Education" class="w-full h-auto object-cover">
+              <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <footer class="pt-5 pb-3 text-muted footer" style="background-color: #efefef;">
-    <div class="container">
-      <div class="row">
-        <div class="col-md-6 mb-4">
-          <h3 class="mb-3 fw-semibold">Hey Youth</h3>
-          <p><b>Email:</b> <a href="mailto:hey.youth.id@gmail.com"
-              class="text-muted text-decoration-none">hey.youth.id@gmail.com</a></p>
+    <!-- Vision & Mission Section -->
+    <section class="py-20 bg-surface relative overflow-hidden">
+      <div
+        class="absolute top-0 right-0 w-96 h-96 bg-white opacity-50 rounded-full blur-3xl -mr-20 -mt-20 pointer-events-none">
+      </div>
+      <div
+        class="absolute bottom-0 left-0 w-64 h-64 bg-blue-100 opacity-50 rounded-full blur-3xl -ml-10 -mb-10 pointer-events-none">
+      </div>
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div class="text-center mb-16 max-w-3xl mx-auto">
+          <h2 class="text-base text-primary font-bold tracking-wide uppercase mb-2"><span class="lang-id">Tujuan
+              Kami</span><span class="lang-en">Our Purpose</span></h2>
+          <h3 class="text-3xl lg:text-4xl font-extrabold text-heading"><span class="lang-id">Visi &amp; Misi
+              Kami</span><span class="lang-en">Our Vision &amp; Mission</span></h3>
+          <p class="mt-4 text-body text-lg"><span class="lang-id">Kami berdiri atas dasar impian untuk menciptakan
+              ekosistem belajar yang inklusif di seluruh nusantara.</span><span class="lang-en">We stand on the dream of
+              creating an inclusive learning ecosystem throughout the archipelago.</span></p>
         </div>
-        <div class="col-md-6 mb-4">
-          <h4 class="mb-3 fw-semibold">Follow Us</h4>
-          <p>Follow us to keep you updated with our latest activities</p>
-          <a href="https://www.instagram.com/heyyouth_id/" class="btn btn-outline-secondary rounded-circle me-2">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-instagram"
-              viewBox="0 0 16 16">
-              <path
-                d="M8 0C5.829 0 5.556.01 4.703.048 3.85.088 3.269.222 2.76.42a3.9 3.9 0 0 0-1.417.923A3.9 3.9 0 0 0 .42 2.76C.222 3.268.087 3.85.048 4.7.01 5.555 0 5.827 0 8.001c0 2.172.01 2.444.048 3.297.04.852.174 1.433.372 1.942.205.526.478.972.923 1.417.444.445.89.719 1.416.923.51.198 1.09.333 1.942.372C5.555 15.99 5.827 16 8 16s2.444-.01 3.298-.048c.851-.04 1.434-.174 1.943-.372a3.9 3.9 0 0 0 1.416-.923c.445-.445.718-.891.923-1.417.197-.509.332-1.09.372-1.942C15.99 10.445 16 10.173 16 8s-.01-2.445-.048-3.299c-.04-.851-.175-1.433-.372-1.941a3.9 3.9 0 0 0-.923-1.417A3.9 3.9 0 0 0 13.24.42c-.51-.198-1.092-.333-1.943-.372C10.443.01 10.172 0 7.998 0zm-.717 1.442h.718c2.136 0 2.389.007 3.232.046.78.035 1.204.166 1.486.275.373.145.64.319.92.599s.453.546.598.92c.11.281.24.705.275 1.485.039.843.047 1.096.047 3.231s-.008 2.389-.047 3.232c-.035.78-.166 1.203-.275 1.485a2.5 2.5 0 0 1-.599.919c-.28.28-.546.453-.92.598-.28.11-.704.24-1.485.276-.843.038-1.096.047-3.232.047s-2.39-.009-3.233-.047c-.78-.036-1.203-.166-1.485-.276a2.5 2.5 0 0 1-.92-.598 2.5 2.5 0 0 1-.6-.92c-.109-.281-.24-.705-.275-1.485-.038-.843-.046-1.096-.046-3.233s.008-2.388.046-3.231c.036-.78.166-1.204.276-1.486.145-.373.319-.64.599-.92s.546-.453.92-.598c.282-.11.705-.24 1.485-.276.738-.034 1.024-.044 2.515-.045zm4.988 1.328a.96.96 0 1 0 0 1.92.96.96 0 0 0 0-1.92m-4.27 1.122a4.109 4.109 0 1 0 0 8.217 4.109 4.109 0 0 0 0-8.217m0 1.441a2.667 2.667 0 1 1 0 5.334 2.667 2.667 0 0 1 0-5.334">
-              </path>
-            </svg>
-          </a>
-          <a href="https://www.linkedin.com/company/hey-youth1" class="btn btn-outline-secondary rounded-circle me-2">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-linkedin"
-              viewBox="0 0 16 16">
-              <path
-                d="M0 1.146C0 .513.526 0 1.175 0h13.65C15.474 0 16 .513 16 1.146v13.708c0 .633-.526 1.146-1.175 1.146H1.175C.526 16 0 15.487 0 14.854zm4.943 12.248V6.169H2.542v7.225zm-1.2-8.212c.837 0 1.358-.554 1.358-1.248-.015-.709-.52-1.248-1.342-1.248S2.4 3.226 2.4 3.934c0 .694.521 1.248 1.327 1.248zm4.908 8.212V9.359c0-.216.016-.432.08-.586.173-.431.568-.878 1.232-.878.869 0 1.216.662 1.216 1.634v3.865h2.401V9.25c0-2.22-1.184-3.252-2.764-3.252-1.274 0-1.845.7-2.165 1.193v.025h-.016l.016-.025V6.169h-2.4c.03.678 0 7.225 0 7.225z">
-              </path>
-            </svg>
-          </a>
-          <a href="https://x.com/heyyouth_id" class="btn btn-outline-secondary rounded-circle me-2">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-twitter-x"
-              viewBox="0 0 16 16">
-              <path
-                d="M12.6.75h2.454l-5.36 6.142L16 15.25h-4.937l-3.867-5.07-4.425 5.07H.316l5.733-6.57L0 .75h5.063l3.495 4.633L12.601.75Zm-.86 13.028h1.36L4.323 2.145H2.865z">
-              </path>
-            </svg>
-          </a>
-          <a href="https://www.tiktok.com/@heyyouth_id" class="btn btn-outline-secondary rounded-circle me-2">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-tiktok"
-              viewBox="0 0 16 16">
-              <path
-                d="M9 0h1.98c.144.715.54 1.617 1.235 2.512C12.895 3.389 13.797 4 15 4v2c-1.753 0-3.07-.814-4-1.829V11a5 5 0 1 1-5-5v2a3 3 0 1 0 3 3z">
-              </path>
-            </svg>
-          </a>
-          <a href="https://www.youtube.com/@heyyouth6461" class="btn btn-outline-secondary rounded-circle">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-youtube"
-              viewBox="0 0 16 16">
-              <path
-                d="M8.051 1.999h.089c.822.003 4.987.033 6.11.335a2.01 2.01 0 0 1 1.415 1.42c.101.38.172.883.22 1.402l.01.104.022.26.008.104c.065.914.073 1.77.074 1.957v.075c-.001.194-.01 1.108-.082 2.06l-.008.105-.009.104c-.05.572-.124 1.14-.235 1.558a2.01 2.01 0 0 1-1.415 1.42c-1.16.312-5.569.334-6.18.335h-.142c-.309 0-1.587-.006-2.927-.052l-.17-.006-.087-.004-.171-.007-.171-.007c-1.11-.049-2.167-.128-2.654-.26a2.01 2.01 0 0 1-1.415-1.419c-.111-.417-.185-.986-.235-1.558L.09 9.82l-.008-.104A31 31 0 0 1 0 7.68v-.123c.002-.215.01-.958.064-1.778l.007-.103.003-.052.008-.104.022-.26.01-.104c.048-.519.119-1.023.22-1.402a2.01 2.01 0 0 1 1.415-1.42c.487-.13 1.544-.21 2.654-.26l.17-.007.172-.006.086-.003.171-.007A100 100 0 0 1 7.858 2zM6.4 5.209v4.818l4.157-2.408z">
-              </path>
-            </svg>
-          </a>
+        <div class="grid md:grid-cols-2 gap-8 mb-20">
+          <div
+            class="bg-white p-10 rounded-3xl shadow-lg border border-blue-100 relative overflow-hidden group hover:-translate-y-2 transition-transform duration-300">
+            <div class="absolute top-0 right-0 p-6 opacity-10 group-hover:opacity-20 transition-opacity"><i
+                class="fas fa-eye text-9xl text-primary"></i></div>
+            <div class="w-14 h-14 bg-blue-100 rounded-2xl flex items-center justify-center text-primary mb-6"><i
+                class="fas fa-eye text-2xl"></i></div>
+            <h4 class="text-2xl font-bold text-heading mb-4"><span class="lang-id">Visi</span><span
+                class="lang-en">Vision</span></h4>
+            <p class="text-body text-lg leading-relaxed"><span class="lang-id">Mewujudkan akses pendidikan yang setara
+                dan berkualitas bagi setiap pemuda di Indonesia, tanpa memandang latar belakang sosial maupun
+                ekonomi.</span><span class="lang-en">Realizing equal and quality access to education for every youth in
+                Indonesia, regardless of social or economic background.</span></p>
+          </div>
+          <div
+            class="bg-white p-10 rounded-3xl shadow-lg border border-blue-100 relative overflow-hidden group hover:-translate-y-2 transition-transform duration-300">
+            <div class="absolute top-0 right-0 p-6 opacity-10 group-hover:opacity-20 transition-opacity"><i
+                class="fas fa-bullseye text-9xl text-accent"></i></div>
+            <div class="w-14 h-14 bg-yellow-100 rounded-2xl flex items-center justify-center text-accent mb-6"><i
+                class="fas fa-bullseye text-2xl"></i></div>
+            <h4 class="text-2xl font-bold text-heading mb-4"><span class="lang-id">Misi</span><span
+                class="lang-en">Mission</span></h4>
+            <p class="text-body text-lg leading-relaxed"><span class="lang-id">Menghubungkan pemimpin muda yang
+                berpotensi dengan komunitas yang membutuhkan dukungan pendidikan, serta memberdayakan mereka melalui
+                program mentoring intensif.</span><span class="lang-en">Connecting potential young leaders with
+                communities that need educational support, and empowering them through intensive mentoring
+                programs.</span></p>
+          </div>
         </div>
       </div>
-      <hr>
-      <div class="text-center small">
-        <p class="mb-0">
-          © Hey Youth. Made with ❤️ for Golden Future. All right reserved
+    </section>
+
+    <!-- Core Values Section -->
+    <section class="py-20 bg-white">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16">
+          <h2 class="text-base text-primary font-bold tracking-wide uppercase mb-2"><span class="lang-id">Budaya
+              Kami</span><span class="lang-en">Our Culture</span></h2>
+          <h3 class="text-3xl lg:text-4xl font-extrabold text-heading"><span class="lang-id">Nilai-Nilai
+              Kami</span><span class="lang-en">Our Values</span></h3>
+        </div>
+        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div class="text-center group p-6 rounded-2xl hover:bg-surface transition-colors duration-300">
+            <div
+              class="w-20 h-20 mx-auto bg-blue-50 rounded-full flex items-center justify-center text-primary mb-6 group-hover:scale-110 group-hover:bg-primary group-hover:text-white transition-all duration-300 shadow-sm">
+              <i class="fas fa-star text-3xl"></i></div>
+            <h4 class="text-xl font-bold text-heading mb-3"><span class="lang-id">Keunggulan</span><span
+                class="lang-en">Excellence</span></h4>
+            <p class="text-sm text-body leading-relaxed"><span class="lang-id">Kami berkomitmen mengejar standar
+                tertinggi untuk memastikan dampak pendidikan yang nyata dan berkelanjutan.</span><span
+                class="lang-en">We are committed to pursuing the highest standards to ensure real and sustainable
+                educational impact.</span></p>
+          </div>
+          <div class="text-center group p-6 rounded-2xl hover:bg-surface transition-colors duration-300">
+            <div
+              class="w-20 h-20 mx-auto bg-indigo-50 rounded-full flex items-center justify-center text-indigo-600 mb-6 group-hover:scale-110 group-hover:bg-indigo-600 group-hover:text-white transition-all duration-300 shadow-sm">
+              <i class="fas fa-users text-3xl"></i></div>
+            <h4 class="text-xl font-bold text-heading mb-3"><span class="lang-id">Kolaborasi</span><span
+                class="lang-en">Collaboration</span></h4>
+            <p class="text-sm text-body leading-relaxed"><span class="lang-id">Kami percaya bahwa perubahan komunitas
+                besar tercapai melalui kolaborasi yang erat antara relawan dan mitra.</span><span class="lang-en">We
+                believe major community change is achieved through close collaboration between volunteers and
+                partners.</span></p>
+          </div>
+          <div class="text-center group p-6 rounded-2xl hover:bg-surface transition-colors duration-300">
+            <div
+              class="w-20 h-20 mx-auto bg-teal-50 rounded-full flex items-center justify-center text-teal-600 mb-6 group-hover:scale-110 group-hover:bg-teal-600 group-hover:text-white transition-all duration-300 shadow-sm">
+              <i class="fas fa-lightbulb text-3xl"></i></div>
+            <h4 class="text-xl font-bold text-heading mb-3"><span class="lang-id">Inovasi</span><span
+                class="lang-en">Innovation</span></h4>
+            <p class="text-sm text-body leading-relaxed"><span class="lang-id">Kami selalu mencari cara kreatif dan
+                inovatif untuk memecahkan tantangan pendidikan di era digital.</span><span class="lang-en">We always
+                seek creative and innovative ways to solve educational challenges in the digital era.</span></p>
+          </div>
+          <div class="text-center group p-6 rounded-2xl hover:bg-surface transition-colors duration-300">
+            <div
+              class="w-20 h-20 mx-auto bg-orange-50 rounded-full flex items-center justify-center text-orange-500 mb-6 group-hover:scale-110 group-hover:bg-orange-500 group-hover:text-white transition-all duration-300 shadow-sm">
+              <i class="fas fa-heart text-3xl"></i></div>
+            <h4 class="text-xl font-bold text-heading mb-3"><span class="lang-id">Kepedulian</span><span
+                class="lang-en">Compassion</span></h4>
+            <p class="text-sm text-body leading-relaxed"><span class="lang-id">Empati dan kepedulian terhadap sesama
+                adalah inti dari setiap langkah yang kami ambil dalam membantu komunitas.</span><span
+                class="lang-en">Empathy and care for others are at the core of every step we take in helping the
+                community.</span></p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Milestones Section -->
+    <section class="py-20 bg-bg relative overflow-hidden">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16">
+          <h2 class="text-base text-primary font-bold tracking-wide uppercase mb-2"><span
+              class="lang-id">Sejarah</span><span class="lang-en">History</span></h2>
+          <h3 class="text-3xl lg:text-4xl font-extrabold text-heading"><span class="lang-id">Pencapaian &amp;
+              Pertumbuhan</span><span class="lang-en">Milestones &amp; Growth</span></h3>
+          <p class="mt-4 text-body"><span class="lang-id">Momen-momen penting yang membentuk gerakan kami</span><span
+              class="lang-en">Key moments that shaped our movement</span></p>
+        </div>
+        <div class="relative">
+          <div class="hidden md:block absolute left-1/2 transform -translate-x-1/2 h-full w-1 bg-blue-100 rounded-full">
+          </div>
+          <div class="space-y-12">
+            <div class="flex flex-col md:flex-row items-center justify-between group">
+              <div class="md:w-5/12 text-center md:text-right mb-4 md:mb-0">
+                <div
+                  class="inline-block bg-white p-4 rounded-xl shadow-sm border border-gray-100 group-hover:shadow-md transition-shadow">
+                  <h4 class="font-bold text-primary text-lg">2018</h4>
+                  <p class="font-bold text-heading mb-1"><span class="lang-id">Awal Mula</span><span class="lang-en">The
+                      Beginning</span></p>
+                  <p class="text-sm text-gray-500"><span class="lang-id">Memulai program pemberdayaan pendidikan di
+                      Banten Selatan.</span><span class="lang-en">Started the educational empowerment program in South
+                      Banten.</span></p>
+                </div>
+              </div>
+              <div
+                class="z-10 w-10 h-10 rounded-full bg-accent border-4 border-white shadow-md flex items-center justify-center text-white font-bold text-xs">
+                1</div>
+              <div class="md:w-5/12 hidden md:block"></div>
+            </div>
+            <div class="flex flex-col md:flex-row items-center justify-between group">
+              <div class="md:w-5/12 hidden md:block"></div>
+              <div
+                class="z-10 w-10 h-10 rounded-full bg-primary border-4 border-white shadow-md flex items-center justify-center text-white font-bold text-xs">
+                2</div>
+              <div class="md:w-5/12 text-center md:text-left mt-4 md:mt-0">
+                <div
+                  class="inline-block bg-white p-4 rounded-xl shadow-sm border border-gray-100 group-hover:shadow-md transition-shadow">
+                  <h4 class="font-bold text-primary text-lg">2019</h4>
+                  <p class="font-bold text-heading mb-1"><span class="lang-id">Memperluas Jangkauan</span><span
+                      class="lang-en">Expanding Reach</span></p>
+                  <p class="text-sm text-gray-500"><span class="lang-id">Volunteer melebihi 50 orang, mengajar di daerah
+                      terpencil.</span><span class="lang-en">Volunteers exceeded 50, teaching in remote areas.</span>
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="flex flex-col md:flex-row items-center justify-between group">
+              <div class="md:w-5/12 text-center md:text-right mb-4 md:mb-0">
+                <div
+                  class="inline-block bg-white p-4 rounded-xl shadow-sm border border-gray-100 group-hover:shadow-md transition-shadow">
+                  <h4 class="font-bold text-primary text-lg">2020</h4>
+                  <p class="font-bold text-heading mb-1"><span class="lang-id">Masuk Digital</span><span
+                      class="lang-en">Going Digital</span></p>
+                  <p class="text-sm text-gray-500"><span class="lang-id">Adaptasi pembelajaran virtual &amp; webinar
+                      beasiswa pertama.</span><span class="lang-en">Adapted to virtual learning &amp; hosted the first
+                      scholarship webinar.</span></p>
+                </div>
+              </div>
+              <div
+                class="z-10 w-10 h-10 rounded-full bg-primary border-4 border-white shadow-md flex items-center justify-center text-white font-bold text-xs">
+                3</div>
+              <div class="md:w-5/12 hidden md:block"></div>
+            </div>
+            <div class="flex flex-col md:flex-row items-center justify-between group">
+              <div class="md:w-5/12 hidden md:block"></div>
+              <div
+                class="z-10 w-10 h-10 rounded-full bg-primary border-4 border-white shadow-md flex items-center justify-center text-white font-bold text-xs">
+                4</div>
+              <div class="md:w-5/12 text-center md:text-left mt-4 md:mt-0">
+                <div
+                  class="inline-block bg-white p-4 rounded-xl shadow-sm border border-gray-100 group-hover:shadow-md transition-shadow">
+                  <h4 class="font-bold text-primary text-lg">2021</h4>
+                  <p class="font-bold text-heading mb-1"><span class="lang-id">Jaringan Global</span><span
+                      class="lang-en">Global Network</span></p>
+                  <p class="text-sm text-gray-500"><span class="lang-id">Kontributor dari 10 negara bergabung, membangun
+                      komunitas global.</span><span class="lang-en">Contributors from 10 countries joined, building a
+                      global community.</span></p>
+                </div>
+              </div>
+            </div>
+            <div class="flex flex-col md:flex-row items-center justify-between group">
+              <div class="md:w-5/12 text-center md:text-right mb-4 md:mb-0">
+                <div
+                  class="inline-block bg-white p-4 rounded-xl shadow-sm border border-gray-100 group-hover:shadow-md transition-shadow">
+                  <h4 class="font-bold text-primary text-lg">2025</h4>
+                  <p class="font-bold text-heading mb-1"><span class="lang-id">Terus Melangkah</span><span
+                      class="lang-en">Moving Forward</span></p>
+                  <p class="text-sm text-gray-500"><span class="lang-id">Mencapai 1000+ Relawan, 1000+ Aktivitas, dan
+                      mendukung SDGs.</span><span class="lang-en">Reached 1000+ Volunteers, 1000+ Activities, and
+                      supporting SDGs.</span></p>
+                </div>
+              </div>
+              <div
+                class="z-10 w-10 h-10 rounded-full bg-accent border-4 border-white shadow-md flex items-center justify-center text-white font-bold text-xs">
+                5</div>
+              <div class="md:w-5/12 hidden md:block"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Leadership Team Section (DINAMIS) -->
+    <section class="py-20 bg-white">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16">
+          <h2 class="text-base text-primary font-bold tracking-wide uppercase mb-2"><span class="lang-id">Orang-Orang di
+              Balik Layar</span><span class="lang-en">People Behind The Scene</span></h2>
+          <h3 class="text-3xl lg:text-4xl font-extrabold text-heading"><span class="lang-id">Tim Kepemimpinan
+              Kami</span><span class="lang-en">Our Leadership Team</span></h3>
+          <p class="mt-4 text-body"><span class="lang-id">Kenali individu-individu bersemangat yang menggerakkan misi
+              kami untuk mengubah pendidikan di seluruh Indonesia.</span><span class="lang-en">Meet the passionate
+              individuals driving our mission to transform education across Indonesia.</span></p>
+        </div>
+
+        <div id="team-container" class="grid md:grid-cols-3 gap-8">
+          <div class="col-span-full text-center py-10"><span class="lang-id">Memuat data tim...</span><span
+              class="lang-en">Loading team data...</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Secondary CTA Section -->
+    <section class="py-20 bg-bg text-center">
+      <div class="max-w-4xl mx-auto px-4">
+        <h2 class="text-3xl lg:text-5xl font-bold text-heading mb-6">
+          <span class="lang-id">Siap menjadi bagian dari gerakan ini?</span>
+          <span class="lang-en">Ready to be part of the movement?</span>
+        </h2>
+        <p class="text-lg text-gray-600 mb-10 max-w-2xl mx-auto">
+          <span class="lang-id">Bersama-sama, kita bisa menciptakan masa depan yang lebih cerah bagi generasi
+            penerus.</span>
+          <span class="lang-en">Together, we can create a brighter future for the next generation.</span>
         </p>
-        <p class="mb-0 d-none">
-          Made by <a href="https://kredybel.gx1.org/" target="_blank" class="text-muted">Kredybel</a>
-        </p>
+        <div class="flex flex-col sm:flex-row justify-center gap-4">
+          <a href="https://bit.ly/HYOprec"
+            class="bg-primary hover:bg-primaryDark text-white px-8 py-3.5 rounded-full font-bold transition-all shadow-lg hover:-translate-y-1"><span
+              class="lang-id">Bergabung dengan Hey Youth!</span><span class="lang-en">Join Hey Youth Today!</span></a>
+          <a href="index.html#contact"
+            class="bg-white border border-gray-300 text-heading hover:border-primary hover:text-primary px-8 py-3.5 rounded-full font-bold transition-all shadow-sm hover:shadow-md"><span
+              class="lang-id">Hubungi Kami</span><span class="lang-en">Contact Us</span></a>
+        </div>
       </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-heading text-gray-400 py-12 border-t border-gray-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid md:grid-cols-3 gap-8 mb-8">
+        <div>
+          <span class="text-2xl font-bold text-white block mb-4">Hey Youth!</span>
+          <p class="mt-4 text-sm leading-relaxed text-gray-400">Helping youths grow through webinar, mentoring &amp;
+            volunteering<br>Est. 2018 | 5K+ learners | 📩 Join our team to make a real impact 🌏</p>
+        </div>
+        <div>
+          <h4 class="text-white font-bold mb-4 uppercase text-xs tracking-wider">Contact</h4>
+          <ul class="space-y-2 text-sm">
+            <li class="flex items-center gap-2"><i class="fas fa-envelope text-accent"></i> hey.youth.id@gmail.com</li>
+            <li class="flex items-center gap-2"><i class="fas fa-map-marker-alt text-accent"></i> Jakarta, Indonesia
+            </li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="text-white font-bold mb-4 uppercase text-xs tracking-wider">Follow Us</h4>
+          <div class="flex space-x-4">
+            <a href="#"
+              class="w-8 h-8 rounded bg-gray-800 flex items-center justify-center hover:bg-primary hover:text-white transition-all"><i
+                class="fab fa-instagram"></i></a>
+            <a href="#"
+              class="w-8 h-8 rounded bg-gray-800 flex items-center justify-center hover:bg-primary hover:text-white transition-all"><i
+                class="fab fa-linkedin-in"></i></a>
+            <a href="#"
+              class="w-8 h-8 rounded bg-gray-800 flex items-center justify-center hover:bg-primary hover:text-white transition-all"><i
+                class="fab fa-youtube"></i></a>
+            <a href="#"
+              class="w-8 h-8 rounded bg-gray-800 flex items-center justify-center hover:bg-primary hover:text-white transition-all"><i
+                class="fab fa-tiktok"></i></a>
+            <a href="#"
+              class="w-8 h-8 rounded bg-gray-800 flex items-center justify-center hover:bg-primary hover:text-white transition-all"><i
+                class="fa-brands fa-x-twitter"></i></a>
+          </div>
+        </div>
+      </div>
+      <div class="border-t border-gray-800 pt-8 text-center text-xs">&copy; Hey Youth. Made with ❤ for Golden Future.
+        All right reserved.</div>
     </div>
   </footer>
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
-  <script src="assets/script.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+  <script src="assets/Javascript/firebase-init.js"></script>
+  <script src="assets/Javascript/Script.js"></script>
+  <script>
+    (function () {
+      function _esc(s) {
+        if (!s) return '';
+        var d = document.createElement('div');
+        d.textContent = s;
+        return d.innerHTML;
+      }
+
+      function renderHero(heroData) {
+        var titleEl = document.getElementById('hero-title');
+        var subEl = document.getElementById('hero-subtitle');
+        var badgeEl = document.getElementById('hero-volunteer-badge');
+        var imgEl = document.getElementById('hero-image-display');
+
+        if (titleEl) titleEl.innerHTML = heroData.title_id || heroData.title_en
+          ? '<span class="lang-id">' + (heroData.title_id || heroData.title || '') + '</span><span class="lang-en">' + (heroData.title_en || heroData.title || '') + '</span>'
+          : (heroData.title || '');
+        if (subEl) subEl.innerHTML = heroData.subtitle_id || heroData.subtitle_en
+          ? '<span class="lang-id">' + (heroData.subtitle_id || heroData.subtitle || '') + '</span><span class="lang-en">' + (heroData.subtitle_en || heroData.subtitle || '') + '</span>'
+          : (heroData.subtitle || '');
+        if (badgeEl) badgeEl.textContent = heroData.volunteerCount || '1k+';
+
+        if (imgEl && heroData.image) {
+          imgEl.src = heroData.image;
+          imgEl.onerror = function () {
+            this.src = 'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?q=80&w=2070&auto=format&fit=crop';
+          };
+        }
+      }
+
+      function renderTeam(teamData) {
+        var container = document.getElementById('team-container');
+        if (!container) return;
+
+        var html = '';
+        for (var i = 0; i < teamData.length; i++) {
+          var member = teamData[i];
+          var imgSrc = member.image || '';
+          var displaySrc = imgSrc ? window._resolveImgPath(imgSrc) : 'https://picsum.photos/seed/' + member.id + '/200/200';
+          var fallback = 'https://ui-avatars.com/api/?name=' + encodeURIComponent(member.name) + '&size=100&background=random&color=fff';
+
+          var roleHtml = member.role_id || member.role_en
+            ? '<span class="lang-id">' + _esc(member.role_id || member.role || '') + '</span><span class="lang-en">' + _esc(member.role_en || member.role || '') + '</span>'
+            : _esc(member.role || '');
+
+          html += '<div class="bg-bg rounded-3xl p-6 text-center hover:shadow-xl transition-all duration-300 border border-gray-100">' +
+            '<div class="w-32 h-32 mx-auto rounded-full p-1 bg-gradient-to-tr from-primary to-accent mb-4">' +
+            '<img src="' + _esc(displaySrc) + '" alt="' + _esc(member.name) + '" class="w-full h-full rounded-full object-cover border-4 border-white" onerror="this.src=\'' + fallback + '\'">' +
+            '</div>' +
+            '<h4 class="text-xl font-bold text-heading">' + _esc(member.name) + '</h4>' +
+            '<p class="text-primary font-semibold text-sm mb-4">' + roleHtml + '</p>' +
+            '<div class="flex justify-center space-x-3">' +
+            '<a href="' + _esc(member.linkedin) + '" class="text-gray-400 hover:text-primary"><i class="fab fa-linkedin-in"></i></a>' +
+            '<a href="' + _esc(member.instagram) + '" class="text-gray-400 hover:text-primary"><i class="fab fa-instagram"></i></a>' +
+            '</div>' +
+            '</div>';
+        }
+        container.innerHTML = html;
+      }
+
+      async function initAbout() {
+        var data = await window.getFirebaseData(window.HEY_YOUTH_DEFAULT_DATA);
+        renderHero(data.aboutHero || window.HEY_YOUTH_DEFAULT_DATA.aboutHero);
+        renderTeam(data.team || window.HEY_YOUTH_DEFAULT_DATA.team);
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initAbout);
+      } else {
+        initAbout();
+      }
+
+    })();
+  </script>
 </body>
 
 </html>

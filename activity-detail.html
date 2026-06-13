@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <script>
+        (function () {
+            var savedTheme = localStorage.getItem('heyyouth_theme') || 'light';
+            if (savedTheme === 'dark') {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        })();
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Activity Detail - Hey Youth!</title>
+    <meta name="robots" content="noindex, follow">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Merriweather:ital,wght@0,700;1,400&display=swap"
+        rel="stylesheet">
+
+    <style>
+        .hero-header-bg {
+            background-attachment: fixed;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+
+        @media (max-width: 768px) {
+            .hero-header-bg {
+                background-attachment: scroll;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="assets/Style/tailwind.css">
+    <link rel="stylesheet" href="assets/Style/Style.css">
+</head>
+
+<body
+    class="lang-en bg-bg text-body font-sans antialiased selection:bg-primary selection:text-white flex flex-col min-h-screen">
+
+    <!-- NAVBAR (Sama dengan main site) -->
+    <nav id="navbar"
+        class="fixed w-full z-[2000] transition-all duration-300 bg-white/90 backdrop-blur-md border-b border-gray-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <a href="index.html" class="flex-shrink-0 flex items-center gap-2 group">
+                    <img src="assets/img/NEW HEY YOUTH Sep 2025.png" alt="Hey Youth Logo"
+                        class="h-10 w-auto object-contain group-hover:scale-105 transition-transform duration-300">
+                </a>
+                <div class="hidden md:flex space-x-8 items-center">
+                    <a href="index.html" class="nav-link text-body hover:text-primary transition-colors">Home</a>
+                    <a href="about us.html" class="nav-link text-body hover:text-primary transition-colors">About us</a>
+                    <a href="activities.html"
+                        class="nav-link text-primary font-bold hover:text-primaryDark transition-colors">Activities</a>
+                    <a href="partner.html" class="nav-link text-body hover:text-primary transition-colors">Partners</a>
+                    <a href="donation.html" class="nav-link text-body hover:text-primary transition-colors">Donation</a>
+                </div>
+                <div class="hidden md:flex items-center gap-3">
+                    <a href="CMS/Login.html"
+                        class="text-body hover:text-primary px-3 py-2.5 rounded-lg font-medium transition-colors text-sm flex items-center gap-1.5"><i
+                            class="fas fa-lock text-xs"></i> Dashboard</a>
+                    <a href="https://bit.ly/HYOprec"
+                        class="bg-primary hover:bg-primaryDark text-white px-6 py-2.5 rounded-full font-semibold transition-all shadow-md hover:shadow-lg hover:-translate-y-0.5">Join
+                        Us!</a>
+
+                    <button type="button"
+                        class="theme-toggle-btn ml-2 p-2.5 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-700 transition-all focus:outline-none dark:bg-slate-800 dark:hover:bg-slate-700 dark:text-yellow-400 w-9 h-9 flex items-center justify-center"
+                        aria-label="Toggle Theme">
+                        <i class="fas fa-sun theme-icon-sun text-sm hidden"></i>
+                        <i class="fas fa-moon theme-icon-moon text-sm"></i>
+                    </button>
+                    <div class="btn-group lang-toggle-group ml-2 bg-gray-200 rounded-full p-1 relative flex items-center w-[84px] h-9 dark:bg-slate-800"
+                        role="group" aria-label="Language Switch">
+                        <div class="absolute left-1 bg-white h-7 w-9 rounded-full shadow-sm transition-transform duration-300 lang-slider-bg dark:bg-slate-900"
+                            style="transform: translateX(0);"></div>
+                        <button type="button"
+                            class="btn btn-secondary flex-1 text-xs font-bold text-gray-800 relative z-10 lang-btn dark:text-slate-200"
+                            data-lang="id">ID</button>
+                        <button type="button"
+                            class="btn btn-secondary flex-1 text-xs font-bold text-gray-800 relative z-10 lang-btn dark:text-slate-200"
+                            data-lang="en">EN</button>
+                    </div>
+                </div>
+                <div class="md:hidden flex items-center">
+                    <button id="mobile-menu-btn" class="text-heading hover:text-primary focus:outline-none p-2"
+                        aria-label="Toggle menu">
+                        <svg id="icon-menu" class="h-6 w-6 transition-transform duration-300" fill="none"
+                            viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                        <svg id="icon-close" class="h-6 w-6 hidden transition-transform duration-300" fill="none"
+                            viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div id="mobile-menu"
+            class="hidden md:hidden bg-white border-t border-gray-100 absolute w-full shadow-xl transform transition-all duration-300 origin-top">
+            <div class="px-4 pt-4 pb-6 space-y-2">
+                <a href="index.html"
+                    class="block px-4 py-3 rounded-xl text-base font-medium text-body hover:text-primary hover:bg-gray-50">Home</a>
+                <a href="about us.html"
+                    class="block px-4 py-3 rounded-xl text-base font-medium text-body hover:text-primary hover:bg-gray-50">About
+                    us</a>
+                <a href="activities.html"
+                    class="block px-4 py-3 rounded-xl text-base font-medium text-primary font-bold bg-blue-50">Activities</a>
+                <a href="partner.html"
+                    class="block px-4 py-3 rounded-xl text-base font-medium text-body hover:text-primary hover:bg-gray-50">Partners</a>
+                <a href="donation.html"
+                    class="block px-4 py-3 rounded-xl text-base font-medium text-body hover:text-primary hover:bg-gray-50">Donation</a>
+                <div class="pt-4 border-t border-gray-100 mt-4 space-y-2">
+                    <a href="CMS/Login.html"
+                        class="block w-full text-center border-2 border-gray-200 text-heading font-semibold px-4 py-3 rounded-xl hover:border-primary hover:text-primary transition-colors flex items-center justify-center gap-2"><i
+                            class="fas fa-lock text-sm"></i> Dashboard</a>
+                    <a href="https://bit.ly/HYOprec"
+                        class="block w-full text-center bg-accent text-white px-4 py-3 rounded-xl font-bold hover:bg-yellow-600 transition-colors shadow-md">Join
+                        Us Now!</a>
+
+                    <div class="flex justify-center mt-4 pt-2 gap-3 items-center">
+                        <div class="btn-group lang-toggle-group bg-gray-200 rounded-full p-1 relative flex items-center w-[84px] h-9 dark:bg-slate-800"
+                            role="group" aria-label="Language Switch">
+                            <div class="absolute left-1 bg-white h-7 w-9 rounded-full shadow-sm transition-transform duration-300 lang-slider-bg dark:bg-slate-900"
+                                style="transform: translateX(0);"></div>
+                            <button type="button"
+                                class="btn btn-secondary flex-1 text-xs font-bold text-gray-800 relative z-10 lang-btn dark:text-slate-200"
+                                data-lang="id">ID</button>
+                            <button type="button"
+                                class="btn btn-secondary flex-1 text-xs font-bold text-gray-800 relative z-10 lang-btn dark:text-slate-200"
+                                data-lang="en">EN</button>
+                        </div>
+                        <button type="button"
+                            class="theme-toggle-btn p-2.5 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-700 transition-all focus:outline-none dark:bg-slate-800 dark:text-yellow-400 w-9 h-9 flex items-center justify-center"
+                            aria-label="Toggle Theme">
+                            <i class="fas fa-sun theme-icon-sun text-sm hidden"></i>
+                            <i class="fas fa-moon theme-icon-moon text-sm"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="flex-grow pt-20">
+
+        <div id="loading-state" class="flex items-center justify-center min-h-[50vh]">
+            <div class="text-center">
+                <i class="fas fa-circle-notch fa-spin text-4xl text-primary mb-4"></i>
+                <p class="text-body">Memuat artikel...</p>
+            </div>
+        </div>
+
+        <div id="article-container" class="hidden animate-fade-in-up">
+
+            <header
+                class="relative h-[50vh] min-h-[400px] max-h-[600px] w-full overflow-hidden hero-header-bg shadow-lg"
+                id="detail-hero">
+                <div class="absolute inset-0 bg-gradient-to-t from-heading/90 via-heading/40 to-transparent"></div>
+                <div class="absolute bottom-0 left-0 w-full p-6 md:p-12">
+                    <div class="max-w-4xl mx-auto">
+                        <div class="flex flex-wrap items-center gap-4 text-white/90 text-sm mb-4">
+                            <span id="detail-category"
+                                class="bg-accent text-white px-3 py-1 rounded-full font-bold text-xs uppercase tracking-wider shadow-md">Category</span>
+                            <span class="flex items-center gap-2"><i class="far fa-calendar-alt"></i> <span
+                                    id="detail-date">Date</span></span>
+                        </div>
+                        <h1 id="detail-title"
+                            class="text-3xl md:text-5xl font-extrabold text-white font-serif leading-tight drop-shadow-lg">
+                            Judul Artikel
+                        </h1>
+                    </div>
+                </div>
+            </header>
+
+            <article class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
+                <div class="relative mb-10 pl-6 border-l-4 border-primary">
+                    <p id="detail-description"
+                        class="text-xl md:text-2xl font-serif text-heading italic leading-relaxed">
+                        Deskripsi singkat...
+                    </p>
+                </div>
+
+                <hr class="border-gray-200 mb-10">
+
+                <div class="prose prose-lg prose-blue max-w-none text-gray-600 leading-relaxed space-y-6">
+                    <div id="detail-full-content">
+                    </div>
+                </div>
+
+                <div
+                    class="mt-16 pt-8 border-t border-gray-200 flex flex-col sm:flex-row justify-between items-center gap-4">
+                    <a href="activities.html"
+                        class="inline-flex items-center text-primary font-bold hover:text-accent transition-colors">
+                        <i class="fas fa-arrow-left mr-2"></i> <span class="lang-id">Kembali ke Kegiatan</span><span class="lang-en">Back to Activities</span>
+                    </a>
+                    <div class="flex gap-4">
+                        <span class="text-sm text-gray-500 font-medium self-center"><span class="lang-id">Bagikan:</span><span class="lang-en">Share:</span></span>
+                        <a href="#"
+                            class="w-10 h-10 rounded-full bg-gray-100 hover:bg-primary hover:text-white flex items-center justify-center transition-all text-gray-600"><i
+                                class="fab fa-facebook-f"></i></a>
+                        <a href="#"
+                            class="w-10 h-10 rounded-full bg-gray-100 hover:bg-primary hover:text-white flex items-center justify-center transition-all text-gray-600"><i
+                                class="fab fa-twitter"></i></a>
+                        <a href="#"
+                            class="w-10 h-10 rounded-full bg-gray-100 hover:bg-primary hover:text-white flex items-center justify-center transition-all text-gray-600"><i
+                                class="fab fa-whatsapp"></i></a>
+                    </div>
+                </div>
+            </article>
+        </div>
+
+        <div id="error-state" class="hidden py-20 text-center px-4">
+            <div class="max-w-md mx-auto bg-white p-8 rounded-2xl shadow-md border border-red-100">
+                <div
+                    class="w-16 h-16 bg-red-100 text-red-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-exclamation-triangle text-2xl"></i>
+                </div>
+                <h2 class="text-2xl font-bold text-heading mb-2"><span class="lang-id">Artikel Tidak Ditemukan</span><span class="lang-en">Article Not Found</span></h2>
+                <p class="text-gray-600 mb-6"><span class="lang-id">Maaf, artikel yang Anda cari mungkin telah dihapus atau link salah.</span><span class="lang-en">Sorry, the article you are looking for may have been deleted or the link is incorrect.</span></p>
+                <a href="activities.html"
+                    class="inline-block bg-primary hover:bg-primaryDark text-white px-6 py-3 rounded-xl font-bold transition-colors"><span class="lang-id">Lihat Semua Aktivitas</span><span class="lang-en">View All Activities</span></a>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-heading text-gray-400 py-12 border-t border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-3 gap-8 mb-8">
+                <div>
+                    <span class="text-2xl font-bold text-white block mb-4">Hey Youth!</span>
+                    <p class="mt-4 text-sm leading-relaxed text-gray-400">Helping youths grow through webinar, mentoring
+                        & volunteering<br>Est. 2018 | 5K+ learners | 📩 Join our team to make a real impact 🌏</p>
+                </div>
+                <div>
+                    <h4 class="text-white font-bold mb-4 uppercase text-xs tracking-wider">Contact</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li class="flex items-center gap-2"><i class="fas fa-envelope text-accent"></i>
+                            hey.youth.id@gmail.com</li>
+                        <li class="flex items-center gap-2"><i class="fas fa-map-marker-alt text-accent"></i> Jakarta,
+                            Indonesia</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white font-bold mb-4 uppercase text-xs tracking-wider">Follow Us</h4>
+                    <div class="flex space-x-3">
+                        <a href="#"
+                            class="w-8 h-8 rounded bg-gray-800 flex items-center justify-center hover:bg-primary hover:text-white transition-all"><i
+                                class="fab fa-instagram"></i></a>
+                        <a href="#"
+                            class="w-8 h-8 rounded bg-gray-800 flex items-center justify-center hover:bg-primary hover:text-white transition-all"><i
+                                class="fab fa-linkedin-in"></i></a>
+                        <a href="#"
+                            class="w-8 h-8 rounded bg-gray-800 flex items-center justify-center hover:bg-primary hover:text-white transition-all"><i
+                                class="fab fa-youtube"></i></a>
+                        <a href="#"
+                            class="w-8 h-8 rounded bg-gray-800 flex items-center justify-center hover:bg-primary hover:text-white transition-all"><i
+                                class="fab fa-tiktok"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center text-sm">
+                <p>&copy; 2025 Hey Youth! All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+    <script src="assets/Javascript/firebase-init.js"></script>
+    <script src="assets/Javascript/Script.js"></script>
+
+    <script>
+        async function initActivityDetail() {
+            try {
+                const defaultData = { activityCards: [] };
+                const data = await window.getFirebaseData(defaultData);
+                const urlParams = new URLSearchParams(window.location.search);
+                const activityId = urlParams.get('id');
+
+                const loadingState = document.getElementById('loading-state');
+                const articleContainer = document.getElementById('article-container');
+                const errorState = document.getElementById('error-state');
+
+                if (!activityId || !data.activityCards || data.activityCards.length === 0) {
+                    loadingState.classList.add('hidden');
+                    errorState.classList.remove('hidden');
+                    return;
+                }
+
+                const activity = data.activityCards.find(a => String(a.id) === String(activityId));
+
+                if (activity) {
+                    const bilEsc = (idVal, enVal, fallback) => {
+                        if (window._bilingualEsc) {
+                            return window._bilingualEsc(idVal, enVal, fallback);
+                        }
+                        const escape = (s) => {
+                            if (!s) return '';
+                            const d = document.createElement('div');
+                            d.textContent = s;
+                            return d.innerHTML;
+                        };
+                        const id = escape(idVal || fallback || '');
+                        const en = escape(enVal || fallback || '');
+                        return '<span class="lang-id">' + id + '</span><span class="lang-en">' + en + '</span>';
+                    };
+
+                    const bilHtml = (idVal, enVal, fallback) => {
+                        if (window._bilingualHtml) {
+                            return window._bilingualHtml(idVal, enVal, fallback);
+                        }
+                        const id = idVal || fallback || '';
+                        const en = enVal || fallback || '';
+                        return '<span class="lang-id">' + id + '</span><span class="lang-en">' + en + '</span>';
+                    };
+
+                    document.getElementById('detail-title').innerHTML = bilEsc(activity.title_id, activity.title_en, activity.title);
+                    document.getElementById('detail-category').innerHTML = bilEsc(activity.category_id, activity.category_en, activity.category);
+                    document.getElementById('detail-date').textContent = activity.date;
+                    document.getElementById('detail-description').innerHTML = bilEsc(activity.description_id, activity.description_en, activity.description);
+                    
+                    const fullContent = document.getElementById('detail-full-content');
+                    const story_id = activity.fullStory_id || activity.fullStory || '';
+                    const story_en = activity.fullStory_en || activity.fullStory || '';
+                    
+                    if (story_id.trim() !== '' || story_en.trim() !== '') {
+                        fullContent.innerHTML = bilHtml(story_id, story_en);
+                    } else {
+                        const desc_id = activity.description_id || activity.description || '';
+                        const desc_en = activity.description_en || activity.description || '';
+                        fullContent.innerHTML = bilHtml('<p>' + desc_id + '</p>', '<p>' + desc_en + '</p>');
+                    }
+
+                    const detailHero = document.getElementById('detail-hero');
+                    let imgSrc = (activity.image && activity.image.trim() !== '') ? window._resolveImgPath(activity.image) : 'https://images.unsplash.com/photo-1497633762265-9381796906ea?q=80&w=1000&auto=format&fit=crop';
+                    detailHero.style.backgroundImage = 'url("' + imgSrc + '")';
+
+                    const updatePageTitle = () => {
+                        const currentLang = localStorage.getItem('heyyouth_lang') || 'en';
+                        const pageTitleText = (currentLang === 'id') ? (activity.title_id || activity.title) : (activity.title_en || activity.title);
+                        document.title = pageTitleText + ' - Hey Youth!';
+                    };
+
+                    updatePageTitle();
+
+                    // Listen to language changes
+                    document.querySelectorAll('.lang-btn').forEach(btn => {
+                        btn.addEventListener('click', () => {
+                            setTimeout(updatePageTitle, 100);
+                        });
+                    });
+
+                    loadingState.classList.add('hidden');
+                    articleContainer.classList.remove('hidden');
+                } else {
+                    loadingState.classList.add('hidden');
+                    errorState.classList.remove('hidden');
+                }
+            } catch (err) {
+                console.error("Error loading activity details:", err);
+                document.getElementById('loading-state').classList.add('hidden');
+                document.getElementById('error-state').classList.remove('hidden');
+            }
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initActivityDetail);
+        } else {
+            initActivityDetail();
+        }
+    </script>
+</body>
+
+</html>
